@@ -19,7 +19,9 @@ parcel [path to index.html]
 parcel src/index.html
 ```
 
+### Run application in browser
 Parcel will run a local server on port: 1234
+
 Open the application in your browser
 ``` 
 http://localhost:1234/
@@ -32,6 +34,7 @@ http://localhost:1234/
 ### Author
 
 Matt Dillemuth
+
 [Matt Dillemuth](https://mattdillemuth.com/)
 
 ### Version
