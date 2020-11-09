@@ -1,0 +1,10 @@
+Registration
+Login
+MovieCard (
+Genre
+Director
+Profile
+
+MainView (high-level)
+MovieView(high-level)
+MovieCard (low-level)
