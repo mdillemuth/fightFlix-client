@@ -29830,7 +29830,7 @@ var MovieCard = /*#__PURE__*/function (_Component) {
           return _onClick(movie);
         },
         className: "movie-card"
-      }, movie.Title, ";");
+      }, movie.Title);
     }
   }]);
 
@@ -29886,6 +29886,9 @@ var MovieView = /*#__PURE__*/function (_Component) {
     _classCallCheck(this, MovieView);
 
     _this = _super.call(this);
+
+    _this.handleReturn = function () {};
+
     _this.state = {};
     return _this;
   }
@@ -29901,6 +29904,8 @@ var MovieView = /*#__PURE__*/function (_Component) {
         className: "movie-poster",
         src: movie.ImagePath
       }), _react.default.createElement("div", {
+        className: "movie-content"
+      }, _react.default.createElement("div", {
         className: "movie-title"
       }, _react.default.createElement("span", {
         className: "label"
@@ -29924,7 +29929,7 @@ var MovieView = /*#__PURE__*/function (_Component) {
         className: "label"
       }, "Director: "), _react.default.createElement("span", {
         className: "value"
-      }, movie.Director.Name)));
+      }, movie.Director.Name))), _react.default.createElement("button", null, "Back"));
     }
   }]);
 
@@ -31727,9 +31732,9 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _movieCard = _interopRequireDefault(require("./../movie-card/movie-card"));
+var _movieCard = _interopRequireDefault(require("../movie-card/movie-card"));
 
-var _movieView = _interopRequireDefault(require("./../movie-view/movie-view"));
+var _movieView = _interopRequireDefault(require("../movie-view/movie-view"));
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -31771,7 +31776,8 @@ var MainView = /*#__PURE__*/function (_Component) {
 
     _classCallCheck(this, MainView);
 
-    _this = _super.call(this);
+    _this = _super.call(this); // Initialize state
+
     _this.state = {
       movies: null,
       selectedMovie: null
@@ -31804,25 +31810,29 @@ var MainView = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this3 = this;
 
+      // State
       var _this$state = this.state,
           movies = _this$state.movies,
-          selectedMovie = _this$state.selectedMovie;
+          selectedMovie = _this$state.selectedMovie; // Before movies have loaded
+
       if (!movies) return _react.default.createElement("div", {
         className: "main-view"
       });
-      return _react.default.createElement("div", {
-        className: "main-view"
-      }, selectedMovie ? _react.default.createElement(_movieView.default, {
-        movie: selectedMovie
-      }) : movies.map(function (movie) {
-        return _react.default.createElement(_movieCard.default, {
-          key: movie._id,
-          movie: movie,
-          onClick: function onClick(movie) {
-            return _this3.onMovieClick(movie);
-          }
-        });
-      }));
+      return (// Returns either movie's list or movie view
+        _react.default.createElement("div", {
+          className: "main-view"
+        }, selectedMovie ? _react.default.createElement(_movieView.default, {
+          movie: selectedMovie
+        }) : movies.map(function (movie) {
+          return _react.default.createElement(_movieCard.default, {
+            key: movie._id,
+            movie: movie,
+            onClick: function onClick() {
+              return _this3.onMovieClick(movie);
+            }
+          });
+        }))
+      );
     }
   }]);
 
@@ -31831,7 +31841,7 @@ var MainView = /*#__PURE__*/function (_Component) {
 
 var _default = MainView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","./../movie-view/movie-view":"components/movie-view/movie-view.jsx","axios":"../node_modules/axios/index.js"}],"app.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","axios":"../node_modules/axios/index.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31973,14 +31983,14 @@ var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
 
-var _app = _interopRequireDefault(require("./app.js"));
+var _App = _interopRequireDefault(require("./App.js"));
 
 require("./index.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_reactDom.default.render(_react.default.createElement(_react.default.StrictMode, null, _react.default.createElement(_app.default, null)), document.getElementById('root'));
-},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./app.js":"app.js","./index.scss":"index.scss"}],"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+_reactDom.default.render(_react.default.createElement(_react.default.StrictMode, null, _react.default.createElement(_App.default, null)), document.getElementById('root'));
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./App.js":"App.js","./index.scss":"index.scss"}],"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -32008,7 +32018,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44581" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45673" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

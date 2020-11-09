@@ -6,7 +6,7 @@ class MovieCard extends Component {
 
     return (
       <div onClick={() => onClick(movie)} className='movie-card'>
-        {movie.Title};
+        {movie.Title}
       </div>
     );
   }

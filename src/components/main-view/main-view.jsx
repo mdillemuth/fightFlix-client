@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import MovieCard from './../movie-card/movie-card';
-import MovieView from './../movie-view/movie-view';
+import MovieCard from '../movie-card/movie-card';
+import MovieView from '../movie-view/movie-view';
 import axios from 'axios';
 
 class MainView extends Component {
   constructor() {
     super();
+    // Initialize state
     this.state = {
       movies: null,
       selectedMovie: null,
@@ -30,11 +31,14 @@ class MainView extends Component {
   }
 
   render() {
+    // State
     const { movies, selectedMovie } = this.state;
 
+    // Before movies have loaded
     if (!movies) return <div className='main-view' />;
 
     return (
+      // Returns either movie's list or movie view
       <div className='main-view'>
         {selectedMovie ? (
           <MovieView movie={selectedMovie} />
@@ -43,7 +47,7 @@ class MainView extends Component {
             <MovieCard
               key={movie._id}
               movie={movie}
-              onClick={(movie) => this.onMovieClick(movie)}
+              onClick={() => this.onMovieClick(movie)}
             />
           ))
         )}
