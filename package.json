@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "axios": "^0.21.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },
@@ -9,5 +10,23 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "sass": "^1.29.0"
-  }
+  },
+  "name": "fightFlix-client",
+  "description": "This is the client-side of a MERN stack web application built using React. fightFlix is an application that provides users with access to information about different movies, directors, and genres. Users are able to sign up, update personal information, and create a list of their favorite movies.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdillemuth/fightFlix-client.git"
+  },
+  "keywords": [],
+  "author": "Matt Dillemuth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mdillemuth/fightFlix-client/issues"
+  },
+  "homepage": "https://github.com/mdillemuth/fightFlix-client#readme"
 }

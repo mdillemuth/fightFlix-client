@@ -1,11 +1,26 @@
-$color: cyan;
-body {
-  background-color: #212121;
-}
-.fightFlix {
-  color: $color;
-  font-size: 48px;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   font-family: Arial, Helvetica, sans-serif;
+}
+body {
+  background-color: #dfdfdf;
+}
+.main-view {
   text-align: center;
-  margin-top: 1rem;
+  line-height: 1.5;
+}
+.movie-view {
+  max-width: 35%;
+  margin: 0 auto;
+  font-size: 0.8em;
+  text-align: center;
+  .label {
+    font-weight: bold;
+    color: blue;
+  }
+  .movie-content {
+    text-align: left;
+  }
 }
