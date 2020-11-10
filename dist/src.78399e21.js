@@ -29901,7 +29901,7 @@ var MovieView = /*#__PURE__*/function (_Component) {
         className: "movie-view"
       }, _react.default.createElement("img", {
         className: "movie-poster",
-        src: movie.ImagePath
+        src: movie.ImagePath || ''
       }), _react.default.createElement("div", {
         className: "movie-content"
       }, _react.default.createElement("div", {
@@ -29910,25 +29910,25 @@ var MovieView = /*#__PURE__*/function (_Component) {
         className: "label"
       }, "Title: "), _react.default.createElement("span", {
         className: "value"
-      }, movie.Title)), _react.default.createElement("div", {
+      }, movie.Title || '')), _react.default.createElement("div", {
         className: "movie-description"
       }, _react.default.createElement("span", {
         className: "label"
       }, "Description: "), _react.default.createElement("span", {
         className: "value"
-      }, movie.Description)), _react.default.createElement("div", {
+      }, movie.Description || '')), _react.default.createElement("div", {
         className: "movie-genre"
       }, _react.default.createElement("span", {
         className: "label"
       }, "Genre: "), _react.default.createElement("span", {
         className: "value"
-      }, movie.Genre.Name)), _react.default.createElement("div", {
+      }, movie.Genre.Name || '')), _react.default.createElement("div", {
         className: "movie-director"
       }, _react.default.createElement("span", {
         className: "label"
       }, "Director: "), _react.default.createElement("span", {
         className: "value"
-      }, movie.Director.Name))), _react.default.createElement("button", {
+      }, movie.Director.Name || ''))), _react.default.createElement("button", {
         onClick: onReturn
       }, "Back to Movies"));
     }
@@ -32026,7 +32026,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44789" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36685" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
