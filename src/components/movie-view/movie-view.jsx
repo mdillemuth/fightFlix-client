@@ -6,10 +6,8 @@ class MovieView extends Component {
     this.state = {};
   }
 
-  handleReturn = () => {};
-
   render() {
-    const { movie } = this.props;
+    const { movie, onReturn } = this.props;
 
     if (!movie) return null;
 
@@ -35,7 +33,9 @@ class MovieView extends Component {
             <span className='value'>{movie.Director.Name}</span>
           </div>
         </div>
-        <button>Back</button>
+        {/* <button onClick={onPrevious}>Previous</button> */}
+        <button onClick={onReturn}>Back to Movies</button>
+        {/* <button onClick={onNext}>Next</button> */}
       </div>
     );
   }

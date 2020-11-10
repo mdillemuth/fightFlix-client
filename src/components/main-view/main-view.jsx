@@ -24,11 +24,17 @@ class MainView extends Component {
       .catch((error) => console.log(error));
   }
 
-  onMovieClick(movie) {
+  handleMovieClick(movie) {
     this.setState({
       selectedMovie: movie,
     });
   }
+
+  handleReturn = () => {
+    this.setState({
+      selectedMovie: null,
+    });
+  };
 
   render() {
     // State
@@ -41,13 +47,13 @@ class MainView extends Component {
       // Returns either movie's list or movie view
       <div className='main-view'>
         {selectedMovie ? (
-          <MovieView movie={selectedMovie} />
+          <MovieView movie={selectedMovie} onReturn={this.handleReturn} />
         ) : (
           movies.map((movie) => (
             <MovieCard
               key={movie._id}
               movie={movie}
-              onClick={() => this.onMovieClick(movie)}
+              onClick={() => this.handleMovieClick(movie)}
             />
           ))
         )}
