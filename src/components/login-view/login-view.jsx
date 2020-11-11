@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
-import Form from 'react-bootstrap/Form';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 
-const LoginView = (props) => {
-  // Initialize username/password with hooks
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const LoginView = ({ handleLoggedIn, onRegister }) => {
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  });
+
+  const { username, password } = formData;
+
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = () => {
-    props.handleLoggedIn(username);
+    handleLoggedIn(username);
   };
 
   return (
@@ -24,29 +30,34 @@ const LoginView = (props) => {
         <form>
           <div className='form-group'>
             <FontAwesomeIcon icon={faUser} className='mr-1' />
-            <label htmlFor='loginUsername' className='mb-1'>
+            <label htmlFor='login-username' className='mb-1'>
               Username
             </label>
             <input
               type='text'
+              name='username'
+              id='login-username'
               className='form-control'
               placeholder='Username'
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={onChange}
+              required
             />
           </div>
-          <div className='form-group mb-4'>
+          <div className='form-group mb-5'>
             <FontAwesomeIcon icon={faLock} className='mr-1' />
-            <label htmlFor='loginPassword' className='mb-1'>
+            <label htmlFor='login-password' className='mb-1'>
               Password
             </label>
             <input
               type='password'
-              className='form-control'
+              name='password'
               id='login-password'
+              className='form-control'
               placeholder='Password'
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={onChange}
+              required
             />
           </div>
           <button
@@ -58,13 +69,19 @@ const LoginView = (props) => {
         </form>
         <button
           className='btn btn-lg w-100 btn-outline-danger'
-          onClick={props.onRegister}
+          onClick={onRegister}
         >
           Create an account
         </button>
       </div>
     </div>
   );
+};
+
+// PropTypes
+LoginView.propTypes = {
+  handleLoggedIn: PropTypes.func.isRequired,
+  onRegister: PropTypes.func.isRequired,
 };
 
 export default LoginView;
