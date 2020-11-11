@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import MovieCard from '../movie-card/movie-card';
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
+import RegistrationView from '../registration-view/registration-view';
 import axios from 'axios';
 
 class MainView extends Component {
   constructor() {
     super();
-    // Initialize state
     this.state = {
       movies: null,
       selectedMovie: null,
       user: null,
+      hasAccount: true,
     };
   }
 
@@ -47,14 +48,30 @@ class MainView extends Component {
     });
   };
 
+  handleRegister = () => {
+    this.setState({
+      hasAccount: false,
+    });
+  };
+
   render() {
     // State
-    const { movies, selectedMovie, user } = this.state;
+    const { movies, selectedMovie, user, hasAccount } = this.state;
+
+    // Goes to RegistrationView on click of 'Register new account' btn
+    if (!hasAccount) {
+      return <RegistrationView />;
+    }
 
     // Renders LoginView if no user
     // If there is a user, user details are passed as a prop to LoginView
     if (!user)
-      return <LoginView handleLoggedIn={(user) => this.handleLoggedIn(user)} />;
+      return (
+        <LoginView
+          handleLoggedIn={(user) => this.handleLoggedIn(user)}
+          onRegister={this.handleRegister}
+        />
+      );
 
     // Before movies have loaded
     if (!movies) return <div className='main-view' />;

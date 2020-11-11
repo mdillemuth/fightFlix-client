@@ -30810,7 +30810,8 @@ var MovieCard = /*#__PURE__*/function (_Component) {
   }]);
 
   return MovieCard;
-}(_react.Component);
+}(_react.Component); // PropTypes
+
 
 MovieCard.propTypes = {
   movie: _propTypes.default.shape({
@@ -30971,11 +30972,10 @@ var LoginView = function LoginView(props) {
       setPassword = _useState4[1];
 
   var handleSubmit = function handleSubmit() {
-    console.log(username, password);
     props.handleLoggedIn(username);
   };
 
-  return _react.default.createElement("form", null, _react.default.createElement("label", null, "Username:", _react.default.createElement("input", {
+  return _react.default.createElement("div", null, _react.default.createElement("form", null, _react.default.createElement("label", null, "Username:", _react.default.createElement("input", {
     type: "text",
     value: username,
     onChange: function onChange(e) {
@@ -30990,12 +30990,82 @@ var LoginView = function LoginView(props) {
   })), _react.default.createElement("button", {
     type: "button",
     onClick: handleSubmit
-  }, "Submit"));
+  }, "Submit")), _react.default.createElement("button", {
+    onClick: props.onRegister
+  }, "Register a new account"));
 };
 
 var _default = LoginView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"../node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js"}],"components/registration-view/registration-view.jsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var RegistrationView = function RegistrationView(props) {
+  // Initialize fields with hooks
+  // const [username, setUsername] = useState('');
+  // const [password, setPassword] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [birthday, setBirthday] = useState('');
+  return _react.default.createElement("div", null, _react.default.createElement("p", null, "registration view")) // <div>
+  //   <form>
+  //     <label>
+  //       Username:
+  //       <input
+  //         type='text'
+  //         value={username}
+  //         onChange={(e) => setUsername(e.target.value)}
+  //       />
+  //     </label>
+  //     <label>
+  //       Password:
+  //       <input
+  //         type='password'
+  //         value={password}
+  //         onChange={(e) => setPassword(e.target.value)}
+  //       />
+  //     </label>
+  //     <label>
+  //       Email:
+  //       <input
+  //         type='email'
+  //         value={email}
+  //         onChange={(e) => setEmail(e.target.value)}
+  //       />
+  //     </label>
+  //     <label>
+  //       Birthday:
+  //       <input
+  //         type='date'
+  //         value={birthday}
+  //         onChange={(e) => setBirthday(e.target.value)}
+  //       />
+  //     </label>
+  //     <button type='button' onClick={handleSubmit}>
+  //       Submit
+  //     </button>
+  //   </form>
+  // </div>
+  ;
+};
+
+var _default = RegistrationView;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js"}],"../node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -32795,6 +32865,8 @@ var _movieView = _interopRequireDefault(require("../movie-view/movie-view"));
 
 var _loginView = _interopRequireDefault(require("../login-view/login-view"));
 
+var _registrationView = _interopRequireDefault(require("../registration-view/registration-view"));
+
 var _axios = _interopRequireDefault(require("axios"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -32835,7 +32907,7 @@ var MainView = /*#__PURE__*/function (_Component) {
 
     _classCallCheck(this, MainView);
 
-    _this = _super.call(this); // Initialize state
+    _this = _super.call(this);
 
     _this.handleReturn = function () {
       _this.setState({
@@ -32849,10 +32921,17 @@ var MainView = /*#__PURE__*/function (_Component) {
       });
     };
 
+    _this.handleRegister = function () {
+      _this.setState({
+        hasAccount: false
+      });
+    };
+
     _this.state = {
       movies: null,
       selectedMovie: null,
-      user: null
+      user: null,
+      hasAccount: true
     };
     return _this;
   }
@@ -32889,13 +32968,20 @@ var MainView = /*#__PURE__*/function (_Component) {
       var _this$state = this.state,
           movies = _this$state.movies,
           selectedMovie = _this$state.selectedMovie,
-          user = _this$state.user; // Renders LoginView if no user
+          user = _this$state.user,
+          hasAccount = _this$state.hasAccount; // Goes to RegistrationView on click of 'Register new account' btn
+
+      if (!hasAccount) {
+        return _react.default.createElement(_registrationView.default, null);
+      } // Renders LoginView if no user
       // If there is a user, user details are passed as a prop to LoginView
+
 
       if (!user) return _react.default.createElement(_loginView.default, {
         handleLoggedIn: function handleLoggedIn(user) {
           return _this3.handleLoggedIn(user);
-        }
+        },
+        onRegister: this.handleRegister
       }); // Before movies have loaded
 
       if (!movies) return _react.default.createElement("div", {
@@ -32925,7 +33011,7 @@ var MainView = /*#__PURE__*/function (_Component) {
 
 var _default = MainView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../login-view/login-view":"components/login-view/login-view.jsx","axios":"../node_modules/axios/index.js"}],"App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../login-view/login-view":"components/login-view/login-view.jsx","../registration-view/registration-view":"components/registration-view/registration-view.jsx","axios":"../node_modules/axios/index.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -33060,6 +33146,12 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
+},{"_css_loader":"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../node_modules/bootstrap/dist/css/bootstrap.min.css":[function(require,module,exports) {
+
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
 },{"_css_loader":"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"index.jsx":[function(require,module,exports) {
 "use strict";
 
@@ -33071,10 +33163,12 @@ var _App = _interopRequireDefault(require("./App.js"));
 
 require("./index.scss");
 
+require("bootstrap/dist/css/bootstrap.min.css");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _reactDom.default.render(_react.default.createElement(_react.default.StrictMode, null, _react.default.createElement(_App.default, null)), document.getElementById('root'));
-},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./App.js":"App.js","./index.scss":"index.scss"}],"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./App.js":"App.js","./index.scss":"index.scss","bootstrap/dist/css/bootstrap.min.css":"../node_modules/bootstrap/dist/css/bootstrap.min.css"}],"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -33102,7 +33196,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43061" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40147" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

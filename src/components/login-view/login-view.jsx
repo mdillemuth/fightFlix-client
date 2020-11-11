@@ -6,32 +6,34 @@ const LoginView = (props) => {
   const [password, setPassword] = useState('');
 
   const handleSubmit = () => {
-    console.log(username, password);
     props.handleLoggedIn(username);
   };
 
   return (
-    <form>
-      <label>
-        Username:
-        <input
-          type='text'
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </label>
-      <label>
-        Password:
-        <input
-          type='password'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </label>
-      <button type='button' onClick={handleSubmit}>
-        Submit
-      </button>
-    </form>
+    <div>
+      <form>
+        <label>
+          Username:
+          <input
+            type='text'
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </label>
+        <label>
+          Password:
+          <input
+            type='password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+        <button type='button' onClick={handleSubmit}>
+          Submit
+        </button>
+      </form>
+      <button onClick={props.onRegister}>Register a new account</button>
+    </div>
   );
 };
 
