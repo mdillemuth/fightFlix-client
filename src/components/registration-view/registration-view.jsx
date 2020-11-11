@@ -6,8 +6,10 @@ import {
   faEnvelope,
   faBirthdayCake,
 } from '@fortawesome/free-solid-svg-icons';
+import { Container, Col, Row, Form, Button } from 'react-bootstrap';
 
 const RegistrationView = () => {
+  // State for form input
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -17,92 +19,129 @@ const RegistrationView = () => {
 
   const { username, email, password, birthday } = formData;
 
+  // State for form validation
+  const [validated, setValidated] = useState(false);
+
+  // Handler for form submission (validation & registration)
+  const handleSubmit = (e) => {
+    // Validation
+    const form = e.currentTarget;
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    setValidated(true);
+
+    // Timer to remove validation styling
+    setTimeout(() => {
+      setValidated(false);
+    }, 3000);
+
+    // Create account logic
+    // ***** TODO *****
+  };
+
+  // Handler for form input
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   return (
-    <div className='container'>
-      <div className='col-sm-8 col-md-6 col-lg-4 mx-auto bg-light rounded mt-3 p-4'>
-        <div className='mb-4'>
-          <p className='text-center h3'>Register for</p>
-          <p className='text-center h3 font-italic'>
+    <Container className='my-3'>
+      <Col
+        lg={{ span: 4, offset: 4 }}
+        md={{ span: 6, offset: 3 }}
+        sm={{ span: 8, offset: 2 }}
+        xs={{ span: 10, offset: 1 }}
+        className='bg-light rounded p-4'
+      >
+        <div className='text-center mb-4'>
+          <p className='h3'>Sign Up for</p>
+          <p className='font-italic h3'>
             my<span className='text-primary'>Fight</span>Flix
           </p>
         </div>
-        <form>
-          <div className='form-group'>
-            <FontAwesomeIcon icon={faUser} className='mr-1' />
-            <label htmlFor='register-username' className='mb-1'>
-              Username
-            </label>
-            <input
+        <Form
+          className='mb-2'
+          noValidate
+          validated={validated}
+          onSubmit={handleSubmit}
+        >
+          <Form.Group controlId='registerUsername'>
+            <FontAwesomeIcon icon={faUser} className='mr-2' />
+            <Form.Label>Username</Form.Label>
+            <Form.Control
               type='text'
-              className='form-control'
-              name='username'
-              id='register-username'
               placeholder='Username'
+              name='username'
               value={username}
               onChange={onChange}
               required
             />
-          </div>
-          <div className='form-group'>
-            <FontAwesomeIcon icon={faEnvelope} className='mr-1' />
-            <label htmlFor='register-email' className='mb-1'>
-              Email
-            </label>
-            <input
+            <Form.Control.Feedback type='invalid'>
+              Please choose a username
+            </Form.Control.Feedback>
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+
+          <Form.Group controlId='registerEmail'>
+            <FontAwesomeIcon icon={faEnvelope} className='mr-2' />
+            <Form.Label>Email</Form.Label>
+            <Form.Control
               type='email'
-              className='form-control'
-              name='email'
-              id='register-email'
               placeholder='Email'
+              name='email'
               value={email}
               onChange={onChange}
               required
             />
-            <small class='form-text text-muted font-italic'>
-              We will <span className='text-primary'>never</span> share your
-              email or send you spam
-            </small>
-          </div>
-          <div className='form-group'>
-            <FontAwesomeIcon icon={faLock} className='mr-1' />
-            <label htmlFor='register-password' className='mb-1'>
-              Password
-            </label>
-            <input
+
+            <Form.Control.Feedback type='invalid'>
+              Please enter a valid email address
+            </Form.Control.Feedback>
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Text className='text-muted'>
+              We'll never share your email or send you spam.
+            </Form.Text>
+          </Form.Group>
+          <Form.Group controlId='registerPassword'>
+            <FontAwesomeIcon icon={faLock} className='mr-2' />
+            <Form.Label>Password</Form.Label>
+            <Form.Control
               type='password'
-              className='form-control'
-              name='password'
-              id='register-password'
               placeholder='Password'
+              name='password'
               value={password}
               onChange={onChange}
               required
+              minlength='7'
             />
-          </div>
-          <div className='form-group mb-5'>
-            <FontAwesomeIcon icon={faBirthdayCake} className='mr-1' />
-            <label htmlFor='register-birthday' className='mb-1'>
-              Birthday
-            </label>
-            <input
+            <Form.Control.Feedback type='invalid'>
+              Password must be at least 7 characters long
+            </Form.Control.Feedback>
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId='registerBirthday' className='mb-5'>
+            <FontAwesomeIcon icon={faBirthdayCake} className='mr-2' />
+            <Form.Label>Birthday</Form.Label>
+            <Form.Control
               type='date'
-              className='form-control'
               name='birthday'
-              id='register-birthday'
               value={birthday}
               onChange={onChange}
               required
             />
-          </div>
-          <button className='btn btn-lg w-100 mb-3 btn-primary'>
+            <Form.Control.Feedback type='invalid'>
+              Please enter your birthday
+            </Form.Control.Feedback>
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+          <Button variant='primary' type='submit' className='w-100 btn-lg'>
             Create Account
-          </button>
-        </form>
-      </div>
-    </div>
+          </Button>
+        </Form>
+      </Col>
+    </Container>
   );
 };
 

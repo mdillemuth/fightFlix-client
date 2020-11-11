@@ -1,4 +1,13 @@
 // Customizing Bootstrap variables
+
+@font-face {
+  font-family: 'Noto Sans';
+  src: url('./fonts/NotoSans-Regular.ttf');
+}
+
+$font-family-sans-serif: 'Noto Sans', -apple-system, system-ui,
+  BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !default;
+
 $theme-colors: (
   'dark': #303841,
   'secondary': #3a4750,
