@@ -10,7 +10,7 @@ const RegistrationView = (props) => {
 
   return (
     <div>
-      <p>registration view</p>
+      <h1>Register a new account</h1>
     </div>
     // <div>
     //   <form>

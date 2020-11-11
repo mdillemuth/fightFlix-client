@@ -1,0 +1,11 @@
+// Customizing Bootstrap variables
+$theme-colors: (
+  'dark': #303841,
+  'secondary': #3a4750,
+  'danger': #d72323,
+  'light': #eeeeee,
+  'primary': #d72323,
+);
+
+// Import to Bootstrap set changes
+@import '~bootstrap/scss/bootstrap';
