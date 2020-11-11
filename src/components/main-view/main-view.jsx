@@ -3,6 +3,16 @@ import MovieCard from '../movie-card/movie-card';
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
 import RegistrationView from '../registration-view/registration-view';
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Card,
+  CardDeck,
+  CardGroup,
+  CardColumns,
+} from 'react-bootstrap';
 import axios from 'axios';
 
 class MainView extends Component {
@@ -77,18 +87,19 @@ class MainView extends Component {
     if (!movies) return <div className='main-view' />;
 
     return (
-      // Returns either movie's list or movie view
-      <div className='main-view'>
+      <div>
         {selectedMovie ? (
           <MovieView movie={selectedMovie} onReturn={this.handleReturn} />
         ) : (
-          movies.map((movie) => (
-            <MovieCard
-              key={movie._id}
-              movie={movie}
-              onClick={() => this.handleMovieClick(movie)}
-            />
-          ))
+          <div className='container d-flex flex-wrap'>
+            {movies.map((movie) => (
+              <MovieCard
+                key={movie._id}
+                movie={movie}
+                onClick={() => this.handleMovieClick(movie)}
+              />
+            ))}
+          </div>
         )}
       </div>
     );
