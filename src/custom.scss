@@ -1,11 +1,11 @@
 // Customizing Bootstrap variables
 
 @font-face {
-  font-family: 'Noto Sans';
-  src: url('./fonts/NotoSans-Regular.ttf');
+  font-family: 'Open Sans';
+  src: url('./fonts/OpenSans-Regular.ttf');
 }
 
-$font-family-sans-serif: 'Noto Sans', -apple-system, system-ui,
+$font-family-sans-serif: 'Open Sans', -apple-system, system-ui,
   BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !default;
 
 $theme-colors: (

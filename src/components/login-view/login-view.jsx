@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import { Container, Col, Form, Button } from 'react-bootstrap';
 import './login-view.scss';
-import { Link } from 'react-router-dom';
 
 const LoginView = ({ handleLoggedIn, onRegister }) => {
   // State for form input
@@ -35,7 +32,7 @@ const LoginView = ({ handleLoggedIn, onRegister }) => {
     // Timer to remove validation styling
     setTimeout(() => {
       setValidated(false);
-    }, 3000);
+    }, 4000);
 
     // Login
     handleLoggedIn(username);
@@ -43,28 +40,24 @@ const LoginView = ({ handleLoggedIn, onRegister }) => {
 
   return (
     <Container className='my-3'>
-      <Col
-        lg={{ span: 4, offset: 4 }}
-        md={{ span: 6, offset: 3 }}
-        sm={{ span: 8, offset: 2 }}
-        xs={{ span: 10, offset: 1 }}
-        className='bg-light rounded p-3'
-      >
-        <div className='text-center mb-4'>
-          <p className='h3'>Welcome to</p>
-          <p className='font-italic h3'>
+      <Col md={{ span: 6, offset: 3 }} className='bg-white rounded p-3'>
+        <h1 className='text-center h3 mb-5'>
+          Welcome to{' '}
+          <span className='font-italic'>
             my<span className='text-primary'>Fight</span>Flix
-          </p>
-        </div>
+          </span>
+        </h1>
+
+        <h2 className='text-left h5 text-dark font-weight-bold mb-3'>
+          Login to Your Account
+        </h2>
         <Form
           noValidate
           validated={validated}
           className='mb-2'
           onSubmit={handleSubmit}
         >
-          <Form.Group controlId='loginUsername'>
-            <FontAwesomeIcon icon={faUser} className='mr-2' />
-            <Form.Label>Username</Form.Label>
+          <Form.Group className='mb-2' controlId='loginUsername'>
             <Form.Control
               type='text'
               placeholder='Username'
@@ -78,9 +71,7 @@ const LoginView = ({ handleLoggedIn, onRegister }) => {
             </Form.Control.Feedback>
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId='loginPassword' className='mb-4'>
-            <FontAwesomeIcon icon={faLock} className='mr-2' />
-            <Form.Label>Password</Form.Label>
+          <Form.Group controlId='loginPassword' className='mb-2'>
             <Form.Control
               type='password'
               placeholder='Password'
@@ -95,13 +86,13 @@ const LoginView = ({ handleLoggedIn, onRegister }) => {
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
           <Button variant='primary' type='submit' className='w-100 btn-lg mb-3'>
-            Log In
+            Login
           </Button>
         </Form>
         <p className='text-muted text-center'>
-          New here?
+          Not a member yet?
           <span onClick={onRegister} className='register text-primary ml-2'>
-            Register
+            Sign up for free
           </span>
         </p>
       </Col>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import './movie-card.scss';
 
 class MovieCard extends Component {
@@ -9,14 +8,14 @@ class MovieCard extends Component {
     const { movie, onClick } = this.props;
 
     return (
-      <div className='movie-card bg-light m-2 p-3 rounded d-flex flex-column justify-content-between align-items-center'>
-        <img src={movie.ImagePath} className='movie-card-img rounded' />
-        <div className='mw-100'>
-          <p className='h4 text-center font-weight-semi-bold'>{movie.Title}</p>
-          <p className='movie-card-description text-muted'>
-            {movie.Description}
+      <div className='movie-card bg-white m-3 p-3 rounded d-flex flex-column justify-content-between align-items-center'>
+        <div className='d-flex flex-column align-items-center'>
+          <img src={movie.ImagePath} className='movie-card-img rounded mb-2' />
+          <p className='h4 text-center text-dark font-weight-bold'>
+            {movie.Title}
           </p>
         </div>
+        <p className='movie-card-description text-muted'>{movie.Description}</p>
         <Button
           onClick={() => onClick(movie)}
           variant='primary'

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App.js';
 import './app.scss';
+import 'font-awesome/css/font-awesome.css';
 
 ReactDOM.render(
   <React.StrictMode>
