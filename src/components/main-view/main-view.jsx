@@ -3,16 +3,6 @@ import MovieCard from '../movie-card/movie-card';
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
 import RegistrationView from '../registration-view/registration-view';
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  Card,
-  CardDeck,
-  CardGroup,
-  CardColumns,
-} from 'react-bootstrap';
 import axios from 'axios';
 
 class MainView extends Component {
@@ -91,7 +81,7 @@ class MainView extends Component {
         {selectedMovie ? (
           <MovieView movie={selectedMovie} onReturn={this.handleReturn} />
         ) : (
-          <div className='container d-flex flex-wrap'>
+          <div className='container d-flex flex-wrap justify-content-center'>
             {movies.map((movie) => (
               <MovieCard
                 key={movie._id}

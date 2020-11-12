@@ -1,0 +1,17 @@
+.movie-card {
+  width: 275px;
+  height: 325px;
+}
+.movie-card-img {
+  width: 80px;
+  height: 125px;
+  object-fit: cover;
+}
+.movie-card-description {
+  font-size: 0.9em;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}

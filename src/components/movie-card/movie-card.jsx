@@ -2,28 +2,28 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import './movie-card.scss';
 
 class MovieCard extends Component {
   render() {
     const { movie, onClick } = this.props;
 
     return (
-      <div
-        className='bg-light m-2 p-2 rounded'
-        style={{ width: '200px', height: '300px' }}
-      >
-        {/* <img src={movie.ImagePath} /> */}
-        <div>
-          <p>{movie.Title}</p>
-          {/* <p>{movie.Description}</p> */}
-          <Button
-            onClick={() => onClick(movie)}
-            variant='primary'
-            className='w-100'
-          >
-            View
-          </Button>
+      <div className='movie-card bg-light m-2 p-3 rounded d-flex flex-column justify-content-between align-items-center'>
+        <img src={movie.ImagePath} className='movie-card-img rounded' />
+        <div className='mw-100'>
+          <p className='h4 text-center font-weight-semi-bold'>{movie.Title}</p>
+          <p className='movie-card-description text-muted'>
+            {movie.Description}
+          </p>
         </div>
+        <Button
+          onClick={() => onClick(movie)}
+          variant='primary'
+          className='w-100'
+        >
+          View
+        </Button>
       </div>
     );
   }

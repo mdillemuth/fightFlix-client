@@ -121,7 +121,7 @@ const RegistrationView = () => {
             </Form.Control.Feedback>
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId='registerBirthday' className='mb-5'>
+          <Form.Group controlId='registerBirthday' className='mb-4'>
             <FontAwesomeIcon icon={faBirthdayCake} className='mr-2' />
             <Form.Label>Birthday</Form.Label>
             <Form.Control

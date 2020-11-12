@@ -76,7 +76,7 @@ const LoginView = ({ handleLoggedIn, onRegister }) => {
             </Form.Control.Feedback>
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId='loginPassword' className='mb-5'>
+          <Form.Group controlId='loginPassword' className='mb-4'>
             <FontAwesomeIcon icon={faLock} className='mr-2' />
             <Form.Label>Password</Form.Label>
             <Form.Control
