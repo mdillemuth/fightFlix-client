@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUser,
@@ -7,8 +8,9 @@ import {
   faBirthdayCake,
 } from '@fortawesome/free-solid-svg-icons';
 import { Container, Col, Row, Form, Button } from 'react-bootstrap';
+import './registration-view.scss';
 
-const RegistrationView = () => {
+const RegistrationView = ({ onReturnLogin }) => {
   // State for form input
   const [formData, setFormData] = useState({
     username: '',
@@ -30,21 +32,20 @@ const RegistrationView = () => {
       e.preventDefault();
       e.stopPropagation();
     }
-
     setValidated(true);
 
     // Timer to remove validation styling
     setTimeout(() => {
       setValidated(false);
     }, 3000);
-
-    // Create account logic
-    // ***** TODO *****
   };
 
   // Handler for form input
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  // Handler to return to LoginView
+  const onReturn = () => onReturnLogin();
 
   return (
     <Container className='my-3'>
@@ -56,7 +57,7 @@ const RegistrationView = () => {
         className='bg-light rounded p-4'
       >
         <div className='text-center mb-4'>
-          <p className='h3'>Sign Up for</p>
+          <p className='h3'>Register for</p>
           <p className='font-italic h3'>
             my<span className='text-primary'>Fight</span>Flix
           </p>
@@ -83,7 +84,6 @@ const RegistrationView = () => {
             </Form.Control.Feedback>
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
-
           <Form.Group controlId='registerEmail'>
             <FontAwesomeIcon icon={faEnvelope} className='mr-2' />
             <Form.Label>Email</Form.Label>
@@ -95,7 +95,6 @@ const RegistrationView = () => {
               onChange={onChange}
               required
             />
-
             <Form.Control.Feedback type='invalid'>
               Please enter a valid email address
             </Form.Control.Feedback>
@@ -136,13 +135,24 @@ const RegistrationView = () => {
             </Form.Control.Feedback>
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
-          <Button variant='primary' type='submit' className='w-100 btn-lg'>
+          <Button variant='primary' type='submit' className='w-100 btn-lg mb-3'>
             Create Account
           </Button>
         </Form>
+        <p className='text-muted text-center'>
+          Return to
+          <span onClick={onReturn} className='return text-primary ml-2'>
+            Login
+          </span>
+        </p>
       </Col>
     </Container>
   );
+};
+
+// PropTypes
+RegistrationView.propTypes = {
+  onReturnLogin: PropTypes.func.isRequired,
 };
 
 export default RegistrationView;

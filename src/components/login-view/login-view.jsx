@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
-import { Container, Col, Row, Form, Button } from 'react-bootstrap';
+import { Container, Col, Form, Button } from 'react-bootstrap';
+import './login-view.scss';
+import { Link } from 'react-router-dom';
 
 const LoginView = ({ handleLoggedIn, onRegister }) => {
   // State for form input
@@ -46,7 +48,7 @@ const LoginView = ({ handleLoggedIn, onRegister }) => {
         md={{ span: 6, offset: 3 }}
         sm={{ span: 8, offset: 2 }}
         xs={{ span: 10, offset: 1 }}
-        className='bg-light rounded p-4'
+        className='bg-light rounded p-3'
       >
         <div className='text-center mb-4'>
           <p className='h3'>Welcome to</p>
@@ -92,18 +94,16 @@ const LoginView = ({ handleLoggedIn, onRegister }) => {
             </Form.Control.Feedback>
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
-          <Button variant='primary' type='submit' className='w-100 btn-lg'>
+          <Button variant='primary' type='submit' className='w-100 btn-lg mb-3'>
             Log In
           </Button>
         </Form>
-        <Button
-          variant='outline-primary'
-          type='button'
-          onClick={onRegister}
-          className='w-100 btn-lg'
-        >
-          Create an Account
-        </Button>
+        <p className='text-muted text-center'>
+          New here?
+          <span onClick={onRegister} className='register text-primary ml-2'>
+            Register
+          </span>
+        </p>
       </Col>
     </Container>
   );

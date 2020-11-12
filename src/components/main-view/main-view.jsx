@@ -48,9 +48,17 @@ class MainView extends Component {
     });
   };
 
+  // Handler to navigate to RegistrationView from LoginView
   handleRegister = () => {
     this.setState({
       hasAccount: false,
+    });
+  };
+
+  // Handler to return to LoginView from RegistrationView
+  handleReturnLogin = () => {
+    this.setState({
+      hasAccount: true,
     });
   };
 
@@ -60,7 +68,7 @@ class MainView extends Component {
 
     // Goes to RegistrationView on click of 'Register new account' btn
     if (!hasAccount) {
-      return <RegistrationView />;
+      return <RegistrationView onReturnLogin={this.handleReturnLogin} />;
     }
 
     // Renders LoginView if no user

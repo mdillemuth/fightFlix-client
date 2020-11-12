@@ -17,6 +17,12 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
 }
+.register {
+  cursor: pointer;
+}
+.return {
+  cursor: pointer;
+}
 @charset "UTF-8";
 @font-face {
   font-family: "Noto Sans";
