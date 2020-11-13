@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './movie-view.scss';
 
 class MovieView extends Component {
@@ -24,10 +25,7 @@ class MovieView extends Component {
                 {movie.Title || ''}
               </span>
               <p className='h4 text-dark ml-2'>
-                <i
-                  onClick={this.handleLike}
-                  className='heart fa fa-heart-o'
-                ></i>
+                <i className='heart fa fa-heart-o'></i>
               </p>
             </div>
             <div className='text-left w-100 mb-3'>
@@ -53,5 +51,25 @@ class MovieView extends Component {
     );
   }
 }
+
+// PropTypes
+MovieView.propTypes = {
+  movie: PropTypes.shape({
+    Title: PropTypes.string.isRequired,
+    Description: PropTypes.string.isRequired,
+    Genre: PropTypes.shape({
+      Name: PropTypes.string.isRequired,
+      Description: PropTypes.string.isRequired,
+    }),
+    Director: PropTypes.shape({
+      Name: PropTypes.string.isRequired,
+      Bio: PropTypes.string.isRequired,
+      Birth: PropTypes.string.isRequired,
+    }),
+    ImagePath: PropTypes.string.isRequired,
+    Featured: PropTypes.bool.isRequired,
+  }).isRequired,
+  onReturn: PropTypes.func.isRequired,
+};
 
 export default MovieView;

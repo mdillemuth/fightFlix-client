@@ -31305,7 +31305,11 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
 require("./movie-view.scss");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
@@ -31373,7 +31377,6 @@ var MovieView = /*#__PURE__*/function (_Component) {
       }, movie.Title || ''), _react.default.createElement("p", {
         className: "h4 text-dark ml-2"
       }, _react.default.createElement("i", {
-        onClick: this.handleLike,
         className: "heart fa fa-heart-o"
       }))), _react.default.createElement("div", {
         className: "text-left w-100 mb-3"
@@ -31401,11 +31404,30 @@ var MovieView = /*#__PURE__*/function (_Component) {
   }]);
 
   return MovieView;
-}(_react.Component);
+}(_react.Component); // PropTypes
 
+
+MovieView.propTypes = {
+  movie: _propTypes.default.shape({
+    Title: _propTypes.default.string.isRequired,
+    Description: _propTypes.default.string.isRequired,
+    Genre: _propTypes.default.shape({
+      Name: _propTypes.default.string.isRequired,
+      Description: _propTypes.default.string.isRequired
+    }),
+    Director: _propTypes.default.shape({
+      Name: _propTypes.default.string.isRequired,
+      Bio: _propTypes.default.string.isRequired,
+      Birth: _propTypes.default.string.isRequired
+    }),
+    ImagePath: _propTypes.default.string.isRequired,
+    Featured: _propTypes.default.bool.isRequired
+  }).isRequired,
+  onReturn: _propTypes.default.func.isRequired
+};
 var _default = MovieView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./movie-view.scss":"components/movie-view/movie-view.scss"}],"../node_modules/invariant/browser.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","./movie-view.scss":"components/movie-view/movie-view.scss"}],"../node_modules/invariant/browser.js":[function(require,module,exports) {
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -48347,30 +48369,20 @@ var NavBar = function NavBar() {
   }, "Fight"), "Flix"), _react.default.createElement(_Button.default, null, "Profile")), _react.default.createElement(_Navbar.default, {
     bg: "dark",
     className: "d-flex justify-content-center align-items center"
-  }, _react.default.createElement(_DropdownButton.default, {
-    size: "sm",
+  }, _react.default.createElement("div", null, _react.default.createElement(_DropdownButton.default, {
     className: "mr-2",
     id: "dropdown-filter",
-    title: "Filter"
-  }, _react.default.createElement(_Dropdown.default.Item, {
-    href: "#/action-1"
-  }, "Action"), _react.default.createElement(_Dropdown.default.Item, {
-    href: "#/action-2"
-  }, "Another action"), _react.default.createElement(_Dropdown.default.Item, {
-    href: "#/action-3"
-  }, "Something else")), _react.default.createElement(_DropdownButton.default, {
-    size: "sm",
+    title: "Filter By"
+  }, _react.default.createElement(_Dropdown.default.Item, null, "Genre"), _react.default.createElement(_Dropdown.default.Item, null, "Director"))), _react.default.createElement(_DropdownButton.default, {
     variant: "outline-light",
     className: "ml-2",
     id: "dropdown-sort",
-    title: "Sort"
-  }, _react.default.createElement(_Dropdown.default.Item, {
-    href: "#/action-1"
-  }, "Action"), _react.default.createElement(_Dropdown.default.Item, {
-    href: "#/action-2"
-  }, "Another action"), _react.default.createElement(_Dropdown.default.Item, {
-    href: "#/action-3"
-  }, "Something else"))));
+    title: "Sort By"
+  }, _react.default.createElement(_Dropdown.default.Item, null, "Most Popular"), _react.default.createElement(_Dropdown.default.Item, null, "Least Popular"), _react.default.createElement(_Dropdown.default.Item, null, "Most Recent"), _react.default.createElement(_Dropdown.default.Item, null, "Oldest"), _react.default.createElement(_Dropdown.default.Item, null, "Title ", _react.default.createElement("span", {
+    className: "font-italic"
+  }, "(A-to-Z)")), _react.default.createElement(_Dropdown.default.Item, null, "Title ", _react.default.createElement("span", {
+    className: "font-italic"
+  }, "(Z-to-A)")))));
 };
 
 var _default = NavBar;
@@ -48664,7 +48676,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44681" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38573" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
