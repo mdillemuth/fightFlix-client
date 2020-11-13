@@ -4,6 +4,7 @@ import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
 import RegistrationView from '../registration-view/registration-view';
 import axios from 'axios';
+import NavBar from './../layout/NavBar';
 
 class MainView extends Component {
   constructor() {
@@ -89,15 +90,18 @@ class MainView extends Component {
         {selectedMovie ? (
           <MovieView movie={selectedMovie} onReturn={this.handleReturn} />
         ) : (
-          <div className='container d-flex flex-wrap justify-content-center'>
-            {movies.map((movie) => (
-              <MovieCard
-                key={movie._id}
-                movie={movie}
-                onClick={() => this.handleMovieClick(movie)}
-              />
-            ))}
-          </div>
+          <React.Fragment>
+            <NavBar />
+            <div className='container d-flex flex-wrap justify-content-center'>
+              {movies.map((movie) => (
+                <MovieCard
+                  key={movie._id}
+                  movie={movie}
+                  onClick={() => this.handleMovieClick(movie)}
+                />
+              ))}
+            </div>
+          </React.Fragment>
         )}
       </div>
     );

@@ -43,8 +43,12 @@ const RegistrationView = ({ onReturnLogin }) => {
 
   return (
     <Container className='my-3'>
-      <Col md={{ span: 6, offset: 3 }} className='bg-white rounded p-3'>
-        <h1 className='text-center h3 mb-5'>
+      <Col
+        md={{ span: 6, offset: 3 }}
+        lg={{ span: 4, offset: 4 }}
+        className='bg-white rounded p-3'
+      >
+        <h1 className='text-center text-dark h3 mb-5'>
           Welcome to{' '}
           <span className='font-italic'>
             my<span className='text-primary'>Fight</span>Flix
@@ -145,12 +149,12 @@ const RegistrationView = ({ onReturnLogin }) => {
             Sign Up
           </Button>
         </Form>
-        <p className='text-muted text-center'>
+        <small className='text-muted text-center d-block'>
           Already a member?
           <span onClick={onReturn} className='return text-primary ml-2'>
             Login here
           </span>
-        </p>
+        </small>
       </Col>
     </Container>
   );

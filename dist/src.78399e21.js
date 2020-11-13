@@ -46264,15 +46264,19 @@ var LoginView = function LoginView(_ref) {
       span: 6,
       offset: 3
     },
+    lg: {
+      span: 4,
+      offset: 4
+    },
     className: "bg-white rounded p-3"
   }, _react.default.createElement("h1", {
-    className: "text-center h3 mb-5"
+    className: "text-dark text-center h3 mb-5"
   }, "Welcome to", ' ', _react.default.createElement("span", {
     className: "font-italic"
   }, "my", _react.default.createElement("span", {
     className: "text-primary"
   }, "Fight"), "Flix")), _react.default.createElement("h2", {
-    className: "text-left h5 text-dark font-weight-bold mb-3"
+    className: "text-left h6 text-dark font-weight-bold mb-2"
   }, "Login to Your Account"), _react.default.createElement(_reactBootstrap.Form, {
     noValidate: true,
     validated: validated,
@@ -46306,8 +46310,8 @@ var LoginView = function LoginView(_ref) {
     variant: "primary",
     type: "submit",
     className: "w-100 btn-lg mb-3"
-  }, "Login")), _react.default.createElement("p", {
-    className: "text-muted text-center"
+  }, "Login")), _react.default.createElement("small", {
+    className: "text-muted text-center d-block"
   }, "Not a member yet?", _react.default.createElement("span", {
     onClick: onRegister,
     className: "register text-primary ml-2"
@@ -46424,9 +46428,13 @@ var RegistrationView = function RegistrationView(_ref) {
       span: 6,
       offset: 3
     },
+    lg: {
+      span: 4,
+      offset: 4
+    },
     className: "bg-white rounded p-3"
   }, _react.default.createElement("h1", {
-    className: "text-center h3 mb-5"
+    className: "text-center text-dark h3 mb-5"
   }, "Welcome to", ' ', _react.default.createElement("span", {
     className: "font-italic"
   }, "my", _react.default.createElement("span", {
@@ -46510,8 +46518,8 @@ var RegistrationView = function RegistrationView(_ref) {
     variant: "primary",
     type: "submit",
     className: "w-100 btn-lg mb-3"
-  }, "Sign Up")), _react.default.createElement("p", {
-    className: "text-muted text-center"
+  }, "Sign Up")), _react.default.createElement("small", {
+    className: "text-muted text-center d-block"
   }, "Already a member?", _react.default.createElement("span", {
     onClick: onReturn,
     className: "return text-primary ml-2"
@@ -48308,7 +48316,66 @@ module.exports.default = axios;
 
 },{"./utils":"../node_modules/axios/lib/utils.js","./helpers/bind":"../node_modules/axios/lib/helpers/bind.js","./core/Axios":"../node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"../node_modules/axios/lib/core/mergeConfig.js","./defaults":"../node_modules/axios/lib/defaults.js","./cancel/Cancel":"../node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"../node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"../node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"../node_modules/axios/lib/helpers/spread.js"}],"../node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"components/main-view/main-view.jsx":[function(require,module,exports) {
+},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"components/layout/NavBar.jsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _Navbar = _interopRequireDefault(require("react-bootstrap/Navbar"));
+
+var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
+
+var _Dropdown = _interopRequireDefault(require("react-bootstrap/Dropdown"));
+
+var _DropdownButton = _interopRequireDefault(require("react-bootstrap/DropdownButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var NavBar = function NavBar() {
+  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Navbar.default, {
+    bg: "white",
+    className: "d-flex justify-content-between align-items-center px-3"
+  }, _react.default.createElement(_Navbar.default.Brand, {
+    className: "text-dark font-italic h2 font-weight-bold p-0 m-0"
+  }, "my", _react.default.createElement("span", {
+    className: "text-primary"
+  }, "Fight"), "Flix"), _react.default.createElement(_Button.default, null, "Profile")), _react.default.createElement(_Navbar.default, {
+    bg: "dark",
+    className: "d-flex justify-content-center align-items center"
+  }, _react.default.createElement(_DropdownButton.default, {
+    size: "sm",
+    className: "mr-2",
+    id: "dropdown-filter",
+    title: "Filter"
+  }, _react.default.createElement(_Dropdown.default.Item, {
+    href: "#/action-1"
+  }, "Action"), _react.default.createElement(_Dropdown.default.Item, {
+    href: "#/action-2"
+  }, "Another action"), _react.default.createElement(_Dropdown.default.Item, {
+    href: "#/action-3"
+  }, "Something else")), _react.default.createElement(_DropdownButton.default, {
+    size: "sm",
+    variant: "outline-light",
+    className: "ml-2",
+    id: "dropdown-sort",
+    title: "Sort"
+  }, _react.default.createElement(_Dropdown.default.Item, {
+    href: "#/action-1"
+  }, "Action"), _react.default.createElement(_Dropdown.default.Item, {
+    href: "#/action-2"
+  }, "Another action"), _react.default.createElement(_Dropdown.default.Item, {
+    href: "#/action-3"
+  }, "Something else"))));
+};
+
+var _default = NavBar;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","react-bootstrap/Navbar":"../node_modules/react-bootstrap/esm/Navbar.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Dropdown":"../node_modules/react-bootstrap/esm/Dropdown.js","react-bootstrap/DropdownButton":"../node_modules/react-bootstrap/esm/DropdownButton.js"}],"components/main-view/main-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -48327,6 +48394,8 @@ var _loginView = _interopRequireDefault(require("../login-view/login-view"));
 var _registrationView = _interopRequireDefault(require("../registration-view/registration-view"));
 
 var _axios = _interopRequireDefault(require("axios"));
+
+var _NavBar = _interopRequireDefault(require("./../layout/NavBar"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -48459,7 +48528,7 @@ var MainView = /*#__PURE__*/function (_Component) {
       return _react.default.createElement("div", null, selectedMovie ? _react.default.createElement(_movieView.default, {
         movie: selectedMovie,
         onReturn: this.handleReturn
-      }) : _react.default.createElement("div", {
+      }) : _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, null), _react.default.createElement("div", {
         className: "container d-flex flex-wrap justify-content-center"
       }, movies.map(function (movie) {
         return _react.default.createElement(_movieCard.default, {
@@ -48469,7 +48538,7 @@ var MainView = /*#__PURE__*/function (_Component) {
             return _this3.handleMovieClick(movie);
           }
         });
-      })));
+      }))));
     }
   }]);
 
@@ -48478,7 +48547,7 @@ var MainView = /*#__PURE__*/function (_Component) {
 
 var _default = MainView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../login-view/login-view":"components/login-view/login-view.jsx","../registration-view/registration-view":"components/registration-view/registration-view.jsx","axios":"../node_modules/axios/index.js"}],"App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../login-view/login-view":"components/login-view/login-view.jsx","../registration-view/registration-view":"components/registration-view/registration-view.jsx","axios":"../node_modules/axios/index.js","./../layout/NavBar":"components/layout/NavBar.jsx"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -48595,7 +48664,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33601" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44681" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

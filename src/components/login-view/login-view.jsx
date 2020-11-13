@@ -40,15 +40,19 @@ const LoginView = ({ handleLoggedIn, onRegister }) => {
 
   return (
     <Container className='my-3'>
-      <Col md={{ span: 6, offset: 3 }} className='bg-white rounded p-3'>
-        <h1 className='text-center h3 mb-5'>
+      <Col
+        md={{ span: 6, offset: 3 }}
+        lg={{ span: 4, offset: 4 }}
+        className='bg-white rounded p-3'
+      >
+        <h1 className='text-dark text-center h3 mb-5'>
           Welcome to{' '}
           <span className='font-italic'>
             my<span className='text-primary'>Fight</span>Flix
           </span>
         </h1>
 
-        <h2 className='text-left h5 text-dark font-weight-bold mb-3'>
+        <h2 className='text-left h6 text-dark font-weight-bold mb-2'>
           Login to Your Account
         </h2>
         <Form
@@ -89,12 +93,12 @@ const LoginView = ({ handleLoggedIn, onRegister }) => {
             Login
           </Button>
         </Form>
-        <p className='text-muted text-center'>
+        <small className='text-muted text-center d-block'>
           Not a member yet?
           <span onClick={onRegister} className='register text-primary ml-2'>
             Sign up for free
           </span>
-        </p>
+        </small>
       </Col>
     </Container>
   );
