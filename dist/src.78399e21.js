@@ -31377,7 +31377,7 @@ var MovieView = /*#__PURE__*/function (_Component) {
       }, movie.Title || ''), _react.default.createElement("p", {
         className: "h4 text-dark ml-2"
       }, _react.default.createElement("i", {
-        className: "heart fa fa-heart-o"
+        className: "star fa fa-star-o text-warning"
       }))), _react.default.createElement("div", {
         className: "text-left w-100 mb-3"
       }, _react.default.createElement("div", {
@@ -48676,7 +48676,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38573" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36525" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

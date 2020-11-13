@@ -25,7 +25,7 @@ class MovieView extends Component {
                 {movie.Title || ''}
               </span>
               <p className='h4 text-dark ml-2'>
-                <i className='heart fa fa-heart-o'></i>
+                <i className='star fa fa-star-o text-warning'></i>
               </p>
             </div>
             <div className='text-left w-100 mb-3'>
