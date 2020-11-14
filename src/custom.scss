@@ -1,0 +1,20 @@
+// Customizing Bootstrap variables
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('./fonts/OpenSans-Regular.ttf');
+}
+
+$font-family-sans-serif: 'Open Sans', -apple-system, system-ui,
+  BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !default;
+
+$theme-colors: (
+  'dark': #303841,
+  'secondary': #3a4750,
+  'danger': #d72323,
+  'light': #eeeeee,
+  'primary': #d72323,
+);
+
+// Import to Bootstrap set changes
+@import '~bootstrap/scss/bootstrap';
