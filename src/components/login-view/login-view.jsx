@@ -25,17 +25,18 @@ const LoginView = ({ handleLoggedIn, onRegister }) => {
   // Handler for form submission (validation & login)
   const handleSubmit = (e) => {
     // Validation
-    // const form = e.currentTarget;
-    // if (!form.checkValidity()) {
-    //   e.preventDefault();
-    //   e.stopPropagation();
-    // }
-    // setValidated(true);
+    const form = e.currentTarget;
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setValidated(true);
 
-    // // Timer to remove validation styling
-    // setTimeout(() => {
-    //   setValidated(false);
-    // }, 4000);
+    // Timer to remove validation styling
+    setTimeout(() => {
+      setValidated(false);
+    }, 4000);
+
     e.preventDefault();
 
     // Send request to server for authentication

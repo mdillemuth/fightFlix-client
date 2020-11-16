@@ -48049,16 +48049,18 @@ var LoginView = function LoginView(_ref) {
 
   var handleSubmit = function handleSubmit(e) {
     // Validation
-    // const form = e.currentTarget;
-    // if (!form.checkValidity()) {
-    //   e.preventDefault();
-    //   e.stopPropagation();
-    // }
-    // setValidated(true);
-    // // Timer to remove validation styling
-    // setTimeout(() => {
-    //   setValidated(false);
-    // }, 4000);
+    var form = e.currentTarget;
+
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    setValidated(true); // Timer to remove validation styling
+
+    setTimeout(function () {
+      setValidated(false);
+    }, 4000);
     e.preventDefault(); // Send request to server for authentication
 
     _axios.default.post('https://my-fight-flix.herokuapp.com/api/login', {
@@ -48367,7 +48369,8 @@ var _DropdownButton = _interopRequireDefault(require("react-bootstrap/DropdownBu
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var NavBar = function NavBar() {
+var NavBar = function NavBar(_ref) {
+  var handleLogout = _ref.handleLogout;
   return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Navbar.default, {
     bg: "white",
     className: "d-flex justify-content-between align-items-center px-3"
@@ -48375,7 +48378,13 @@ var NavBar = function NavBar() {
     className: "text-dark font-italic h2 font-weight-bold p-0 m-0"
   }, "my", _react.default.createElement("span", {
     className: "text-primary"
-  }, "Fight"), "Flix"), _react.default.createElement(_Button.default, null, "Profile")), _react.default.createElement(_Navbar.default, {
+  }, "Fight"), "Flix"), _react.default.createElement("div", null, _react.default.createElement(_Button.default, {
+    className: "mr-1"
+  }, "Profile"), _react.default.createElement(_Button.default, {
+    onClick: handleLogout,
+    className: "ml-1",
+    variant: "outline-primary"
+  }, "Logout"))), _react.default.createElement(_Navbar.default, {
     bg: "dark",
     className: "d-flex justify-content-center align-items center"
   }, _react.default.createElement("div", null, _react.default.createElement(_DropdownButton.default, {
@@ -48488,6 +48497,15 @@ var MainView = /*#__PURE__*/function (_Component) {
       });
     };
 
+    _this.handleLogout = function () {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+
+      _this.setState({
+        user: null
+      });
+    };
+
     _this.state = {
       movies: null,
       selectedMovie: null,
@@ -48548,6 +48566,7 @@ var MainView = /*#__PURE__*/function (_Component) {
     } // Returns to MainView from MovieView
     // Handler to navigate to RegistrationView from LoginView
     // Handler to return to LoginView from RegistrationView
+    // Logout
 
   }, {
     key: "render",
@@ -48582,7 +48601,9 @@ var MainView = /*#__PURE__*/function (_Component) {
       return _react.default.createElement("div", null, selectedMovie ? _react.default.createElement(_movieView.default, {
         movie: selectedMovie,
         onReturn: this.handleReturn
-      }) : _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, null), _react.default.createElement("div", {
+      }) : _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
+        handleLogout: this.handleLogout
+      }), _react.default.createElement("div", {
         className: "container d-flex flex-wrap justify-content-center"
       }, movies.map(function (movie) {
         return _react.default.createElement(_movieCard.default, {
@@ -48718,7 +48739,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37147" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44911" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

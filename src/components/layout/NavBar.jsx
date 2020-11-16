@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 
-const NavBar = () => {
+const NavBar = ({ handleLogout }) => {
   return (
     <React.Fragment>
       <Navbar
@@ -14,7 +14,16 @@ const NavBar = () => {
         <Navbar.Brand className='text-dark font-italic h2 font-weight-bold p-0 m-0'>
           my<span className='text-primary'>Fight</span>Flix
         </Navbar.Brand>
-        <Button>Profile</Button>
+        <div>
+          <Button className='mr-1'>Profile</Button>
+          <Button
+            onClick={handleLogout}
+            className='ml-1'
+            variant='outline-primary'
+          >
+            Logout
+          </Button>
+        </div>
       </Navbar>
       <Navbar
         bg='dark'

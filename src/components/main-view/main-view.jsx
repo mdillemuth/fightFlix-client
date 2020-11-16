@@ -93,6 +93,16 @@ class MainView extends Component {
     });
   };
 
+  // Logout
+  handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
+    this.setState({
+      user: null,
+    });
+  };
+
   render() {
     // State
     const { movies, selectedMovie, user, hasAccount } = this.state;
@@ -121,7 +131,7 @@ class MainView extends Component {
           <MovieView movie={selectedMovie} onReturn={this.handleReturn} />
         ) : (
           <React.Fragment>
-            <NavBar />
+            <NavBar handleLogout={this.handleLogout} />
             <div className='container d-flex flex-wrap justify-content-center'>
               {movies.map((movie) => (
                 <MovieCard
