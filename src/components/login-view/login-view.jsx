@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
+
+// Import Styles
 import { Container, Col, Form, Button } from 'react-bootstrap';
 import './login-view.scss';
 
@@ -22,20 +25,30 @@ const LoginView = ({ handleLoggedIn, onRegister }) => {
   // Handler for form submission (validation & login)
   const handleSubmit = (e) => {
     // Validation
-    const form = e.currentTarget;
-    if (!form.checkValidity()) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    setValidated(true);
+    // const form = e.currentTarget;
+    // if (!form.checkValidity()) {
+    //   e.preventDefault();
+    //   e.stopPropagation();
+    // }
+    // setValidated(true);
 
-    // Timer to remove validation styling
-    setTimeout(() => {
-      setValidated(false);
-    }, 4000);
+    // // Timer to remove validation styling
+    // setTimeout(() => {
+    //   setValidated(false);
+    // }, 4000);
+    e.preventDefault();
 
-    // Login
-    handleLoggedIn(username);
+    // Send request to server for authentication
+    axios
+      .post('https://my-fight-flix.herokuapp.com/api/login', {
+        Username: username,
+        Password: password,
+      })
+      .then((res) => {
+        const data = res.data;
+        handleLoggedIn(data);
+      })
+      .catch((e) => console.log('invalid credentials'));
   };
 
   return (

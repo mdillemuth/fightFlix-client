@@ -17,16 +17,40 @@ class MainView extends Component {
     };
   }
 
+  // componentDidMount() {
+  //   axios
+  //     .get('https://my-fight-flix.herokuapp.com/api/movies')
+  //     .then((res) => {
+  //       this.setState({
+  //         movies: res.data,
+  //       });
+  //     })
+  //     .catch((error) => console.log(error));
+  // }
+
   componentDidMount() {
-    axios
-      .get('https://my-fight-flix.herokuapp.com/api/movies')
-      .then((res) => {
-        this.setState({
-          movies: res.data,
-        });
-      })
-      .catch((error) => console.log(error));
+    let accessToken = localStorage.getItem('token');
+    if (accessToken !== null) {
+      this.setState({
+        user: localStorage.getItem('user'),
+      });
+      this.getMovies(accessToken);
+    }
   }
+
+  // Authentication
+  // Updates 'user' in state on successful user login
+  handleLoggedIn = (authData) => {
+    console.log(authData);
+
+    this.setState({
+      user: authData.user.Username,
+    });
+
+    // Storing token in local storage
+    localStorage.setItem('token', authData.token);
+    localStorage.setItem('user', authData.user.Username);
+  };
 
   // Changes to MovieView (of selected movie) from MainView
   handleMovieClick(movie) {
@@ -35,17 +59,23 @@ class MainView extends Component {
     });
   }
 
+  getMovies(token) {
+    axios
+      .get('https://my-fight-flix.herokuapp.com/api/movies', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        this.setState({
+          movies: res.data,
+        });
+      })
+      .catch((error) => console.log(error));
+  }
+
   // Returns to MainView from MovieView
   handleReturn = () => {
     this.setState({
       selectedMovie: null,
-    });
-  };
-
-  // Updates 'user' in state on successful user login
-  handleLoggedIn = (user) => {
-    this.setState({
-      user,
     });
   };
 
@@ -77,7 +107,7 @@ class MainView extends Component {
     if (!user)
       return (
         <LoginView
-          handleLoggedIn={(user) => this.handleLoggedIn(user)}
+          handleLoggedIn={(data) => this.handleLoggedIn(data)}
           onRegister={this.handleRegister}
         />
       );
