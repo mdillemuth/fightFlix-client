@@ -3,26 +3,26 @@ import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import './movie-card.scss';
 
+import { Link } from 'react-router-dom';
+
 class MovieCard extends Component {
   render() {
-    const { movie, onClick } = this.props;
+    const { movie } = this.props;
 
     return (
       <div className='movie-card bg-white m-3 p-3 rounded d-flex flex-column justify-content-between align-items-center'>
         <div className='d-flex flex-column align-items-center'>
           <img src={movie.ImagePath} className='movie-card-img rounded mb-2' />
-          <p className='h4 text-center text-dark font-weight-bold'>
+          <p className='h4 text-center text-dark font-weight-semi-bold'>
             {movie.Title}
           </p>
         </div>
         <p className='movie-card-description text-muted'>{movie.Description}</p>
-        <Button
-          onClick={() => onClick(movie)}
-          variant='primary'
-          className='w-100'
-        >
-          View
-        </Button>
+        <Link to={`/movies/${movie._id}`}>
+          <Button variant='primary' className='w-100'>
+            View
+          </Button>
+        </Link>
       </div>
     );
   }
@@ -45,7 +45,6 @@ MovieCard.propTypes = {
     ImagePath: PropTypes.string.isRequired,
     Featured: PropTypes.bool.isRequired,
   }).isRequired,
-  onClick: PropTypes.func.isRequired,
 };
 
 export default MovieCard;

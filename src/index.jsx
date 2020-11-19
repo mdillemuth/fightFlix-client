@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App.js';
+import { BrowserRouter } from 'react-router-dom';
+import MainView from './components/main-view/main-view';
 import './app.scss';
 import 'font-awesome/css/font-awesome.css';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <MainView />
+  </BrowserRouter>,
   document.getElementById('root')
 );

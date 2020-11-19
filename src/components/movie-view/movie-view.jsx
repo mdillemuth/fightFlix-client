@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './movie-view.scss';
+import Button from 'react-bootstrap/Button';
+import { Link } from 'react-router-dom';
 
 class MovieView extends Component {
   constructor() {
@@ -9,7 +11,7 @@ class MovieView extends Component {
   }
 
   render() {
-    const { movie, onReturn } = this.props;
+    const { movie } = this.props;
 
     if (!movie) return null;
 
@@ -31,20 +33,26 @@ class MovieView extends Component {
             <div className='text-left w-100 mb-3'>
               <div className='movie-genre'>
                 <span className='label'>Genre: </span>
-                <span className='value'>{movie.Genre.Name || ''}</span>
+                <Link to='/genre/:id'>
+                  <span className='value'>{movie.Genre.Name || ''}</span>
+                </Link>
               </div>
               <div className='movie-director'>
                 <span className='label'>Director: </span>
-                <span className='value'>{movie.Director.Name || ''}</span>
+                <Link to='/directors/:id'>
+                  <span className='value'>{movie.Director.Name || ''}</span>
+                </Link>
               </div>
             </div>
             <div className='movie-description mb-2'>
               <span className='value'>{movie.Description || ''}</span>
             </div>
 
-            <button className='ml-auto btn btn-primary' onClick={onReturn}>
-              Back to Movies
-            </button>
+            <Link to='/'>
+              <Button className='ml-auto btn btn-primary'>
+                Back to Movies
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -69,7 +77,6 @@ MovieView.propTypes = {
     ImagePath: PropTypes.string.isRequired,
     Featured: PropTypes.bool.isRequired,
   }).isRequired,
-  onReturn: PropTypes.func.isRequired,
 };
 
 export default MovieView;

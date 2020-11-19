@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { Container, Col, Row, Form, Button } from 'react-bootstrap';
+import { Container, Col, Form, Button } from 'react-bootstrap';
 import './registration-view.scss';
 
-const RegistrationView = ({ onReturnLogin }) => {
+import { Link } from 'react-router-dom';
+
+const RegistrationView = () => {
   // State for form input
   const [formData, setFormData] = useState({
     username: '',
@@ -37,9 +38,6 @@ const RegistrationView = ({ onReturnLogin }) => {
   // Handler for form input
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  // Handler to return to LoginView
-  const onReturn = () => onReturnLogin();
 
   return (
     <Container className='my-3'>
@@ -104,7 +102,7 @@ const RegistrationView = ({ onReturnLogin }) => {
               value={password}
               onChange={onChange}
               required
-              minlength='7'
+              minLength='7'
             />
             <Form.Control.Feedback type='invalid'>
               Password must be at least 7 characters long
@@ -119,7 +117,7 @@ const RegistrationView = ({ onReturnLogin }) => {
               value={password2}
               onChange={onChange}
               required
-              minlength='7'
+              minLength='7'
             />
             <Form.Control.Feedback type='invalid'>
               Password must be at least 7 characters long
@@ -151,18 +149,13 @@ const RegistrationView = ({ onReturnLogin }) => {
         </Form>
         <small className='text-muted text-center d-block'>
           Already a member?
-          <span onClick={onReturn} className='return text-primary ml-2'>
-            Login here
-          </span>
+          <Link to='/'>
+            <span className='return text-primary ml-2'>Login here</span>
+          </Link>
         </small>
       </Col>
     </Container>
   );
-};
-
-// PropTypes
-RegistrationView.propTypes = {
-  onReturnLogin: PropTypes.func.isRequired,
 };
 
 export default RegistrationView;
