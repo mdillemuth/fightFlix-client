@@ -51444,6 +51444,8 @@ var _NavBar = _interopRequireDefault(require("./../layout/NavBar"));
 
 var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
+var _movieCard = _interopRequireDefault(require("./../movie-card/movie-card"));
+
 var _reactRouterDom = require("react-router-dom");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -51488,8 +51490,16 @@ var DirectorView = /*#__PURE__*/function (_Component) {
   _createClass(DirectorView, [{
     key: "render",
     value: function render() {
-      var movie = this.props.movie;
-      return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, null), _react.default.createElement("h1", null, movie.Director.Name), _react.default.createElement("p", null, movie.Director.Bio), _react.default.createElement(_reactRouterDom.Link, {
+      var _this$props = this.props,
+          movie = _this$props.movie,
+          other = _this$props.other;
+      console.log(other);
+      return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, null), _react.default.createElement("h1", null, movie.Director.Name), _react.default.createElement("p", null, "Born in ", movie.Director.Birth), _react.default.createElement("p", null, "Bio: ", movie.Director.Bio), _react.default.createElement("h2", null, "Some movies from this director:"), other.map(function (o) {
+        return _react.default.createElement(_movieCard.default, {
+          key: o._id,
+          movie: o
+        });
+      }), _react.default.createElement(_reactRouterDom.Link, {
         to: "/"
       }, _react.default.createElement(_Button.default, {
         className: "ml-auto btn btn-primary"
@@ -51502,7 +51512,7 @@ var DirectorView = /*#__PURE__*/function (_Component) {
 
 var _default = DirectorView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./../layout/NavBar":"components/layout/NavBar.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/genre-view/genre-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./../layout/NavBar":"components/layout/NavBar.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/genre-view/genre-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51516,13 +51526,21 @@ var _NavBar = _interopRequireDefault(require("./../layout/NavBar"));
 
 var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
+var _movieCard = _interopRequireDefault(require("./../movie-card/movie-card"));
+
 var _reactRouterDom = require("react-router-dom");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var GenreView = function GenreView(_ref) {
-  var movie = _ref.movie;
-  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, null), _react.default.createElement("h1", null, movie.Genre.Name), _react.default.createElement("h2", null, movie.Genre.Description), _react.default.createElement(_reactRouterDom.Link, {
+  var movie = _ref.movie,
+      other = _ref.other;
+  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, null), _react.default.createElement("h1", null, movie.Genre.Name), _react.default.createElement("h2", null, movie.Genre.Description), _react.default.createElement("h3", null, "Other movies with this genre:"), other.map(function (o) {
+    return _react.default.createElement(_movieCard.default, {
+      key: o._id,
+      movie: o
+    });
+  }), _react.default.createElement(_reactRouterDom.Link, {
     to: "/"
   }, _react.default.createElement(_Button.default, {
     className: "ml-auto btn btn-primary"
@@ -51531,7 +51549,7 @@ var GenreView = function GenreView(_ref) {
 
 var _default = GenreView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./../layout/NavBar":"components/layout/NavBar.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/profile-view/profile-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./../layout/NavBar":"components/layout/NavBar.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/profile-view/profile-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51773,6 +51791,9 @@ var MainView = /*#__PURE__*/function (_Component) {
           return _react.default.createElement(_directorView.default, {
             movie: movies.find(function (m) {
               return m.Director.Name === match.params.directorName;
+            }),
+            other: movies.filter(function (m) {
+              return m.Director.Name === match.params.directorName;
             })
           });
         }
@@ -51783,6 +51804,9 @@ var MainView = /*#__PURE__*/function (_Component) {
           var match = _ref2.match;
           return _react.default.createElement(_genreView.default, {
             movie: movies.find(function (m) {
+              return m.Genre.Name === match.params.genreName;
+            }),
+            other: movies.filter(function (m) {
               return m.Genre.Name === match.params.genreName;
             })
           });
@@ -51863,7 +51887,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44303" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44693" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

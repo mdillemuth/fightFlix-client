@@ -108,6 +108,9 @@ class MainView extends Component {
               movie={movies.find(
                 (m) => m.Director.Name === match.params.directorName
               )}
+              other={movies.filter(
+                (m) => m.Director.Name === match.params.directorName
+              )}
             />
           )}
         />
@@ -117,6 +120,9 @@ class MainView extends Component {
           render={({ match }) => (
             <GenreView
               movie={movies.find(
+                (m) => m.Genre.Name === match.params.genreName
+              )}
+              other={movies.filter(
                 (m) => m.Genre.Name === match.params.genreName
               )}
             />
