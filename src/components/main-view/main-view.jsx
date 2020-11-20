@@ -7,7 +7,11 @@ import MovieCard from '../movie-card/movie-card';
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
 import RegistrationView from '../registration-view/registration-view';
+import DirectorView from '../director-view/director-view';
+import GenreView from './../genre-view/genre-view';
+import ProfileView from '../profile-view/profile-view';
 import NavBar from './../layout/NavBar';
+import SubNavBar from './../layout/SubNavBar';
 
 class MainView extends Component {
   constructor() {
@@ -84,6 +88,7 @@ class MainView extends Component {
             return (
               <div>
                 <NavBar handleLogout={this.handleLogout} />
+                <SubNavBar />
                 <div className='container d-flex flex-wrap justify-content-center'>
                   {movies.map((m) => (
                     <MovieCard key={m._id} movie={m} />
@@ -94,7 +99,31 @@ class MainView extends Component {
           }}
         />
         <Route path='/register' render={() => <RegistrationView />} />
+        <Route path='/profile' render={() => <ProfileView />} />
         <Route
+          exact
+          path='/directors/:directorName'
+          render={({ match }) => (
+            <DirectorView
+              movie={movies.find(
+                (m) => m.Director.Name === match.params.directorName
+              )}
+            />
+          )}
+        />
+        <Route
+          exact
+          path='/genres/:genreName'
+          render={({ match }) => (
+            <GenreView
+              movie={movies.find(
+                (m) => m.Genre.Name === match.params.genreName
+              )}
+            />
+          )}
+        />
+        <Route
+          exact
           path='/movies/:movieId'
           render={({ match }) => (
             <MovieView
@@ -102,7 +131,6 @@ class MainView extends Component {
             />
           )}
         />
-        {/* </div> */}
       </div>
     );
   }

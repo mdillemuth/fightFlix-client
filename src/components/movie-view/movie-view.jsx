@@ -33,13 +33,13 @@ class MovieView extends Component {
             <div className='text-left w-100 mb-3'>
               <div className='movie-genre'>
                 <span className='label'>Genre: </span>
-                <Link to='/genre/:id'>
+                <Link to={`/genres/${movie.Genre.Name}`}>
                   <span className='value'>{movie.Genre.Name || ''}</span>
                 </Link>
               </div>
               <div className='movie-director'>
                 <span className='label'>Director: </span>
-                <Link to='/directors/:id'>
+                <Link to={`/directors/${movie.Director.Name}`}>
                   <span className='value'>{movie.Director.Name || ''}</span>
                 </Link>
               </div>
@@ -47,7 +47,6 @@ class MovieView extends Component {
             <div className='movie-description mb-2'>
               <span className='value'>{movie.Description || ''}</span>
             </div>
-
             <Link to='/'>
               <Button className='ml-auto btn btn-primary'>
                 Back to Movies
