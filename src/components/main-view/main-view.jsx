@@ -25,7 +25,8 @@ class MainView extends Component {
   // Authentication and adding 'user' to state
   handleLoggedIn = (authData) => {
     this.setState({
-      user: authData.user.Username,
+      //  CHANGING THIS FOR EXPERIMENTATION (ORIGINAL: authData.user.Username)
+      user: authData.user,
     });
 
     localStorage.setItem('token', authData.token);
@@ -99,7 +100,10 @@ class MainView extends Component {
           }}
         />
         <Route path='/register' render={() => <RegistrationView />} />
-        <Route path='/profile' render={() => <ProfileView />} />
+        <Route
+          path='/profile'
+          render={() => <ProfileView user={user} movies={movies} />}
+        />
         <Route
           exact
           path='/directors/:directorName'

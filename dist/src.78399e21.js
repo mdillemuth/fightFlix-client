@@ -51561,15 +51561,26 @@ var _react = _interopRequireDefault(require("react"));
 
 var _NavBar = _interopRequireDefault(require("../layout/NavBar"));
 
+var _movieCard = _interopRequireDefault(require("../movie-card/movie-card"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ProfileView = function ProfileView() {
-  return _react.default.createElement("div", null, _react.default.createElement(_NavBar.default, null), _react.default.createElement("h1", null, "Profile View"));
+var ProfileView = function ProfileView(_ref) {
+  var user = _ref.user,
+      movies = _ref.movies;
+  return _react.default.createElement("div", null, _react.default.createElement(_NavBar.default, null), _react.default.createElement("h1", null, "Profile View"), _react.default.createElement("p", null, "Logged in as: ", user.Username), user.FavoriteMovies.map(function (i) {
+    return _react.default.createElement(_movieCard.default, {
+      key: i,
+      movie: movies.find(function (m) {
+        return m._id === i;
+      })
+    });
+  }));
 };
 
 var _default = ProfileView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../layout/NavBar":"components/layout/NavBar.jsx"}],"components/layout/SubNavBar.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../layout/NavBar":"components/layout/NavBar.jsx","../movie-card/movie-card":"components/movie-card/movie-card.jsx"}],"components/layout/SubNavBar.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51683,7 +51694,8 @@ var MainView = /*#__PURE__*/function (_Component) {
 
     _this.handleLoggedIn = function (authData) {
       _this.setState({
-        user: authData.user.Username
+        //  CHANGING THIS FOR EXPERIMENTATION (ORIGINAL: authData.user.Username)
+        user: authData.user
       });
 
       localStorage.setItem('token', authData.token);
@@ -51781,7 +51793,10 @@ var MainView = /*#__PURE__*/function (_Component) {
       }), _react.default.createElement(_reactRouterDom.Route, {
         path: "/profile",
         render: function render() {
-          return _react.default.createElement(_profileView.default, null);
+          return _react.default.createElement(_profileView.default, {
+            user: user,
+            movies: movies
+          });
         }
       }), _react.default.createElement(_reactRouterDom.Route, {
         exact: true,
@@ -51887,7 +51902,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44693" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36271" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
