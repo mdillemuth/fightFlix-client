@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Container, Col, Form, Button } from 'react-bootstrap';
 import './registration-view.scss';
 
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const RegistrationView = () => {
@@ -10,29 +11,46 @@ const RegistrationView = () => {
     username: '',
     email: '',
     password: '',
-    password2: '',
     birthday: '',
   });
 
-  const { username, email, password, password2, birthday } = formData;
+  const { username, email, password, birthday } = formData;
 
   // State for form validation
   const [validated, setValidated] = useState(false);
 
   // Handler for form submission (validation & registration)
-  const handleSubmit = (e) => {
-    // Validation
-    const form = e.currentTarget;
-    if (!form.checkValidity()) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    setValidated(true);
+  // const handleSubmit = (e) => {
+  //   // Validation
+  //   const form = e.currentTarget;
+  //   if (!form.checkValidity()) {
+  //     e.preventDefault();
+  //     e.stopPropagation();
+  //   }
+  //   setValidated(true);
 
-    // Timer to remove validation styling
-    setTimeout(() => {
-      setValidated(false);
-    }, 8000);
+  //   // Timer to remove validation styling
+  //   setTimeout(() => {
+  //     setValidated(false);
+  //   }, 8000);
+  // };
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+
+    axios
+      .post('https://my-fight-flix.herokuapp.com/api/users', {
+        Username: username,
+        Password: password,
+        Email: email,
+        Birthday: birthday,
+      })
+      .then((res) => {
+        const data = res.data;
+        console.log(data);
+        window.open('/', '_self');
+      })
+      .catch((e) => console.log('registration error'));
   };
 
   // Handler for form input
@@ -64,7 +82,7 @@ const RegistrationView = () => {
           className='mb-2'
           noValidate
           validated={validated}
-          onSubmit={handleSubmit}
+          onSubmit={handleRegister}
         >
           <Form.Group className='mb-2' controlId='registerUsername'>
             <Form.Control
@@ -109,7 +127,7 @@ const RegistrationView = () => {
             </Form.Control.Feedback>
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
-          <Form.Group className='mb-2' controlId='registerPassword2'>
+          {/* <Form.Group className='mb-2' controlId='registerPassword2'>
             <Form.Control
               type='password'
               placeholder='Re-type password'
@@ -123,7 +141,7 @@ const RegistrationView = () => {
               Password must be at least 7 characters long
             </Form.Control.Feedback>
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-          </Form.Group>
+          </Form.Group> */}
 
           <Form.Group controlId='registerBirthday' className='mb-2 '>
             <Form.Label className='mb-1 text-muted font-weight-bold'>

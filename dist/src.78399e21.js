@@ -51214,9 +51214,13 @@ var _reactBootstrap = require("react-bootstrap");
 
 require("./registration-view.scss");
 
+var _axios = _interopRequireDefault(require("axios"));
+
 var _reactRouterDom = require("react-router-dom");
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
@@ -51242,7 +51246,6 @@ var RegistrationView = function RegistrationView() {
     username: '',
     email: '',
     password: '',
-    password2: '',
     birthday: ''
   }),
       _useState2 = _slicedToArray(_useState, 2),
@@ -51252,29 +51255,42 @@ var RegistrationView = function RegistrationView() {
   var username = formData.username,
       email = formData.email,
       password = formData.password,
-      password2 = formData.password2,
       birthday = formData.birthday; // State for form validation
 
   var _useState3 = (0, _react.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
       validated = _useState4[0],
       setValidated = _useState4[1]; // Handler for form submission (validation & registration)
+  // const handleSubmit = (e) => {
+  //   // Validation
+  //   const form = e.currentTarget;
+  //   if (!form.checkValidity()) {
+  //     e.preventDefault();
+  //     e.stopPropagation();
+  //   }
+  //   setValidated(true);
+  //   // Timer to remove validation styling
+  //   setTimeout(() => {
+  //     setValidated(false);
+  //   }, 8000);
+  // };
 
 
-  var handleSubmit = function handleSubmit(e) {
-    // Validation
-    var form = e.currentTarget;
+  var handleRegister = function handleRegister(e) {
+    e.preventDefault();
 
-    if (!form.checkValidity()) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    setValidated(true); // Timer to remove validation styling
-
-    setTimeout(function () {
-      setValidated(false);
-    }, 8000);
+    _axios.default.post('https://my-fight-flix.herokuapp.com/api/users', {
+      Username: username,
+      Password: password,
+      Email: email,
+      Birthday: birthday
+    }).then(function (res) {
+      var data = res.data;
+      console.log(data);
+      window.open('/', '_self');
+    }).catch(function (e) {
+      return console.log('registration error');
+    });
   }; // Handler for form input
 
 
@@ -51310,7 +51326,7 @@ var RegistrationView = function RegistrationView() {
     className: "mb-2",
     noValidate: true,
     validated: validated,
-    onSubmit: handleSubmit
+    onSubmit: handleRegister
   }, _react.default.createElement(_reactBootstrap.Form.Group, {
     className: "mb-2",
     controlId: "registerUsername"
@@ -51349,19 +51365,6 @@ var RegistrationView = function RegistrationView() {
   }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
     type: "invalid"
   }, "Password must be at least 7 characters long"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!")), _react.default.createElement(_reactBootstrap.Form.Group, {
-    className: "mb-2",
-    controlId: "registerPassword2"
-  }, _react.default.createElement(_reactBootstrap.Form.Control, {
-    type: "password",
-    placeholder: "Re-type password",
-    name: "password2",
-    value: password2,
-    onChange: onChange,
-    required: true,
-    minLength: "7"
-  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
-    type: "invalid"
-  }, "Password must be at least 7 characters long"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!")), _react.default.createElement(_reactBootstrap.Form.Group, {
     controlId: "registerBirthday",
     className: "mb-2 "
   }, _react.default.createElement(_reactBootstrap.Form.Label, {
@@ -51390,7 +51393,7 @@ var RegistrationView = function RegistrationView() {
 
 var _default = RegistrationView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","./registration-view.scss":"components/registration-view/registration-view.scss","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/layout/NavBar.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","./registration-view.scss":"components/registration-view/registration-view.scss","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/layout/NavBar.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51563,24 +51566,42 @@ var _NavBar = _interopRequireDefault(require("../layout/NavBar"));
 
 var _movieCard = _interopRequireDefault(require("../movie-card/movie-card"));
 
+var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _reactRouterDom = require("react-router-dom");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// Import components
+// Import styling
+// Import routing
 var ProfileView = function ProfileView(_ref) {
   var user = _ref.user,
-      movies = _ref.movies;
-  return _react.default.createElement("div", null, _react.default.createElement(_NavBar.default, null), _react.default.createElement("h1", null, "Profile View"), _react.default.createElement("p", null, "Logged in as: ", user.Username), user.FavoriteMovies.map(function (i) {
-    return _react.default.createElement(_movieCard.default, {
+      movies = _ref.movies,
+      handleLogout = _ref.handleLogout;
+  return _react.default.createElement("div", null, _react.default.createElement(_NavBar.default, {
+    handleLogout: handleLogout
+  }), _react.default.createElement(_reactRouterDom.Link, {
+    to: "/"
+  }, _react.default.createElement(_Button.default, {
+    className: "ml-auto btn btn-primary"
+  }, "Back to Movies")), _react.default.createElement("h1", null, "Profile View"), _react.default.createElement("p", null, "Logged in as: ", user.Username), user.FavoriteMovies.map(function (i) {
+    return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_movieCard.default, {
       key: i,
       movie: movies.find(function (m) {
         return m._id === i;
       })
-    });
+    }), _react.default.createElement(_Button.default, {
+      className: "ml-auto btn btn-warning"
+    }, "Remove Favorite"));
   }));
 };
 
 var _default = ProfileView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../layout/NavBar":"components/layout/NavBar.jsx","../movie-card/movie-card":"components/movie-card/movie-card.jsx"}],"components/layout/SubNavBar.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../layout/NavBar":"components/layout/NavBar.jsx","../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/layout/SubNavBar.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51795,7 +51816,8 @@ var MainView = /*#__PURE__*/function (_Component) {
         render: function render() {
           return _react.default.createElement(_profileView.default, {
             user: user,
-            movies: movies
+            movies: movies,
+            handleLogout: _this3.handleLogout
           });
         }
       }), _react.default.createElement(_reactRouterDom.Route, {
@@ -51902,7 +51924,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36271" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36115" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -102,7 +102,13 @@ class MainView extends Component {
         <Route path='/register' render={() => <RegistrationView />} />
         <Route
           path='/profile'
-          render={() => <ProfileView user={user} movies={movies} />}
+          render={() => (
+            <ProfileView
+              user={user}
+              movies={movies}
+              handleLogout={this.handleLogout}
+            />
+          )}
         />
         <Route
           exact
