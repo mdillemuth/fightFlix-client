@@ -19,8 +19,7 @@ const RegistrationView = () => {
   // State for form validation
   const [validated, setValidated] = useState(false);
 
-  // Handler for form submission (validation & registration)
-  // const handleSubmit = (e) => {
+  // const handleValidation = (e) => {
   //   // Validation
   //   const form = e.currentTarget;
   //   if (!form.checkValidity()) {
@@ -64,14 +63,14 @@ const RegistrationView = () => {
         lg={{ span: 4, offset: 4 }}
         className='bg-white rounded p-3'
       >
-        <h1 className='text-center text-dark h3 mb-5'>
+        <h1 className='text-center text-dark h3 mb-4'>
           Welcome to{' '}
           <span className='font-italic'>
             my<span className='text-primary'>Fight</span>Flix
           </span>
         </h1>
 
-        <h2 className='text-left h5 text-dark font-weight-bold mb-3'>
+        <h2 className='text-left h6 text-dark font-weight-bold mb-3'>
           Join{' '}
           <span className='font-italic'>
             my<span className='text-primary'>Fight</span>Flix
@@ -127,22 +126,6 @@ const RegistrationView = () => {
             </Form.Control.Feedback>
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
-          {/* <Form.Group className='mb-2' controlId='registerPassword2'>
-            <Form.Control
-              type='password'
-              placeholder='Re-type password'
-              name='password2'
-              value={password2}
-              onChange={onChange}
-              required
-              minLength='7'
-            />
-            <Form.Control.Feedback type='invalid'>
-              Password must be at least 7 characters long
-            </Form.Control.Feedback>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-          </Form.Group> */}
-
           <Form.Group controlId='registerBirthday' className='mb-2 '>
             <Form.Label className='mb-1 text-muted font-weight-bold'>
               Please enter your birthday

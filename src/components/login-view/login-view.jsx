@@ -61,7 +61,7 @@ const LoginView = ({ handleLoggedIn }) => {
           lg={{ span: 4, offset: 4 }}
           className='bg-white rounded p-3'
         >
-          <h1 className='text-dark text-center h3 mb-5'>
+          <h1 className='text-dark text-center h3 mb-4'>
             Welcome to{' '}
             <span className='font-italic'>
               my<span className='text-primary'>Fight</span>Flix
