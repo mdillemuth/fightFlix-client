@@ -51655,6 +51655,18 @@ var ProfileView = function ProfileView(_ref) {
     });
   };
 
+  var removeFavorite = function removeFavorite(movieId) {
+    _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(user.Username, "/").concat(movieId), {
+      headers: {
+        Authorization: "Bearer ".concat(token)
+      }
+    }).then(function (res) {
+      console.log('favorite removed');
+    }).catch(function (e) {
+      return console.log('error');
+    });
+  };
+
   var handleUpdate = function handleUpdate() {
     // e.preventDefault();
     _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(user.Username), {
@@ -51763,14 +51775,19 @@ var ProfileView = function ProfileView(_ref) {
     className: "text-dark h5"
   }, "My Favorite Movies"), _react.default.createElement("div", {
     className: "container d-flex flex-wrap justify-content-center"
-  }, user.FavoriteMovies.map(function (i) {
-    return _react.default.createElement(_movieCard.default, {
+  }, _react.default.createElement("div", null, user.FavoriteMovies.map(function (i) {
+    return _react.default.createElement("div", null, _react.default.createElement(_movieCard.default, {
       key: i,
       movie: movies.find(function (m) {
         return m._id === i;
       })
-    });
-  })));
+    }), _react.default.createElement(_Button.default, {
+      className: "ml-auto btn btn-warning",
+      onClick: function onClick() {
+        return removeFavorite(i);
+      }
+    }, "Remove Favorite"));
+  }))));
 };
 
 var _default = ProfileView;
@@ -52098,7 +52115,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33843" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39963" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -61,6 +61,20 @@ const ProfileView = ({ user, movies, handleLogout }) => {
       .catch((e) => console.log('error'));
   };
 
+  const removeFavorite = (movieId) => {
+    axios
+      .delete(
+        `https://my-fight-flix.herokuapp.com/api/users/${user.Username}/${movieId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((res) => {
+        console.log('favorite removed');
+      })
+      .catch((e) => console.log('error'));
+  };
+
   const handleUpdate = () => {
     // e.preventDefault();
 
@@ -179,12 +193,20 @@ const ProfileView = ({ user, movies, handleLogout }) => {
 
       <h3 className='text-dark h5'>My Favorite Movies</h3>
       <div className='container d-flex flex-wrap justify-content-center'>
-        {user.FavoriteMovies.map((i) => (
-          <MovieCard key={i} movie={movies.find((m) => m._id === i)} />
-        ))}
+        <div>
+          {user.FavoriteMovies.map((i) => (
+            <div>
+              <MovieCard key={i} movie={movies.find((m) => m._id === i)} />
+              <Button
+                className='ml-auto btn btn-warning'
+                onClick={() => removeFavorite(i)}
+              >
+                Remove Favorite
+              </Button>
+            </div>
+          ))}
+        </div>
       </div>
-
-      {/* <Button className='ml-auto btn btn-warning'>Remove Favorite</Button> */}
 
       {/* <Link to='/'> */}
       {/* <Button className='ml-auto btn btn-primary'>Back to Movies</Button> */}
