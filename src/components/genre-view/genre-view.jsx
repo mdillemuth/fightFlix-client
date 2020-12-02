@@ -1,23 +1,38 @@
 import React from 'react';
-import NavBar from './../layout/NavBar';
-import Button from 'react-bootstrap/Button';
 import MovieCard from './../movie-card/movie-card';
+
+import Button from 'react-bootstrap/Button';
 
 import { Link } from 'react-router-dom';
 
 const GenreView = ({ movie, other }) => {
   return (
     <React.Fragment>
-      <NavBar />
-      <h1>{movie.Genre.Name}</h1>
-      <h2>{movie.Genre.Description}</h2>
-      <h3>Other movies with this genre:</h3>
-      {other.map((o) => (
-        <MovieCard key={o._id} movie={o} />
-      ))}
-      <Link to='/'>
-        <Button className='ml-auto btn btn-primary'>Back to Movies</Button>
-      </Link>
+      <div className='container'>
+        <div className='row bg-white rounded m-3 p-3'>
+          <div className='col d-flex flex-column align-items-center justify-content-between'>
+            <span className='h4 text-primary font-weight-semi-bold mb-2'>
+              {movie.Genre.Name}
+            </span>
+            <span className='mb-3'>
+              <span className='font-weight-bold'>Description:</span>{' '}
+              {movie.Genre.Description}
+            </span>
+            <Link to='/'>
+              <Button className='ml-auto btn btn-primary'>
+                Back to Movies
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        <h2 className='h5 text-dark'>Other movies with this genre:</h2>
+        <div className='container d-flex flex-wrap justify-content-center'>
+          {other.map((o) => (
+            <MovieCard key={o._id} movie={o} />
+          ))}
+        </div>
+      </div>
     </React.Fragment>
   );
 };

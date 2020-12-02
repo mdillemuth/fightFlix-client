@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Route, Switch } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 // Import views
 import MovieCard from '../movie-card/movie-card';
@@ -70,7 +70,7 @@ class MainView extends Component {
     // State
     const { movies, user } = this.state;
 
-    // Before movies have loaded
+    // I'm not sure what this line of code is for ?
     if (!movies) return <div className='main-view' />;
 
     return (
@@ -128,14 +128,17 @@ class MainView extends Component {
           exact
           path='/genres/:genreName'
           render={({ match }) => (
-            <GenreView
-              movie={movies.find(
-                (m) => m.Genre.Name === match.params.genreName
-              )}
-              other={movies.filter(
-                (m) => m.Genre.Name === match.params.genreName
-              )}
-            />
+            <React.Fragment>
+              <NavBar handleLogout={this.handleLogout} />
+              <GenreView
+                movie={movies.find(
+                  (m) => m.Genre.Name === match.params.genreName
+                )}
+                other={movies.filter(
+                  (m) => m.Genre.Name === match.params.genreName
+                )}
+              />
+            </React.Fragment>
           )}
         />
         <Route

@@ -10,16 +10,16 @@ class MovieCard extends Component {
     const { movie } = this.props;
 
     return (
-      <div className='movie-card bg-white m-3 p-3 rounded d-flex flex-column justify-content-between align-items-center'>
+      <div className='movie-card bg-white m-2 p-2 rounded d-flex flex-column justify-content-between align-items-center'>
         <div className='d-flex flex-column align-items-center'>
           <img src={movie.ImagePath} className='movie-card-img rounded mb-2' />
-          <p className='h4 text-center text-dark font-weight-semi-bold'>
+          <p className='h5 text-center text-dark font-weight-semi-bold'>
             {movie.Title}
           </p>
         </div>
         <p className='movie-card-description text-muted'>{movie.Description}</p>
         <Link to={`/movies/${movie._id}`}>
-          <Button variant='primary' className='w-100'>
+          <Button size='sm' variant='primary' className='w-100'>
             View
           </Button>
         </Link>
