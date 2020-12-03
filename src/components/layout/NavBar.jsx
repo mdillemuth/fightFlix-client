@@ -18,13 +18,15 @@ const NavBar = ({ handleLogout }) => {
           <Link to='/profile'>
             <Button className='mr-1'>Profile</Button>
           </Link>
-          <Button
-            onClick={handleLogout}
-            className='ml-1'
-            variant='outline-primary'
-          >
-            Logout
-          </Button>
+          <Link to='/'>
+            <Button
+              onClick={handleLogout}
+              className='ml-1'
+              variant='outline-primary'
+            >
+              Logout
+            </Button>
+          </Link>
         </div>
       </Navbar>
     </React.Fragment>

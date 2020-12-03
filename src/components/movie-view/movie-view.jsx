@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './movie-view.scss';
-import NavBar from './../layout/NavBar';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 
@@ -18,7 +17,6 @@ class MovieView extends Component {
 
     return (
       <React.Fragment>
-        <NavBar />
         <div className='container'>
           <div className='row bg-white rounded m-3 p-3'>
             <div className='col-lg-6 d-flex justify-content-center'>

@@ -1,6 +1,5 @@
 // Import components
 import React, { useState } from 'react';
-import NavBar from '../layout/NavBar';
 import MovieCard from '../movie-card/movie-card';
 
 // Import styling
@@ -13,7 +12,7 @@ import Col from 'react-bootstrap/Col';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const ProfileView = ({ user, movies, handleLogout }) => {
+const ProfileView = ({ user, movies }) => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -93,16 +92,16 @@ const ProfileView = ({ user, movies, handleLogout }) => {
   };
 
   return (
-    <div>
-      <NavBar handleLogout={handleLogout} />
-
+    <React.Fragment>
       <Container className='my-3'>
+        <Link to='/'>
+          <Button className='btn btn-primary'>Back to Movies</Button>
+        </Link>
         <Col
           md={{ span: 6, offset: 3 }}
           lg={{ span: 4, offset: 4 }}
           className='bg-white rounded p-3'
         >
-          {/* Update User Information  */}
           <div className='mb-2'>
             <h2 className='text-left h5 text-dark font-weight-bold mb-1'>
               Update Your Information
@@ -189,16 +188,17 @@ const ProfileView = ({ user, movies, handleLogout }) => {
             </span>
           </small>
         </Col>
-      </Container>
 
-      <h3 className='text-dark h5'>My Favorite Movies</h3>
-      <div className='container d-flex flex-wrap justify-content-center'>
-        <div>
+        <h3 className='text-dark text-center font-weight-bold h5 mt-4'>
+          My <span className='text-primary'>Favorite</span> Movies
+        </h3>
+        <div className='container d-flex flex-wrap justify-content-center'>
           {user.FavoriteMovies.map((i) => (
             <div>
               <MovieCard key={i} movie={movies.find((m) => m._id === i)} />
               <Button
-                className='ml-auto btn btn-warning'
+                size='sm'
+                className='btn btn-warning'
                 onClick={() => removeFavorite(i)}
               >
                 Remove Favorite
@@ -206,12 +206,8 @@ const ProfileView = ({ user, movies, handleLogout }) => {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* <Link to='/'> */}
-      {/* <Button className='ml-auto btn btn-primary'>Back to Movies</Button> */}
-      {/* </Link> */}
-    </div>
+      </Container>
+    </React.Fragment>
   );
 };
 

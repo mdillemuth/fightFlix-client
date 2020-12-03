@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import NavBar from './../layout/NavBar';
 import Button from 'react-bootstrap/Button';
 import MovieCard from './../movie-card/movie-card';
 
@@ -9,11 +8,8 @@ class DirectorView extends Component {
   render() {
     const { movie, other } = this.props;
 
-    console.log(other);
-
     return (
       <React.Fragment>
-        <NavBar />
         <div className='container'>
           <div className='row bg-white rounded m-3 p-3'>
             <div className='col d-flex flex-column align-items-center justify-content-between'>
@@ -34,7 +30,7 @@ class DirectorView extends Component {
           </div>
 
           <h2 className='h5 text-center text-dark mb-1 font-weight-semi-bold'>
-            Other films from{' '}
+            Other movies from{' '}
             <span className='text-primary'>{movie.Director.Name}</span>
           </h2>
           <div className='row bg-light rounded m-1 p-1 d-flex align align-items-center justify-content-center'>

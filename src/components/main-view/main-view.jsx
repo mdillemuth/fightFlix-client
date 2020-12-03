@@ -87,7 +87,7 @@ class MainView extends Component {
               );
             }
             return (
-              <div>
+              <React.Fragment>
                 <NavBar handleLogout={this.handleLogout} />
                 <SubNavBar />
                 <div className='container d-flex flex-wrap justify-content-center'>
@@ -95,7 +95,7 @@ class MainView extends Component {
                     <MovieCard key={m._id} movie={m} />
                   ))}
                 </div>
-              </div>
+              </React.Fragment>
             );
           }}
         />
@@ -103,25 +103,27 @@ class MainView extends Component {
         <Route
           path='/profile'
           render={() => (
-            <ProfileView
-              user={user}
-              movies={movies}
-              handleLogout={this.handleLogout}
-            />
+            <React.Fragment>
+              <NavBar handleLogout={this.handleLogout} />
+              <ProfileView user={user} movies={movies} />
+            </React.Fragment>
           )}
         />
         <Route
           exact
           path='/directors/:directorName'
           render={({ match }) => (
-            <DirectorView
-              movie={movies.find(
-                (m) => m.Director.Name === match.params.directorName
-              )}
-              other={movies.filter(
-                (m) => m.Director.Name === match.params.directorName
-              )}
-            />
+            <React.Fragment>
+              <NavBar handleLogout={this.handleLogout} />
+              <DirectorView
+                movie={movies.find(
+                  (m) => m.Director.Name === match.params.directorName
+                )}
+                other={movies.filter(
+                  (m) => m.Director.Name === match.params.directorName
+                )}
+              />
+            </React.Fragment>
           )}
         />
         <Route
@@ -145,9 +147,12 @@ class MainView extends Component {
           exact
           path='/movies/:movieId'
           render={({ match }) => (
-            <MovieView
-              movie={movies.find((m) => m._id === match.params.movieId)}
-            />
+            <React.Fragment>
+              <NavBar handleLogout={this.handleLogout} />
+              <MovieView
+                movie={movies.find((m) => m._id === match.params.movieId)}
+              />
+            </React.Fragment>
           )}
         />
       </div>
