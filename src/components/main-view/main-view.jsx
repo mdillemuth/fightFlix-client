@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Route } from 'react-router-dom';
 
-// Import views
 import MovieCard from '../movie-card/movie-card';
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
@@ -22,31 +21,16 @@ class MainView extends Component {
     };
   }
 
-  // Authentication and adding 'user' to state
   handleLoggedIn = (authData) => {
     this.setState({
-      //  CHANGING THIS FOR EXPERIMENTATION (ORIGINAL: authData.user.Username)
       user: authData.user,
     });
 
     localStorage.setItem('token', authData.token);
     localStorage.setItem('user', authData.user.Username);
+    this.getMovies(authData.token);
   };
 
-  getMovies(token) {
-    axios
-      .get('https://my-fight-flix.herokuapp.com/api/movies', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        this.setState({
-          movies: res.data,
-        });
-      })
-      .catch((error) => console.log(error));
-  }
-
-  // Logout
   handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -66,11 +50,22 @@ class MainView extends Component {
     }
   }
 
+  getMovies(token) {
+    axios
+      .get('https://my-fight-flix.herokuapp.com/api/movies', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        this.setState({
+          movies: res.data,
+        });
+      })
+      .catch((error) => console.log(error));
+  }
+
   render() {
-    // State
     const { movies, user } = this.state;
 
-    // I'm not sure what this line of code is for ?
     if (!movies) return <div className='main-view' />;
 
     return (

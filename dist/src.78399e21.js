@@ -51569,222 +51569,198 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _reactRouterDom = require("react-router-dom");
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-var ProfileView = function ProfileView(_ref) {
-  var user = _ref.user,
-      movies = _ref.movies;
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-  var _useState = (0, _react.useState)({
-    username: '',
-    email: '',
-    password: '',
-    birthday: ''
-  }),
-      _useState2 = _slicedToArray(_useState, 2),
-      formData = _useState2[0],
-      setFormData = _useState2[1];
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-  var username = formData.username,
-      email = formData.email,
-      password = formData.password,
-      birthday = formData.birthday; // State for form validation
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
-  var _useState3 = (0, _react.useState)(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      validated = _useState4[0],
-      setValidated = _useState4[1]; // const handleValidation = (e) => {
-  //   // Validation
-  //   const form = e.currentTarget;
-  //   if (!form.checkValidity()) {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //   }
-  //   setValidated(true);
-  //   // Timer to remove validation styling
-  //   setTimeout(() => {
-  //     setValidated(false);
-  //   }, 8000);
-  // };
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+var ProfileView = /*#__PURE__*/function (_Component) {
+  _inherits(ProfileView, _Component);
 
-  var token = localStorage.getItem('token'); // Handler for form input
+  var _super = _createSuper(ProfileView);
 
-  var onChange = function onChange(e) {
-    return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
-  };
+  function ProfileView(props) {
+    var _this;
 
-  var removeAccount = function removeAccount() {
-    _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(user.Username), {
-      headers: {
-        Authorization: "Bearer ".concat(token)
-      }
-    }).then(function (res) {
-      console.log('account deleted');
-    }).catch(function (e) {
-      return console.log('error');
-    });
-  };
+    _classCallCheck(this, ProfileView);
 
-  var removeFavorite = function removeFavorite(movieId) {
-    _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(user.Username, "/").concat(movieId), {
-      headers: {
-        Authorization: "Bearer ".concat(token)
-      }
-    }).then(function (res) {
-      console.log('favorite removed');
-    }).catch(function (e) {
-      return console.log('error');
-    });
-  };
+    _this = _super.call(this, props);
 
-  var handleUpdate = function handleUpdate() {
-    // e.preventDefault();
-    _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(user.Username), {
-      headers: {
-        Authorization: "Bearer ".concat(token)
+    _this.removeAccount = function () {
+      var token = localStorage.getItem('token');
+
+      _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(_this.state.Username), {
+        headers: {
+          Authorization: "Bearer ".concat(token)
+        }
+      }).then(function (res) {
+        console.log('account deleted');
+      }).catch(function (e) {
+        return console.log('error');
+      });
+    };
+
+    _this.removeFavorite = function (movieId) {
+      var token = localStorage.getItem('token');
+
+      _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(_this.state.Username, "/").concat(movieId), {
+        headers: {
+          Authorization: "Bearer ".concat(token)
+        }
+      }).then(function (res) {
+        console.log('favorite removed');
+      }).catch(function (e) {
+        return console.log('error');
+      });
+    };
+
+    _this.handleUpdate = function () {
+      // e.preventDefault();
+      _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(_this.state.Username), {
+        headers: {
+          Authorization: "Bearer ".concat(token)
+        },
+        Username: username,
+        Password: password,
+        Email: email,
+        Birthday: birthday
+      }).then(function (res) {
+        console.log('updated');
+      }).catch(function (e) {
+        return console.log('update error');
+      });
+    };
+
+    _this.state = {
+      formData: {
+        username: '',
+        email: '',
+        password: '',
+        birthday: ''
       },
-      Username: username,
-      Password: password,
-      Email: email,
-      Birthday: birthday
-    }).then(function (res) {
-      console.log('updated');
-    }).catch(function (e) {
-      return console.log('update error');
-    });
-  };
+      user: []
+    };
+    return _this;
+  }
 
-  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
-    className: "my-3"
-  }, _react.default.createElement(_reactRouterDom.Link, {
-    to: "/"
-  }, _react.default.createElement(_Button.default, {
-    className: "btn btn-primary"
-  }, "Back to Movies")), _react.default.createElement(_Col.default, {
-    md: {
-      span: 6,
-      offset: 3
-    },
-    lg: {
-      span: 4,
-      offset: 4
-    },
-    className: "bg-white rounded p-3"
-  }, _react.default.createElement("div", {
-    className: "mb-2"
-  }, _react.default.createElement("h2", {
-    className: "text-left h5 text-dark font-weight-bold mb-1"
-  }, "Update Your Information"), _react.default.createElement("small", {
-    className: "text-left text-dark font-italic"
-  }, "You are currently logged in as", ' ', _react.default.createElement("span", {
-    className: "text-primary"
-  }, user.Username))), _react.default.createElement(_Form.default, {
-    className: "mb-2",
-    noValidate: true,
-    validated: validated,
-    onSubmit: handleUpdate
-  }, _react.default.createElement(_Form.default.Group, {
-    className: "mb-2",
-    controlId: "registerUsername"
-  }, _react.default.createElement(_Form.default.Control, {
-    type: "text",
-    placeholder: "New username",
-    name: "username",
-    value: username,
-    onChange: onChange,
-    required: true
-  }), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Please choose a username"), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!")), _react.default.createElement(_Form.default.Group, {
-    className: "mb-2",
-    controlId: "registerEmail"
-  }, _react.default.createElement(_Form.default.Control, {
-    type: "email",
-    placeholder: "New email",
-    name: "email",
-    value: email,
-    onChange: onChange,
-    required: true
-  }), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Please enter a valid email address"), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!")), _react.default.createElement(_Form.default.Group, {
-    className: "mb-2",
-    controlId: "registerPassword"
-  }, _react.default.createElement(_Form.default.Control, {
-    type: "password",
-    placeholder: "New password",
-    name: "password",
-    value: password,
-    onChange: onChange,
-    required: true,
-    minLength: "7"
-  }), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Password must be at least 7 characters long"), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!")), _react.default.createElement(_Form.default.Group, {
-    controlId: "registerBirthday",
-    className: "mb-2 "
-  }, _react.default.createElement(_Form.default.Label, {
-    className: "mb-1 text-muted font-weight-bold"
-  }, "Birthday"), _react.default.createElement(_Form.default.Control, {
-    type: "date",
-    name: "birthday",
-    placeholder: "New birthday",
-    value: birthday,
-    onChange: onChange,
-    required: true
-  }), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Please enter your birthday"), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!")), _react.default.createElement(_Button.default, {
-    variant: "primary",
-    type: "submit",
-    className: "w-100 btn-lg"
-  }, "Submit")), _react.default.createElement("small", {
-    className: "text-muted text-center d-block"
-  }, "Or you can", ' ', _react.default.createElement("span", {
-    className: "register text-primary",
-    onClick: removeAccount
-  }, "remove your account"))), _react.default.createElement("h3", {
-    className: "text-dark text-center font-weight-bold h5 mt-4"
-  }, "My ", _react.default.createElement("span", {
-    className: "text-primary"
-  }, "Favorite"), " Movies"), _react.default.createElement("div", {
-    className: "container d-flex flex-wrap justify-content-center"
-  }, user.FavoriteMovies.map(function (i) {
-    return _react.default.createElement("div", null, _react.default.createElement(_movieCard.default, {
-      key: i,
-      movie: movies.find(function (m) {
-        return m._id === i;
-      })
-    }), _react.default.createElement(_Button.default, {
-      size: "sm",
-      className: "btn btn-warning",
-      onClick: function onClick() {
-        return removeFavorite(i);
+  _createClass(ProfileView, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var accessToken = localStorage.getItem('token');
+
+      if (accessToken !== null) {
+        this.getUser(accessToken);
       }
-    }, "Remove Favorite"));
-  }))));
-};
+    }
+  }, {
+    key: "getUser",
+    value: function getUser(token) {
+      var _this2 = this;
+
+      var username = localStorage.getItem('user');
+
+      _axios.default.get("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
+        headers: {
+          Authorization: "Bearer ".concat(token)
+        }
+      }).then(function (res) {
+        _this2.setState({
+          user: res.data
+        });
+      }).catch(function (error) {
+        return console.log(error);
+      });
+    } // [formData, setFormData] = useState({
+    //   username: '',
+    //   email: '',
+    //   password: '',
+    //   birthday: '',
+    // });
+    // { username, email, password, birthday } = formData;
+    // State for form validation
+    // [validated, setValidated] = useState(false);
+    // const handleValidation = (e) => {
+    //   // Validation
+    //   const form = e.currentTarget;
+    //   if (!form.checkValidity()) {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //   }
+    //   setValidated(true);
+    //   // Timer to remove validation styling
+    //   setTimeout(() => {
+    //     setValidated(false);
+    //   }, 8000);
+    // };
+    // Handler for form input
+    // onChange = (e) =>
+    //   this.setState({ formData: [...e.target.name, e.target.value] });
+    // setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Does not work because the user information is lost
+
+  }, {
+    key: "render",
+    value: function render() {
+      var username = this.state.user.map(function (x) {
+        return x.Username;
+      });
+      return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
+        className: "my-3"
+      }, _react.default.createElement(_reactRouterDom.Link, {
+        to: "/"
+      }, _react.default.createElement(_Button.default, {
+        className: "btn btn-primary"
+      }, "Back to Movies")), _react.default.createElement(_Col.default, {
+        md: {
+          span: 6,
+          offset: 3
+        },
+        lg: {
+          span: 4,
+          offset: 4
+        },
+        className: "bg-white rounded p-3"
+      }, _react.default.createElement("div", {
+        className: "mb-2"
+      }, _react.default.createElement("h2", {
+        className: "text-left h5 text-dark font-weight-bold mb-1"
+      }, "Update Your Information"), _react.default.createElement("small", {
+        className: "text-left text-dark font-italic"
+      }, "You are currently logged in as", ' ', _react.default.createElement("span", {
+        className: "text-primary"
+      }, username)))), _react.default.createElement("h3", {
+        className: "text-dark text-center font-weight-bold h5 mt-4"
+      }, "My ", _react.default.createElement("span", {
+        className: "text-primary"
+      }, "Favorite"), " Movies")));
+    }
+  }]);
+
+  return ProfileView;
+}(_react.Component);
 
 var _default = ProfileView;
 exports.default = _default;
@@ -51944,12 +51920,13 @@ var MainView = /*#__PURE__*/function (_Component) {
 
     _this.handleLoggedIn = function (authData) {
       _this.setState({
-        //  CHANGING THIS FOR EXPERIMENTATION (ORIGINAL: authData.user.Username)
         user: authData.user
       });
 
       localStorage.setItem('token', authData.token);
       localStorage.setItem('user', authData.user.Username);
+
+      _this.getMovies(authData.token);
     };
 
     _this.handleLogout = function () {
@@ -51966,10 +51943,21 @@ var MainView = /*#__PURE__*/function (_Component) {
       user: null
     };
     return _this;
-  } // Authentication and adding 'user' to state
-
+  }
 
   _createClass(MainView, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var accessToken = localStorage.getItem('token');
+
+      if (accessToken !== null) {
+        this.setState({
+          user: localStorage.getItem('user')
+        });
+        this.getMovies(accessToken);
+      }
+    }
+  }, {
     key: "getMovies",
     value: function getMovies(token) {
       var _this2 = this;
@@ -51985,30 +51973,15 @@ var MainView = /*#__PURE__*/function (_Component) {
       }).catch(function (error) {
         return console.log(error);
       });
-    } // Logout
-
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var accessToken = localStorage.getItem('token');
-
-      if (accessToken !== null) {
-        this.setState({
-          user: localStorage.getItem('user')
-        });
-        this.getMovies(accessToken);
-      }
     }
   }, {
     key: "render",
     value: function render() {
       var _this3 = this;
 
-      // State
       var _this$state = this.state,
           movies = _this$state.movies,
-          user = _this$state.user; // I'm not sure what this line of code is for ?
-
+          user = _this$state.user;
       if (!movies) return _react.default.createElement("div", {
         className: "main-view"
       });
@@ -52160,7 +52133,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44151" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40317" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
