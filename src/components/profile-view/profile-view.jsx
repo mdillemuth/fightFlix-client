@@ -68,6 +68,48 @@ class ProfileView extends Component {
     return this.state.user.map((x) => x.FavoriteMovies)[0];
   }
 
+  formatFavoriteMovies = () => {
+    const numFavorites = this.state.user.map((x) => x.FavoriteMovies)[0].length;
+    const { movies } = this.state;
+    const favoriteMovies = this.getFavoriteMovies();
+
+    if (numFavorites === 0) {
+      return (
+        <h3 className='text-dark text-center font-weight-bold h5 mt-4'>
+          You Don't Have Any <span className='text-primary'>Favorite</span>{' '}
+          Movies!
+        </h3>
+      );
+    } else {
+      return (
+        <React.Fragment>
+          <h3 className='text-dark text-center font-weight-bold h5 mt-4'>
+            My <span className='text-primary'>{numFavorites} Favorite</span>{' '}
+            Movies
+          </h3>
+          <div className='container d-flex flex-wrap justify-content-center'>
+            {favoriteMovies.map((i) => (
+              <div>
+                <MovieCard key={i} movie={movies.find((m) => m._id === i)} />
+                <Button
+                  size='sm'
+                  className='btn btn-warning'
+                  onClick={() => this.handleRemoveFavorite(i)}
+                >
+                  Remove Favorite
+                </Button>
+              </div>
+            ))}
+          </div>
+        </React.Fragment>
+      );
+    }
+
+    return numFavorites === 0
+      ? 'No Favorite Movies'
+      : `My ${numFavorites} Favorite Movies`;
+  };
+
   // Adds input data to state
   handleInputChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
@@ -159,12 +201,6 @@ class ProfileView extends Component {
     const username = localStorage.getItem('user');
     const token = localStorage.getItem('token');
 
-    // Form function handlers
-    const handleInputChange = this.handleInputChange,
-      handleUpdateAccount = this.handleUpdateAccount,
-      handleRemoveAccount = this.handleRemoveAccount,
-      handleRemoveFavorite = this.handleRemoveFavorite;
-
     // Getting favorite movies
     const favoriteMovies = this.getFavoriteMovies();
 
@@ -199,14 +235,14 @@ class ProfileView extends Component {
               className='mb-2'
               noValidate
               validated={validated}
-              onSubmit={handleUpdateAccount}
+              onSubmit={this.handleUpdateAccount}
             >
               <Form.Group className='mb-2' controlId='registerUsername'>
                 <Form.Control
                   type='text'
                   placeholder='New username'
                   name='newUsername'
-                  onChange={handleInputChange}
+                  onChange={this.handleInputChange}
                   required
                 />
                 <Form.Control.Feedback type='invalid'>
@@ -219,7 +255,7 @@ class ProfileView extends Component {
                   type='email'
                   placeholder='New email'
                   name='newEmail'
-                  onChange={handleInputChange}
+                  onChange={this.handleInputChange}
                   required
                 />
                 <Form.Control.Feedback type='invalid'>
@@ -232,7 +268,7 @@ class ProfileView extends Component {
                   type='password'
                   placeholder='New password'
                   name='newPassword'
-                  onChange={handleInputChange}
+                  onChange={this.handleInputChange}
                   required
                   minLength='7'
                 />
@@ -248,7 +284,7 @@ class ProfileView extends Component {
                 <Form.Control
                   type='date'
                   name='newBirthday'
-                  onChange={handleInputChange}
+                  onChange={this.handleInputChange}
                   required
                 />
                 <Form.Control.Feedback type='invalid'>
@@ -265,7 +301,7 @@ class ProfileView extends Component {
               <Link to='/'>
                 <span
                   className='register text-primary'
-                  onClick={handleRemoveAccount}
+                  onClick={this.handleRemoveAccount}
                 >
                   remove your account
                 </span>
@@ -273,23 +309,7 @@ class ProfileView extends Component {
             </small>
           </Col>
 
-          <h3 className='text-dark text-center font-weight-bold h5 mt-4'>
-            My <span className='text-primary'>Favorite</span> Movies
-          </h3>
-          <div className='container d-flex flex-wrap justify-content-center'>
-            {favoriteMovies.map((i) => (
-              <div>
-                <MovieCard key={i} movie={movies.find((m) => m._id === i)} />
-                <Button
-                  size='sm'
-                  className='btn btn-warning'
-                  onClick={() => handleRemoveFavorite(i)}
-                >
-                  Remove Favorite
-                </Button>
-              </div>
-            ))}
-          </div>
+          {this.formatFavoriteMovies()}
         </Container>
       </React.Fragment>
     );

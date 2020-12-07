@@ -27,7 +27,7 @@ const GenreView = ({ movie, other }) => {
         </div>
 
         <h2 className='h5 text-dark text-center mb-1 font-weight-semi-bold'>
-          Other movies in the genre{' '}
+          Movies in the genre{' '}
           <span className='text-primary'>{movie.Genre.Name}</span>
         </h2>
         <div className='container d-flex flex-wrap justify-content-center'>

@@ -84,7 +84,14 @@ class MainView extends Component {
             return (
               <React.Fragment>
                 <NavBar handleLogout={this.handleLogout} />
-                <SubNavBar />
+                {/* <SubNavBar /> */}
+                <h2 className='my-1 h5 text-dark text-center'>
+                  Choose from{' '}
+                  <span className='text-primary'>
+                    {this.state.movies.length}
+                  </span>{' '}
+                  exciting movies
+                </h2>
                 <div className='container d-flex flex-wrap justify-content-center'>
                   {movies.map((m) => (
                     <MovieCard key={m._id} movie={m} />

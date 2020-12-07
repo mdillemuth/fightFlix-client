@@ -16,7 +16,7 @@ const NavBar = ({ handleLogout }) => {
         </Navbar.Brand>
         <div>
           <Link to='/profile'>
-            <Button className='mr-1'>Profile</Button>
+            <Button className='mr-1'>{localStorage.getItem('user')}</Button>
           </Link>
           <Link to='/'>
             <Button

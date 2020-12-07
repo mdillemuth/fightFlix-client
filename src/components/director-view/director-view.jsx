@@ -30,7 +30,7 @@ class DirectorView extends Component {
           </div>
 
           <h2 className='h5 text-center text-dark mb-1 font-weight-semi-bold'>
-            Other movies from{' '}
+            Movies from{' '}
             <span className='text-primary'>{movie.Director.Name}</span>
           </h2>
           <div className='row bg-light rounded m-1 p-1 d-flex align align-items-center justify-content-center'>
