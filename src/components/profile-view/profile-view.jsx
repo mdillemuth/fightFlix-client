@@ -155,7 +155,7 @@ class ProfileView extends Component {
   };
 
   render() {
-    // Credentials
+    // User credentials
     const username = localStorage.getItem('user');
     const token = localStorage.getItem('token');
 
@@ -165,22 +165,15 @@ class ProfileView extends Component {
       handleRemoveAccount = this.handleRemoveAccount,
       handleRemoveFavorite = this.handleRemoveFavorite;
 
-    // New user data from update form
-    const {
-      newUsername,
-      newEmail,
-      newPassword,
-      newBirthday,
-      validated,
-      movies,
-    } = this.state;
+    // Getting favorite movies
+    const favoriteMovies = this.getFavoriteMovies();
 
-    const FavoriteMovies = this.getFavoriteMovies();
+    // Using data from state
+    const { validated, movies } = this.state;
 
-    // Acessing user's FavoriteMovies from state
-    // Lets the app reload and return the proper view when FavoriteMovies is populated
-    if (!FavoriteMovies) return <div />;
+    // Checks if data is populated before rendering the correct view
     if (!movies) return <div />;
+    if (!favoriteMovies) return <div />;
 
     return (
       <React.Fragment>
@@ -284,7 +277,7 @@ class ProfileView extends Component {
             My <span className='text-primary'>Favorite</span> Movies
           </h3>
           <div className='container d-flex flex-wrap justify-content-center'>
-            {FavoriteMovies.map((i) => (
+            {favoriteMovies.map((i) => (
               <div>
                 <MovieCard key={i} movie={movies.find((m) => m._id === i)} />
                 <Button

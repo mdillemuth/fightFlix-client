@@ -51774,27 +51774,23 @@ var ProfileView = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      // Credentials
+      // User credentials
       var username = localStorage.getItem('user');
       var token = localStorage.getItem('token'); // Form function handlers
 
       var handleInputChange = this.handleInputChange,
           handleUpdateAccount = this.handleUpdateAccount,
           handleRemoveAccount = this.handleRemoveAccount,
-          handleRemoveFavorite = this.handleRemoveFavorite; // New user data from update form
+          handleRemoveFavorite = this.handleRemoveFavorite; // Getting favorite movies
+
+      var favoriteMovies = this.getFavoriteMovies(); // Using data from state
 
       var _this$state2 = this.state,
-          newUsername = _this$state2.newUsername,
-          newEmail = _this$state2.newEmail,
-          newPassword = _this$state2.newPassword,
-          newBirthday = _this$state2.newBirthday,
           validated = _this$state2.validated,
-          movies = _this$state2.movies;
-      var FavoriteMovies = this.getFavoriteMovies(); // Acessing user's FavoriteMovies from state
-      // Lets the app reload and return the proper view when FavoriteMovies is populated
+          movies = _this$state2.movies; // Checks if data is populated before rendering the correct view
 
-      if (!FavoriteMovies) return _react.default.createElement("div", null);
       if (!movies) return _react.default.createElement("div", null);
+      if (!favoriteMovies) return _react.default.createElement("div", null);
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
         className: "my-3"
       }, _react.default.createElement(_reactRouterDom.Link, {
@@ -51887,7 +51883,7 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         className: "text-primary"
       }, "Favorite"), " Movies"), _react.default.createElement("div", {
         className: "container d-flex flex-wrap justify-content-center"
-      }, FavoriteMovies.map(function (i) {
+      }, favoriteMovies.map(function (i) {
         return _react.default.createElement("div", null, _react.default.createElement(_movieCard.default, {
           key: i,
           movie: movies.find(function (m) {
@@ -52277,7 +52273,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35443" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36005" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
