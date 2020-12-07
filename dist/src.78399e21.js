@@ -51104,17 +51104,18 @@ var LoginView = function LoginView(_ref) {
 
 
   var handleSubmit = function handleSubmit(e) {
-    // Validation
-    // const form = e.currentTarget;
-    // if (!form.checkValidity()) {
-    //   e.preventDefault();
-    //   e.stopPropagation();
-    // }
-    // setValidated(true);
-    // // Timer to remove validation styling
-    // setTimeout(() => {
-    //   setValidated(false);
-    // }, 4000);
+    var form = e.currentTarget;
+
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    setValidated(true); // Timer to remove validation styling
+
+    setTimeout(function () {
+      setValidated(false);
+    }, 4000);
     e.preventDefault(); // Send request to server for authentication
 
     _axios.default.post('https://my-fight-flix.herokuapp.com/api/login', {
@@ -51261,23 +51262,22 @@ var RegistrationView = function RegistrationView() {
   var _useState3 = (0, _react.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
       validated = _useState4[0],
-      setValidated = _useState4[1]; // const handleValidation = (e) => {
-  //   // Validation
-  //   const form = e.currentTarget;
-  //   if (!form.checkValidity()) {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //   }
-  //   setValidated(true);
-  //   // Timer to remove validation styling
-  //   setTimeout(() => {
-  //     setValidated(false);
-  //   }, 8000);
-  // };
-
+      setValidated = _useState4[1];
 
   var handleRegister = function handleRegister(e) {
-    e.preventDefault();
+    // Validation
+    var form = e.currentTarget;
+
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    setValidated(true); // Timer to remove validation styling
+
+    setTimeout(function () {
+      setValidated(false);
+    }, 8000); // Validation
 
     _axios.default.post('https://my-fight-flix.herokuapp.com/api/users', {
       Username: username,
@@ -51569,6 +51569,8 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _reactRouterDom = require("react-router-dom");
 
+var _Image = require("react-bootstrap/esm/Image");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -51576,6 +51578,8 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -51609,10 +51613,15 @@ var ProfileView = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
 
-    _this.removeAccount = function () {
-      var token = localStorage.getItem('token');
+    _this.handleInputChange = function (e) {
+      return _this.setState(_defineProperty({}, e.target.name, e.target.value));
+    };
 
-      _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(_this.state.Username), {
+    _this.handleRemoveAccount = function () {
+      var token = localStorage.getItem('token');
+      var username = localStorage.getItem('user');
+
+      _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
         headers: {
           Authorization: "Bearer ".concat(token)
         }
@@ -51621,12 +51630,15 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       }).catch(function (e) {
         return console.log('error');
       });
+
+      _this.props.handleLogout();
     };
 
-    _this.removeFavorite = function (movieId) {
+    _this.handleRemoveFavorite = function (movieId) {
       var token = localStorage.getItem('token');
+      var username = localStorage.getItem('user');
 
-      _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(_this.state.Username, "/").concat(movieId), {
+      _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username, "/").concat(movieId), {
         headers: {
           Authorization: "Bearer ".concat(token)
         }
@@ -51637,31 +51649,60 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       });
     };
 
-    _this.handleUpdate = function () {
-      // e.preventDefault();
-      _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(_this.state.Username), {
+    _this.handleUpdateAccount = function (e) {
+      // Validation
+      var form = e.currentTarget;
+
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      _this.setState({
+        validated: true
+      }); // Timer to remove validation styling
+
+
+      setTimeout(function () {
+        _this.setState({
+          validated: false
+        });
+      }, 8000);
+      e.preventDefault(); // Credentials to access API route
+
+      var username = localStorage.getItem('user');
+      var token = localStorage.getItem('token'); // Form data for new user information
+
+      var _this$state = _this.state,
+          newUsername = _this$state.newUsername,
+          newPassword = _this$state.newPassword,
+          newEmail = _this$state.newEmail,
+          newBirthday = _this$state.newBirthday;
+
+      _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
+        // ***The Authorization header is not getting through on pre-flight***
         headers: {
           Authorization: "Bearer ".concat(token)
         },
-        Username: username,
-        Password: password,
-        Email: email,
-        Birthday: birthday
+        Username: newUsername,
+        Password: newPassword,
+        Email: newEmail,
+        Birthday: newBirthday
       }).then(function (res) {
         console.log('updated');
+        window.open('/', '_self');
       }).catch(function (e) {
         return console.log('update error');
       });
     };
 
     _this.state = {
-      formData: {
-        username: '',
-        email: '',
-        password: '',
-        birthday: ''
-      },
-      user: []
+      newUsername: '',
+      newEmail: '',
+      newPassword: '',
+      newBirthday: '',
+      user: [],
+      validated: false
     };
     return _this;
   }
@@ -51674,7 +51715,8 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       if (accessToken !== null) {
         this.getUser(accessToken);
       }
-    }
+    } // Receives current user info from API using access token
+
   }, {
     key: "getUser",
     value: function getUser(token) {
@@ -51693,40 +51735,41 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       }).catch(function (error) {
         return console.log(error);
       });
-    } // [formData, setFormData] = useState({
-    //   username: '',
-    //   email: '',
-    //   password: '',
-    //   birthday: '',
-    // });
-    // { username, email, password, birthday } = formData;
-    // State for form validation
-    // [validated, setValidated] = useState(false);
-    // const handleValidation = (e) => {
-    //   // Validation
-    //   const form = e.currentTarget;
-    //   if (!form.checkValidity()) {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //   }
-    //   setValidated(true);
-    //   // Timer to remove validation styling
-    //   setTimeout(() => {
-    //     setValidated(false);
-    //   }, 8000);
-    // };
-    // Handler for form input
-    // onChange = (e) =>
-    //   this.setState({ formData: [...e.target.name, e.target.value] });
-    // setFormData({ ...formData, [e.target.name]: e.target.value });
-    // Does not work because the user information is lost
+    } // Adds input data to state
+    // Remove account and log out user, returning to loginView
+    // Removes favorite movie
+    // *****TODO****** Reload profileView with updated list of favorites
+    // *** DOES NOT WORK ***
+    // The authorization header is not getting received by the server
+    // Seems to be related to pre-flight (OPTIONS) request
+    // Access-Control-Allow-Headers does not accept the auth header for some reason
 
   }, {
     key: "render",
     value: function render() {
-      var username = this.state.user.map(function (x) {
-        return x.Username;
-      });
+      var _this3 = this;
+
+      // Credentials
+      var username = localStorage.getItem('user');
+      var token = localStorage.getItem('token'); // Form function handlers
+
+      var handleInputChange = this.handleInputChange,
+          handleUpdateAccount = this.handleUpdateAccount,
+          handleRemoveAccount = this.handleRemoveAccount,
+          handleRemoveFavorite = this.handleRemoveFavorite; // New user data from update form
+
+      var _this$state2 = this.state,
+          newUsername = _this$state2.newUsername,
+          newEmail = _this$state2.newEmail,
+          newPassword = _this$state2.newPassword,
+          newBirthday = _this$state2.newBirthday,
+          validated = _this$state2.validated; // Acessing user's FavoriteMovies from state
+
+      var FavoriteMovies = this.state.user.map(function (x) {
+        return x.FavoriteMovies;
+      })[0]; // Lets the app reload and return the proper view when FavoriteMovies is populated
+
+      if (!FavoriteMovies) return _react.default.createElement("div", null);
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
         className: "my-3"
       }, _react.default.createElement(_reactRouterDom.Link, {
@@ -51751,11 +51794,88 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         className: "text-left text-dark font-italic"
       }, "You are currently logged in as", ' ', _react.default.createElement("span", {
         className: "text-primary"
-      }, username)))), _react.default.createElement("h3", {
+      }, username))), _react.default.createElement(_Form.default, {
+        className: "mb-2",
+        noValidate: true,
+        validated: validated,
+        onSubmit: handleUpdateAccount
+      }, _react.default.createElement(_Form.default.Group, {
+        className: "mb-2",
+        controlId: "registerUsername"
+      }, _react.default.createElement(_Form.default.Control, {
+        type: "text",
+        placeholder: "New username",
+        name: "newUsername",
+        onChange: handleInputChange,
+        required: true
+      }), _react.default.createElement(_Form.default.Control.Feedback, {
+        type: "invalid"
+      }, "Please choose a username"), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!")), _react.default.createElement(_Form.default.Group, {
+        className: "mb-2",
+        controlId: "registerEmail"
+      }, _react.default.createElement(_Form.default.Control, {
+        type: "email",
+        placeholder: "New email",
+        name: "newEmail",
+        onChange: handleInputChange,
+        required: true
+      }), _react.default.createElement(_Form.default.Control.Feedback, {
+        type: "invalid"
+      }, "Please enter a valid email address"), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!")), _react.default.createElement(_Form.default.Group, {
+        className: "mb-2",
+        controlId: "registerPassword"
+      }, _react.default.createElement(_Form.default.Control, {
+        type: "password",
+        placeholder: "New password",
+        name: "newPassword",
+        onChange: handleInputChange,
+        required: true,
+        minLength: "7"
+      }), _react.default.createElement(_Form.default.Control.Feedback, {
+        type: "invalid"
+      }, "Password must be at least 7 characters long"), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!")), _react.default.createElement(_Form.default.Group, {
+        controlId: "registerBirthday",
+        className: "mb-2 "
+      }, _react.default.createElement(_Form.default.Label, {
+        className: "mb-1 text-muted font-weight-bold"
+      }, "Birthday"), _react.default.createElement(_Form.default.Control, {
+        type: "date",
+        name: "newBirthday",
+        onChange: handleInputChange,
+        required: true
+      }), _react.default.createElement(_Form.default.Control.Feedback, {
+        type: "invalid"
+      }, "Please enter your birthday"), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!")), _react.default.createElement(_Button.default, {
+        variant: "primary",
+        type: "submit",
+        className: "w-100 btn-lg"
+      }, "Submit")), _react.default.createElement("small", {
+        className: "text-muted text-center d-block"
+      }, "Or you can", ' ', _react.default.createElement(_reactRouterDom.Link, {
+        to: "/"
+      }, _react.default.createElement("span", {
+        className: "register text-primary",
+        onClick: handleRemoveAccount
+      }, "remove your account")))), _react.default.createElement("h3", {
         className: "text-dark text-center font-weight-bold h5 mt-4"
       }, "My ", _react.default.createElement("span", {
         className: "text-primary"
-      }, "Favorite"), " Movies")));
+      }, "Favorite"), " Movies"), _react.default.createElement("div", {
+        className: "container d-flex flex-wrap justify-content-center"
+      }, FavoriteMovies.map(function (i) {
+        return _react.default.createElement("div", null, _react.default.createElement(_movieCard.default, {
+          key: i,
+          movie: _this3.props.movies.find(function (m) {
+            return m._id === i;
+          })
+        }), _react.default.createElement(_Button.default, {
+          size: "sm",
+          className: "btn btn-warning",
+          onClick: function onClick() {
+            return handleRemoveFavorite(i);
+          }
+        }, "Remove Favorite"));
+      }))));
     }
   }]);
 
@@ -51764,7 +51884,7 @@ var ProfileView = /*#__PURE__*/function (_Component) {
 
 var _default = ProfileView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/layout/NavBar.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-bootstrap/esm/Image":"../node_modules/react-bootstrap/esm/Image.js"}],"components/layout/NavBar.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51920,7 +52040,7 @@ var MainView = /*#__PURE__*/function (_Component) {
 
     _this.handleLoggedIn = function (authData) {
       _this.setState({
-        user: authData.user
+        user: authData.user.Username
       });
 
       localStorage.setItem('token', authData.token);
@@ -52019,8 +52139,8 @@ var MainView = /*#__PURE__*/function (_Component) {
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
             handleLogout: _this3.handleLogout
           }), _react.default.createElement(_profileView.default, {
-            user: user,
-            movies: movies
+            movies: movies,
+            handleLogout: _this3.handleLogout
           }));
         }
       }), _react.default.createElement(_reactRouterDom.Route, {
@@ -52133,7 +52253,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40317" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38595" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

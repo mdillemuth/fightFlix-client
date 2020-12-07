@@ -19,23 +19,19 @@ const RegistrationView = () => {
   // State for form validation
   const [validated, setValidated] = useState(false);
 
-  // const handleValidation = (e) => {
-  //   // Validation
-  //   const form = e.currentTarget;
-  //   if (!form.checkValidity()) {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //   }
-  //   setValidated(true);
-
-  //   // Timer to remove validation styling
-  //   setTimeout(() => {
-  //     setValidated(false);
-  //   }, 8000);
-  // };
-
   const handleRegister = (e) => {
-    e.preventDefault();
+    // Validation
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setValidated(true);
+
+    // Timer to remove validation styling
+    setTimeout(() => {
+      setValidated(false);
+    }, 8000); // Validation
 
     axios
       .post('https://my-fight-flix.herokuapp.com/api/users', {

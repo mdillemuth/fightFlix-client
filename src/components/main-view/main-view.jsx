@@ -23,7 +23,7 @@ class MainView extends Component {
 
   handleLoggedIn = (authData) => {
     this.setState({
-      user: authData.user,
+      user: authData.user.Username,
     });
 
     localStorage.setItem('token', authData.token);
@@ -100,7 +100,7 @@ class MainView extends Component {
           render={() => (
             <React.Fragment>
               <NavBar handleLogout={this.handleLogout} />
-              <ProfileView user={user} movies={movies} />
+              <ProfileView movies={movies} handleLogout={this.handleLogout} />
             </React.Fragment>
           )}
         />
