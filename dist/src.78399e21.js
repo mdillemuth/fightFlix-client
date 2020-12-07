@@ -51701,6 +51701,7 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       newEmail: '',
       newPassword: '',
       newBirthday: '',
+      movies: [],
       user: [],
       validated: false
     };
@@ -51714,6 +51715,7 @@ var ProfileView = /*#__PURE__*/function (_Component) {
 
       if (accessToken !== null) {
         this.getUser(accessToken);
+        this.getMovies(accessToken);
       }
     } // Receives current user info from API using access token
 
@@ -51735,6 +51737,31 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       }).catch(function (error) {
         return console.log(error);
       });
+    } // Receivers movie information from API
+
+  }, {
+    key: "getMovies",
+    value: function getMovies(token) {
+      var _this3 = this;
+
+      _axios.default.get('https://my-fight-flix.herokuapp.com/api/movies', {
+        headers: {
+          Authorization: "Bearer ".concat(token)
+        }
+      }).then(function (res) {
+        _this3.setState({
+          movies: res.data
+        });
+      }).catch(function (error) {
+        return console.log(error);
+      });
+    }
+  }, {
+    key: "getFavoriteMovies",
+    value: function getFavoriteMovies() {
+      return this.state.user.map(function (x) {
+        return x.FavoriteMovies;
+      })[0];
     } // Adds input data to state
     // Remove account and log out user, returning to loginView
     // Removes favorite movie
@@ -51747,8 +51774,6 @@ var ProfileView = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
-
       // Credentials
       var username = localStorage.getItem('user');
       var token = localStorage.getItem('token'); // Form function handlers
@@ -51763,13 +51788,13 @@ var ProfileView = /*#__PURE__*/function (_Component) {
           newEmail = _this$state2.newEmail,
           newPassword = _this$state2.newPassword,
           newBirthday = _this$state2.newBirthday,
-          validated = _this$state2.validated; // Acessing user's FavoriteMovies from state
-
-      var FavoriteMovies = this.state.user.map(function (x) {
-        return x.FavoriteMovies;
-      })[0]; // Lets the app reload and return the proper view when FavoriteMovies is populated
+          validated = _this$state2.validated,
+          movies = _this$state2.movies;
+      var FavoriteMovies = this.getFavoriteMovies(); // Acessing user's FavoriteMovies from state
+      // Lets the app reload and return the proper view when FavoriteMovies is populated
 
       if (!FavoriteMovies) return _react.default.createElement("div", null);
+      if (!movies) return _react.default.createElement("div", null);
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
         className: "my-3"
       }, _react.default.createElement(_reactRouterDom.Link, {
@@ -51865,7 +51890,7 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       }, FavoriteMovies.map(function (i) {
         return _react.default.createElement("div", null, _react.default.createElement(_movieCard.default, {
           key: i,
-          movie: _this3.props.movies.find(function (m) {
+          movie: movies.find(function (m) {
             return m._id === i;
           })
         }), _react.default.createElement(_Button.default, {
@@ -52139,7 +52164,6 @@ var MainView = /*#__PURE__*/function (_Component) {
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
             handleLogout: _this3.handleLogout
           }), _react.default.createElement(_profileView.default, {
-            movies: movies,
             handleLogout: _this3.handleLogout
           }));
         }
@@ -52253,7 +52277,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38595" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35443" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -100,7 +100,7 @@ class MainView extends Component {
           render={() => (
             <React.Fragment>
               <NavBar handleLogout={this.handleLogout} />
-              <ProfileView movies={movies} handleLogout={this.handleLogout} />
+              <ProfileView handleLogout={this.handleLogout} />
             </React.Fragment>
           )}
         />

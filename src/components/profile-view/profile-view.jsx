@@ -21,6 +21,7 @@ class ProfileView extends Component {
       newEmail: '',
       newPassword: '',
       newBirthday: '',
+      movies: [],
       user: [],
       validated: false,
     };
@@ -30,6 +31,7 @@ class ProfileView extends Component {
     const accessToken = localStorage.getItem('token');
     if (accessToken !== null) {
       this.getUser(accessToken);
+      this.getMovies(accessToken);
     }
   }
 
@@ -46,6 +48,24 @@ class ProfileView extends Component {
         });
       })
       .catch((error) => console.log(error));
+  }
+
+  // Receivers movie information from API
+  getMovies(token) {
+    axios
+      .get('https://my-fight-flix.herokuapp.com/api/movies', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        this.setState({
+          movies: res.data,
+        });
+      })
+      .catch((error) => console.log(error));
+  }
+
+  getFavoriteMovies() {
+    return this.state.user.map((x) => x.FavoriteMovies)[0];
   }
 
   // Adds input data to state
@@ -152,13 +172,15 @@ class ProfileView extends Component {
       newPassword,
       newBirthday,
       validated,
+      movies,
     } = this.state;
 
-    // Acessing user's FavoriteMovies from state
-    const FavoriteMovies = this.state.user.map((x) => x.FavoriteMovies)[0];
+    const FavoriteMovies = this.getFavoriteMovies();
 
+    // Acessing user's FavoriteMovies from state
     // Lets the app reload and return the proper view when FavoriteMovies is populated
     if (!FavoriteMovies) return <div />;
+    if (!movies) return <div />;
 
     return (
       <React.Fragment>
@@ -264,10 +286,7 @@ class ProfileView extends Component {
           <div className='container d-flex flex-wrap justify-content-center'>
             {FavoriteMovies.map((i) => (
               <div>
-                <MovieCard
-                  key={i}
-                  movie={this.props.movies.find((m) => m._id === i)}
-                />
+                <MovieCard key={i} movie={movies.find((m) => m._id === i)} />
                 <Button
                   size='sm'
                   className='btn btn-warning'
