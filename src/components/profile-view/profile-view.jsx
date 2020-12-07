@@ -69,9 +69,9 @@ class ProfileView extends Component {
   }
 
   formatFavoriteMovies = () => {
-    const numFavorites = this.state.user.map((x) => x.FavoriteMovies)[0].length;
-    const { movies } = this.state;
     const favoriteMovies = this.getFavoriteMovies();
+    const numFavorites = favoriteMovies.length;
+    const { movies } = this.state;
 
     if (numFavorites === 0) {
       return (
@@ -104,10 +104,6 @@ class ProfileView extends Component {
         </React.Fragment>
       );
     }
-
-    return numFavorites === 0
-      ? 'No Favorite Movies'
-      : `My ${numFavorites} Favorite Movies`;
   };
 
   // Adds input data to state
@@ -201,11 +197,10 @@ class ProfileView extends Component {
     const username = localStorage.getItem('user');
     const token = localStorage.getItem('token');
 
-    // Getting favorite movies
-    const favoriteMovies = this.getFavoriteMovies();
-
     // Using data from state
     const { validated, movies } = this.state;
+
+    const favoriteMovies = this.getFavoriteMovies();
 
     // Checks if data is populated before rendering the correct view
     if (!movies) return <div />;

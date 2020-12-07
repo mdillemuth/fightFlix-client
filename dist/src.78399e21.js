@@ -51614,13 +51614,10 @@ var ProfileView = /*#__PURE__*/function (_Component) {
     _this = _super.call(this, props);
 
     _this.formatFavoriteMovies = function () {
-      var numFavorites = _this.state.user.map(function (x) {
-        return x.FavoriteMovies;
-      })[0].length;
-
-      var movies = _this.state.movies;
-
       var favoriteMovies = _this.getFavoriteMovies();
+
+      var numFavorites = favoriteMovies.length;
+      var movies = _this.state.movies;
 
       if (numFavorites === 0) {
         return _react.default.createElement("h3", {
@@ -51650,8 +51647,6 @@ var ProfileView = /*#__PURE__*/function (_Component) {
           }, "Remove Favorite"));
         })));
       }
-
-      return numFavorites === 0 ? 'No Favorite Movies' : "My ".concat(numFavorites, " Favorite Movies");
     };
 
     _this.handleInputChange = function (e) {
@@ -51817,13 +51812,12 @@ var ProfileView = /*#__PURE__*/function (_Component) {
     value: function render() {
       // User credentials
       var username = localStorage.getItem('user');
-      var token = localStorage.getItem('token'); // Getting favorite movies
-
-      var favoriteMovies = this.getFavoriteMovies(); // Using data from state
+      var token = localStorage.getItem('token'); // Using data from state
 
       var _this$state2 = this.state,
           validated = _this$state2.validated,
-          movies = _this$state2.movies; // Checks if data is populated before rendering the correct view
+          movies = _this$state2.movies;
+      var favoriteMovies = this.getFavoriteMovies(); // Checks if data is populated before rendering the correct view
 
       if (!movies) return _react.default.createElement("div", null);
       if (!favoriteMovies) return _react.default.createElement("div", null);
@@ -52294,7 +52288,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33509" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41831" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
