@@ -11,67 +11,41 @@ import Col from 'react-bootstrap/Col';
 // Import routing
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { propTypes } from 'react-bootstrap/esm/Image';
 
 class ProfileView extends Component {
   constructor(props) {
+    console.log('constructor');
+
     super(props);
     this.state = {
       newUsername: '',
       newEmail: '',
       newPassword: '',
       newBirthday: '',
-      movies: [],
-      user: [],
       validated: false,
+      favoriteMovies: [],
     };
   }
 
-  componentDidMount() {
-    const accessToken = localStorage.getItem('token');
-    if (accessToken !== null) {
-      this.getUser(accessToken);
-      this.getMovies(accessToken);
-    }
-  }
-
-  // Receives current user info from API using access token
-  getUser(token) {
-    const username = localStorage.getItem('user');
-    axios
-      .get(`https://my-fight-flix.herokuapp.com/api/users/${username}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        this.setState({
-          user: res.data,
-        });
-      })
-      .catch((error) => console.log(error));
-  }
-
-  // Receivers movie information from API
-  getMovies(token) {
-    axios
-      .get('https://my-fight-flix.herokuapp.com/api/movies', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        this.setState({
-          movies: res.data,
-        });
-      })
-      .catch((error) => console.log(error));
+  async componentDidMount() {
+    const favoriteMovies = await this.getFavoriteMovies();
+    this.setState({
+      favoriteMovies,
+    });
+    this.setState({
+      userData: this.props.userData,
+    });
   }
 
   getFavoriteMovies() {
-    return this.state.user.map((x) => x.FavoriteMovies)[0];
+    const favoriteMovies = this.props.userData.map((x) => x.FavoriteMovies)[0];
+    return favoriteMovies;
   }
 
   formatFavoriteMovies = () => {
-    const favoriteMovies = this.getFavoriteMovies();
+    const { movies } = this.props;
+    const { favoriteMovies } = this.state;
     const numFavorites = favoriteMovies.length;
-    const { movies } = this.state;
 
     if (numFavorites === 0) {
       return (
@@ -151,21 +125,21 @@ class ProfileView extends Component {
   // Access-Control-Allow-Headers does not accept the auth header for some reason
   handleUpdateAccount = (e) => {
     // Validation
-    const form = e.currentTarget;
-    if (!form.checkValidity()) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    this.setState({
-      validated: true,
-    });
+    // const form = e.currentTarget;
+    // if (!form.checkValidity()) {
+    //   e.preventDefault();
+    //   e.stopPropagation();
+    // }
+    // this.setState({
+    //   validated: true,
+    // });
 
-    // Timer to remove validation styling
-    setTimeout(() => {
-      this.setState({
-        validated: false,
-      });
-    }, 8000);
+    // // Timer to remove validation styling
+    // setTimeout(() => {
+    //   this.setState({
+    //     validated: false,
+    //   });
+    // }, 8000);
 
     e.preventDefault();
 
@@ -180,10 +154,12 @@ class ProfileView extends Component {
       .put(`https://my-fight-flix.herokuapp.com/api/users/${username}`, {
         // ***The Authorization header is not getting through on pre-flight***
         headers: { Authorization: `Bearer ${token}` },
-        Username: newUsername,
-        Password: newPassword,
-        Email: newEmail,
-        Birthday: newBirthday,
+        data: {
+          Username: newUsername,
+          Password: newPassword,
+          Email: newEmail,
+          Birthday: newBirthday,
+        },
       })
       .then((res) => {
         console.log('updated');
@@ -193,18 +169,8 @@ class ProfileView extends Component {
   };
 
   render() {
-    // User credentials
-    const username = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-
     // Using data from state
-    const { validated, movies } = this.state;
-
-    const favoriteMovies = this.getFavoriteMovies();
-
-    // Checks if data is populated before rendering the correct view
-    if (!movies) return <div />;
-    if (!favoriteMovies) return <div />;
+    const { validated } = this.state;
 
     return (
       <React.Fragment>
@@ -222,8 +188,8 @@ class ProfileView extends Component {
                 Update Your Information
               </h2>
               <small className='text-left text-dark font-italic'>
-                You are currently logged in as{' '}
-                <span className='text-primary'>{username}</span>
+                You are currently logged in as{}
+                <span className='text-primary'>{}</span>
               </small>
             </div>
             <Form

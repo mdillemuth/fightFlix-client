@@ -51569,8 +51569,6 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _reactRouterDom = require("react-router-dom");
 
-var _Image = require("react-bootstrap/esm/Image");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -51578,6 +51576,10 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -51611,13 +51613,13 @@ var ProfileView = /*#__PURE__*/function (_Component) {
 
     _classCallCheck(this, ProfileView);
 
+    console.log('constructor');
     _this = _super.call(this, props);
 
     _this.formatFavoriteMovies = function () {
-      var favoriteMovies = _this.getFavoriteMovies();
-
+      var movies = _this.props.movies;
+      var favoriteMovies = _this.state.favoriteMovies;
       var numFavorites = favoriteMovies.length;
-      var movies = _this.state.movies;
 
       if (numFavorites === 0) {
         return _react.default.createElement("h3", {
@@ -51687,23 +51689,20 @@ var ProfileView = /*#__PURE__*/function (_Component) {
 
     _this.handleUpdateAccount = function (e) {
       // Validation
-      var form = e.currentTarget;
-
-      if (!form.checkValidity()) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-
-      _this.setState({
-        validated: true
-      }); // Timer to remove validation styling
-
-
-      setTimeout(function () {
-        _this.setState({
-          validated: false
-        });
-      }, 8000);
+      // const form = e.currentTarget;
+      // if (!form.checkValidity()) {
+      //   e.preventDefault();
+      //   e.stopPropagation();
+      // }
+      // this.setState({
+      //   validated: true,
+      // });
+      // // Timer to remove validation styling
+      // setTimeout(() => {
+      //   this.setState({
+      //     validated: false,
+      //   });
+      // }, 8000);
       e.preventDefault(); // Credentials to access API route
 
       var username = localStorage.getItem('user');
@@ -51720,10 +51719,12 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         headers: {
           Authorization: "Bearer ".concat(token)
         },
-        Username: newUsername,
-        Password: newPassword,
-        Email: newEmail,
-        Birthday: newBirthday
+        data: {
+          Username: newUsername,
+          Password: newPassword,
+          Email: newEmail,
+          Birthday: newBirthday
+        }
       }).then(function (res) {
         console.log('updated');
         window.open('/', '_self');
@@ -51737,67 +51738,54 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       newEmail: '',
       newPassword: '',
       newBirthday: '',
-      movies: [],
-      user: [],
-      validated: false
+      validated: false,
+      favoriteMovies: []
     };
     return _this;
   }
 
   _createClass(ProfileView, [{
     key: "componentDidMount",
-    value: function componentDidMount() {
-      var accessToken = localStorage.getItem('token');
+    value: function () {
+      var _componentDidMount = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var favoriteMovies;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return this.getFavoriteMovies();
 
-      if (accessToken !== null) {
-        this.getUser(accessToken);
-        this.getMovies(accessToken);
+              case 2:
+                favoriteMovies = _context.sent;
+                this.setState({
+                  favoriteMovies: favoriteMovies
+                });
+                this.setState({
+                  userData: this.props.userData
+                });
+
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function componentDidMount() {
+        return _componentDidMount.apply(this, arguments);
       }
-    } // Receives current user info from API using access token
 
-  }, {
-    key: "getUser",
-    value: function getUser(token) {
-      var _this2 = this;
-
-      var username = localStorage.getItem('user');
-
-      _axios.default.get("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
-        headers: {
-          Authorization: "Bearer ".concat(token)
-        }
-      }).then(function (res) {
-        _this2.setState({
-          user: res.data
-        });
-      }).catch(function (error) {
-        return console.log(error);
-      });
-    } // Receivers movie information from API
-
-  }, {
-    key: "getMovies",
-    value: function getMovies(token) {
-      var _this3 = this;
-
-      _axios.default.get('https://my-fight-flix.herokuapp.com/api/movies', {
-        headers: {
-          Authorization: "Bearer ".concat(token)
-        }
-      }).then(function (res) {
-        _this3.setState({
-          movies: res.data
-        });
-      }).catch(function (error) {
-        return console.log(error);
-      });
-    }
+      return componentDidMount;
+    }()
   }, {
     key: "getFavoriteMovies",
     value: function getFavoriteMovies() {
-      return this.state.user.map(function (x) {
+      var favoriteMovies = this.props.userData.map(function (x) {
         return x.FavoriteMovies;
       })[0];
+      return favoriteMovies;
     } // Adds input data to state
     // Remove account and log out user, returning to loginView
     // Removes favorite movie
@@ -51810,17 +51798,8 @@ var ProfileView = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      // User credentials
-      var username = localStorage.getItem('user');
-      var token = localStorage.getItem('token'); // Using data from state
-
-      var _this$state2 = this.state,
-          validated = _this$state2.validated,
-          movies = _this$state2.movies;
-      var favoriteMovies = this.getFavoriteMovies(); // Checks if data is populated before rendering the correct view
-
-      if (!movies) return _react.default.createElement("div", null);
-      if (!favoriteMovies) return _react.default.createElement("div", null);
+      // Using data from state
+      var validated = this.state.validated;
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
         className: "my-3"
       }, _react.default.createElement(_reactRouterDom.Link, {
@@ -51843,9 +51822,9 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         className: "text-left h5 text-dark font-weight-bold mb-1"
       }, "Update Your Information"), _react.default.createElement("small", {
         className: "text-left text-dark font-italic"
-      }, "You are currently logged in as", ' ', _react.default.createElement("span", {
+      }, "You are currently logged in as", _react.default.createElement("span", {
         className: "text-primary"
-      }, username))), _react.default.createElement(_Form.default, {
+      }))), _react.default.createElement(_Form.default, {
         className: "mb-2",
         noValidate: true,
         validated: validated,
@@ -51916,7 +51895,7 @@ var ProfileView = /*#__PURE__*/function (_Component) {
 
 var _default = ProfileView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-bootstrap/esm/Image":"../node_modules/react-bootstrap/esm/Image.js"}],"components/layout/NavBar.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/layout/NavBar.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -52038,6 +52017,10 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -52079,6 +52062,8 @@ var MainView = /*#__PURE__*/function (_Component) {
       localStorage.setItem('user', authData.user.Username);
 
       _this.getMovies(authData.token);
+
+      _this.getUser(authData.token);
     };
 
     _this.handleLogout = function () {
@@ -52092,49 +52077,142 @@ var MainView = /*#__PURE__*/function (_Component) {
 
     _this.state = {
       movies: [],
-      user: null
+      user: null,
+      userData: []
     };
     return _this;
   }
 
   _createClass(MainView, [{
     key: "componentDidMount",
-    value: function componentDidMount() {
-      var accessToken = localStorage.getItem('token');
+    value: function () {
+      var _componentDidMount = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var accessToken;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                accessToken = localStorage.getItem('token');
 
-      if (accessToken !== null) {
-        this.setState({
-          user: localStorage.getItem('user')
-        });
-        this.getMovies(accessToken);
+                if (!(accessToken !== null)) {
+                  _context.next = 7;
+                  break;
+                }
+
+                this.setState({
+                  user: localStorage.getItem('user')
+                });
+                _context.next = 5;
+                return this.getMovies(accessToken);
+
+              case 5:
+                _context.next = 7;
+                return this.getUser(accessToken);
+
+              case 7:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function componentDidMount() {
+        return _componentDidMount.apply(this, arguments);
       }
-    }
+
+      return componentDidMount;
+    }()
   }, {
     key: "getMovies",
-    value: function getMovies(token) {
-      var _this2 = this;
+    value: function () {
+      var _getMovies = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(token) {
+        var _yield$axios$get, movies;
 
-      _axios.default.get('https://my-fight-flix.herokuapp.com/api/movies', {
-        headers: {
-          Authorization: "Bearer ".concat(token)
-        }
-      }).then(function (res) {
-        _this2.setState({
-          movies: res.data
-        });
-      }).catch(function (error) {
-        return console.log(error);
-      });
-    }
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _axios.default.get('https://my-fight-flix.herokuapp.com/api/movies', {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 2:
+                _yield$axios$get = _context2.sent;
+                movies = _yield$axios$get.data;
+                this.setState({
+                  movies: movies
+                });
+
+              case 5:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function getMovies(_x) {
+        return _getMovies.apply(this, arguments);
+      }
+
+      return getMovies;
+    }()
+  }, {
+    key: "getUser",
+    value: function () {
+      var _getUser = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(token) {
+        var username, _yield$axios$get2, userData;
+
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                username = localStorage.getItem('user');
+                _context3.next = 3;
+                return _axios.default.get("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                _yield$axios$get2 = _context3.sent;
+                userData = _yield$axios$get2.data;
+                this.setState({
+                  userData: userData
+                });
+
+              case 6:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function getUser(_x2) {
+        return _getUser.apply(this, arguments);
+      }
+
+      return getUser;
+    }()
+  }, {
+    key: "getUserFavoriteMovies",
+    value: function getUserFavoriteMovies() {}
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       var _this$state = this.state,
           movies = _this$state.movies,
-          user = _this$state.user;
-      if (!movies) return _react.default.createElement("div", {
+          user = _this$state.user,
+          userData = _this$state.userData;
+      if (!movies || !userData) return _react.default.createElement("div", {
         className: "main-view"
       });
       return _react.default.createElement("div", null, _react.default.createElement(_reactRouterDom.Route, {
@@ -52144,18 +52222,18 @@ var MainView = /*#__PURE__*/function (_Component) {
           if (!user) {
             return _react.default.createElement(_loginView.default, {
               handleLoggedIn: function handleLoggedIn(user) {
-                return _this3.handleLoggedIn(user);
+                return _this2.handleLoggedIn(user);
               }
             });
           }
 
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this3.handleLogout
+            handleLogout: _this2.handleLogout
           }), _react.default.createElement("h2", {
             className: "my-1 h5 text-dark text-center"
           }, "Choose from", ' ', _react.default.createElement("span", {
             className: "text-primary"
-          }, _this3.state.movies.length), ' ', "exciting movies"), _react.default.createElement("div", {
+          }, _this2.state.movies.length), ' ', "exciting movies"), _react.default.createElement("div", {
             className: "container d-flex flex-wrap justify-content-center"
           }, movies.map(function (m) {
             return _react.default.createElement(_movieCard.default, {
@@ -52173,9 +52251,12 @@ var MainView = /*#__PURE__*/function (_Component) {
         path: "/profile",
         render: function render() {
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this3.handleLogout
+            handleLogout: _this2.handleLogout
           }), _react.default.createElement(_profileView.default, {
-            handleLogout: _this3.handleLogout
+            handleLogout: _this2.handleLogout,
+            getUserData: _this2.getUser,
+            userData: userData,
+            movies: movies
           }));
         }
       }), _react.default.createElement(_reactRouterDom.Route, {
@@ -52184,7 +52265,7 @@ var MainView = /*#__PURE__*/function (_Component) {
         render: function render(_ref) {
           var match = _ref.match;
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this3.handleLogout
+            handleLogout: _this2.handleLogout
           }), _react.default.createElement(_directorView.default, {
             movie: movies.find(function (m) {
               return m.Director.Name === match.params.directorName;
@@ -52200,7 +52281,7 @@ var MainView = /*#__PURE__*/function (_Component) {
         render: function render(_ref2) {
           var match = _ref2.match;
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this3.handleLogout
+            handleLogout: _this2.handleLogout
           }), _react.default.createElement(_genreView.default, {
             movie: movies.find(function (m) {
               return m.Genre.Name === match.params.genreName;
@@ -52216,7 +52297,7 @@ var MainView = /*#__PURE__*/function (_Component) {
         render: function render(_ref3) {
           var match = _ref3.match;
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this3.handleLogout
+            handleLogout: _this2.handleLogout
           }), _react.default.createElement(_movieView.default, {
             movie: movies.find(function (m) {
               return m._id === match.params.movieId;
@@ -52288,7 +52369,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41831" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43983" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

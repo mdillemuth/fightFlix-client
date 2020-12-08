@@ -18,6 +18,7 @@ class MainView extends Component {
     this.state = {
       movies: [],
       user: null,
+      userData: [],
     };
   }
 
@@ -29,6 +30,7 @@ class MainView extends Component {
     localStorage.setItem('token', authData.token);
     localStorage.setItem('user', authData.user.Username);
     this.getMovies(authData.token);
+    this.getUser(authData.token);
   };
 
   handleLogout = () => {
@@ -40,33 +42,47 @@ class MainView extends Component {
     });
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     let accessToken = localStorage.getItem('token');
     if (accessToken !== null) {
       this.setState({
         user: localStorage.getItem('user'),
       });
-      this.getMovies(accessToken);
+      await this.getMovies(accessToken);
+      await this.getUser(accessToken);
     }
   }
 
-  getMovies(token) {
-    axios
-      .get('https://my-fight-flix.herokuapp.com/api/movies', {
+  async getMovies(token) {
+    const { data: movies } = await axios.get(
+      'https://my-fight-flix.herokuapp.com/api/movies',
+      {
         headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        this.setState({
-          movies: res.data,
-        });
-      })
-      .catch((error) => console.log(error));
+      }
+    );
+
+    this.setState({ movies });
   }
 
-  render() {
-    const { movies, user } = this.state;
+  async getUser(token) {
+    const username = localStorage.getItem('user');
 
-    if (!movies) return <div className='main-view' />;
+    const { data: userData } = await axios.get(
+      `https://my-fight-flix.herokuapp.com/api/users/${username}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    this.setState({ userData });
+  }
+
+  getUserFavoriteMovies() {}
+
+  render() {
+    const { movies, user, userData } = this.state;
+
+    if (!movies || !userData) return <div className='main-view' />;
 
     return (
       <div>
@@ -107,7 +123,12 @@ class MainView extends Component {
           render={() => (
             <React.Fragment>
               <NavBar handleLogout={this.handleLogout} />
-              <ProfileView handleLogout={this.handleLogout} />
+              <ProfileView
+                handleLogout={this.handleLogout}
+                getUserData={this.getUser}
+                userData={userData}
+                movies={movies}
+              />
             </React.Fragment>
           )}
         />
