@@ -53,28 +53,37 @@ class MainView extends Component {
     }
   }
 
-  async getMovies(token) {
-    const { data: movies } = await axios.get(
-      'https://my-fight-flix.herokuapp.com/api/movies',
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+  getMovies(token) {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-    this.setState({ movies });
+    axios
+      .get('https://my-fight-flix.herokuapp.com/api/movies', config)
+      .then((res) => {
+        this.setState({ movies: res.data });
+      })
+      .catch((e) => console.log('error getting movies'));
   }
 
-  async getUser(token) {
+  getUser(token) {
     const username = localStorage.getItem('user');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-    const { data: userData } = await axios.get(
-      `https://my-fight-flix.herokuapp.com/api/users/${username}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-
-    this.setState({ userData });
+    axios
+      .get(`https://my-fight-flix.herokuapp.com/api/users/${username}`, config)
+      .then((res) => {
+        this.setState({
+          userData: res.data,
+        });
+      })
+      .catch((e) => console.log('error getting user data'));
   }
 
   getUserFavoriteMovies() {}
@@ -125,7 +134,6 @@ class MainView extends Component {
               <NavBar handleLogout={this.handleLogout} />
               <ProfileView
                 handleLogout={this.handleLogout}
-                getUserData={this.getUser}
                 userData={userData}
                 movies={movies}
               />

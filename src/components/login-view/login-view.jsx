@@ -16,30 +16,14 @@ const LoginView = ({ handleLoggedIn }) => {
 
   const { username, password } = formData;
 
-  // State for form validation
-  const [validated, setValidated] = useState(false);
-
   // Handler for form input
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   // Handler for form submission (validation & login)
-  const handleSubmit = (e) => {
-    const form = e.currentTarget;
-    if (!form.checkValidity()) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    setValidated(true);
-
-    // Timer to remove validation styling
-    setTimeout(() => {
-      setValidated(false);
-    }, 4000);
-
+  const handleLogin = (e) => {
     e.preventDefault();
 
-    // Send request to server for authentication
     axios
       .post('https://my-fight-flix.herokuapp.com/api/login', {
         Username: username,
@@ -49,7 +33,9 @@ const LoginView = ({ handleLoggedIn }) => {
         const data = res.data;
         handleLoggedIn(data);
       })
-      .catch((e) => console.log('invalid credentials'));
+      .catch((e) => {
+        console.log('invalid credentials');
+      });
   };
 
   return (
@@ -66,11 +52,10 @@ const LoginView = ({ handleLoggedIn }) => {
               my<span className='text-primary'>Fight</span>Flix
             </span>
           </h1>
-
           <h2 className='text-left h6 text-dark font-weight-bold mb-2'>
             Login to Your Account
           </h2>
-          <Form noValidate validated={validated} className='mb-2'>
+          <Form onSubmit={handleLogin} className='mb-2'>
             <Form.Group className='mb-2' controlId='loginUsername'>
               <Form.Control
                 type='text'
@@ -80,10 +65,6 @@ const LoginView = ({ handleLoggedIn }) => {
                 onChange={onChange}
                 required
               />
-              <Form.Control.Feedback type='invalid'>
-                Please enter your username
-              </Form.Control.Feedback>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId='loginPassword' className='mb-2'>
               <Form.Control
@@ -94,16 +75,11 @@ const LoginView = ({ handleLoggedIn }) => {
                 onChange={onChange}
                 required
               />
-              <Form.Control.Feedback type='invalid'>
-                Please enter your password
-              </Form.Control.Feedback>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
             <Button
               variant='primary'
               type='submit'
               className='w-100 btn-lg mb-3'
-              onClick={handleSubmit}
             >
               Login
             </Button>

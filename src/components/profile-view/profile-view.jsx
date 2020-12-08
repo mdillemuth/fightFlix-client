@@ -1,5 +1,6 @@
 // Import components
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import MovieCard from '../movie-card/movie-card';
 
 // Import styling
@@ -14,15 +15,12 @@ import { Link } from 'react-router-dom';
 
 class ProfileView extends Component {
   constructor(props) {
-    console.log('constructor');
-
     super(props);
     this.state = {
       newUsername: '',
       newEmail: '',
       newPassword: '',
       newBirthday: '',
-      validated: false,
       favoriteMovies: [],
     };
   }
@@ -101,7 +99,6 @@ class ProfileView extends Component {
   };
 
   // Removes favorite movie
-  // *****TODO****** Reload profileView with updated list of favorites
   handleRemoveFavorite = (movieId) => {
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('user');
@@ -119,59 +116,39 @@ class ProfileView extends Component {
       .catch((e) => console.log('error'));
   };
 
-  // *** DOES NOT WORK ***
-  // The authorization header is not getting received by the server
-  // Seems to be related to pre-flight (OPTIONS) request
-  // Access-Control-Allow-Headers does not accept the auth header for some reason
   handleUpdateAccount = (e) => {
-    // Validation
-    // const form = e.currentTarget;
-    // if (!form.checkValidity()) {
-    //   e.preventDefault();
-    //   e.stopPropagation();
-    // }
-    // this.setState({
-    //   validated: true,
-    // });
-
-    // // Timer to remove validation styling
-    // setTimeout(() => {
-    //   this.setState({
-    //     validated: false,
-    //   });
-    // }, 8000);
-
     e.preventDefault();
 
-    // Credentials to access API route
+    const { newUsername, newPassword, newEmail, newBirthday } = this.state;
     const username = localStorage.getItem('user');
     const token = localStorage.getItem('token');
 
-    // Form data for new user information
-    const { newUsername, newPassword, newEmail, newBirthday } = this.state;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
     axios
-      .put(`https://my-fight-flix.herokuapp.com/api/users/${username}`, {
-        // ***The Authorization header is not getting through on pre-flight***
-        headers: { Authorization: `Bearer ${token}` },
-        data: {
+      .put(
+        `https://my-fight-flix.herokuapp.com/api/users/${username}`,
+        {
           Username: newUsername,
           Password: newPassword,
           Email: newEmail,
           Birthday: newBirthday,
         },
-      })
+        config
+      )
       .then((res) => {
         console.log('updated');
         window.open('/', '_self');
+        this.props.handleLogout();
       })
       .catch((e) => console.log('update error'));
   };
 
   render() {
-    // Using data from state
-    const { validated } = this.state;
-
     return (
       <React.Fragment>
         <Container className='my-3'>
@@ -187,17 +164,8 @@ class ProfileView extends Component {
               <h2 className='text-left h5 text-dark font-weight-bold mb-1'>
                 Update Your Information
               </h2>
-              <small className='text-left text-dark font-italic'>
-                You are currently logged in as{}
-                <span className='text-primary'>{}</span>
-              </small>
             </div>
-            <Form
-              className='mb-2'
-              noValidate
-              validated={validated}
-              onSubmit={this.handleUpdateAccount}
-            >
+            <Form className='mb-2' onSubmit={this.handleUpdateAccount}>
               <Form.Group className='mb-2' controlId='registerUsername'>
                 <Form.Control
                   type='text'
@@ -206,10 +174,6 @@ class ProfileView extends Component {
                   onChange={this.handleInputChange}
                   required
                 />
-                <Form.Control.Feedback type='invalid'>
-                  Please choose a username
-                </Form.Control.Feedback>
-                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
               </Form.Group>
               <Form.Group className='mb-2' controlId='registerEmail'>
                 <Form.Control
@@ -219,10 +183,6 @@ class ProfileView extends Component {
                   onChange={this.handleInputChange}
                   required
                 />
-                <Form.Control.Feedback type='invalid'>
-                  Please enter a valid email address
-                </Form.Control.Feedback>
-                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
               </Form.Group>
               <Form.Group className='mb-2' controlId='registerPassword'>
                 <Form.Control
@@ -233,10 +193,6 @@ class ProfileView extends Component {
                   required
                   minLength='7'
                 />
-                <Form.Control.Feedback type='invalid'>
-                  Password must be at least 7 characters long
-                </Form.Control.Feedback>
-                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
               </Form.Group>
               <Form.Group controlId='registerBirthday' className='mb-2 '>
                 <Form.Label className='mb-1 text-muted font-weight-bold'>
@@ -248,10 +204,6 @@ class ProfileView extends Component {
                   onChange={this.handleInputChange}
                   required
                 />
-                <Form.Control.Feedback type='invalid'>
-                  Please enter your birthday
-                </Form.Control.Feedback>
-                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
               </Form.Group>
               <Button variant='primary' type='submit' className='w-100 btn-lg'>
                 Submit
@@ -269,12 +221,17 @@ class ProfileView extends Component {
               </Link>
             </small>
           </Col>
-
-          {this.formatFavoriteMovies()}
+          <div>{this.formatFavoriteMovies()}</div>
         </Container>
       </React.Fragment>
     );
   }
 }
+
+ProfileView.propTypes = {
+  movies: PropTypes.array.isRequired,
+  userData: PropTypes.array.isRequired,
+  handleLogout: PropTypes.func.isRequired,
+};
 
 export default ProfileView;

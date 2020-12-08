@@ -6,7 +6,6 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const RegistrationView = () => {
-  // State for form input
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -16,22 +15,8 @@ const RegistrationView = () => {
 
   const { username, email, password, birthday } = formData;
 
-  // State for form validation
-  const [validated, setValidated] = useState(false);
-
   const handleRegister = (e) => {
-    // Validation
-    const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    setValidated(true);
-
-    // Timer to remove validation styling
-    setTimeout(() => {
-      setValidated(false);
-    }, 8000); // Validation
+    e.preventDefault();
 
     axios
       .post('https://my-fight-flix.herokuapp.com/api/users', {
@@ -42,7 +27,6 @@ const RegistrationView = () => {
       })
       .then((res) => {
         const data = res.data;
-        console.log(data);
         window.open('/', '_self');
       })
       .catch((e) => console.log('registration error'));
@@ -73,12 +57,7 @@ const RegistrationView = () => {
           </span>{' '}
           for free
         </h2>
-        <Form
-          className='mb-2'
-          noValidate
-          validated={validated}
-          onSubmit={handleRegister}
-        >
+        <Form className='mb-2' onSubmit={handleRegister}>
           <Form.Group className='mb-2' controlId='registerUsername'>
             <Form.Control
               type='text'
@@ -88,10 +67,6 @@ const RegistrationView = () => {
               onChange={onChange}
               required
             />
-            <Form.Control.Feedback type='invalid'>
-              Please choose a username
-            </Form.Control.Feedback>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className='mb-2' controlId='registerEmail'>
             <Form.Control
@@ -102,10 +77,6 @@ const RegistrationView = () => {
               onChange={onChange}
               required
             />
-            <Form.Control.Feedback type='invalid'>
-              Please enter a valid email address
-            </Form.Control.Feedback>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className='mb-2' controlId='registerPassword'>
             <Form.Control
@@ -117,10 +88,6 @@ const RegistrationView = () => {
               required
               minLength='7'
             />
-            <Form.Control.Feedback type='invalid'>
-              Password must be at least 7 characters long
-            </Form.Control.Feedback>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId='registerBirthday' className='mb-2 '>
             <Form.Label className='mb-1 text-muted font-weight-bold'>
@@ -134,10 +101,6 @@ const RegistrationView = () => {
               onChange={onChange}
               required
             />
-            <Form.Control.Feedback type='invalid'>
-              Please enter your birthday
-            </Form.Control.Feedback>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
 
           <Button variant='primary' type='submit' className='w-100 btn-lg mb-3'>

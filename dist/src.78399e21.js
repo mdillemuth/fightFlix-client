@@ -51090,33 +51090,15 @@ var LoginView = function LoginView(_ref) {
       setFormData = _useState2[1];
 
   var username = formData.username,
-      password = formData.password; // State for form validation
-
-  var _useState3 = (0, _react.useState)(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      validated = _useState4[0],
-      setValidated = _useState4[1]; // Handler for form input
-
+      password = formData.password; // Handler for form input
 
   var onChange = function onChange(e) {
     return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
   }; // Handler for form submission (validation & login)
 
 
-  var handleSubmit = function handleSubmit(e) {
-    var form = e.currentTarget;
-
-    if (!form.checkValidity()) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    setValidated(true); // Timer to remove validation styling
-
-    setTimeout(function () {
-      setValidated(false);
-    }, 4000);
-    e.preventDefault(); // Send request to server for authentication
+  var handleLogin = function handleLogin(e) {
+    e.preventDefault();
 
     _axios.default.post('https://my-fight-flix.herokuapp.com/api/login', {
       Username: username,
@@ -51125,7 +51107,7 @@ var LoginView = function LoginView(_ref) {
       var data = res.data;
       handleLoggedIn(data);
     }).catch(function (e) {
-      return console.log('invalid credentials');
+      console.log('invalid credentials');
     });
   };
 
@@ -51150,8 +51132,7 @@ var LoginView = function LoginView(_ref) {
   }, "Fight"), "Flix")), _react.default.createElement("h2", {
     className: "text-left h6 text-dark font-weight-bold mb-2"
   }, "Login to Your Account"), _react.default.createElement(_reactBootstrap.Form, {
-    noValidate: true,
-    validated: validated,
+    onSubmit: handleLogin,
     className: "mb-2"
   }, _react.default.createElement(_reactBootstrap.Form.Group, {
     className: "mb-2",
@@ -51163,9 +51144,7 @@ var LoginView = function LoginView(_ref) {
     value: username,
     onChange: onChange,
     required: true
-  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
-    type: "invalid"
-  }, "Please enter your username"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!")), _react.default.createElement(_reactBootstrap.Form.Group, {
+  })), _react.default.createElement(_reactBootstrap.Form.Group, {
     controlId: "loginPassword",
     className: "mb-2"
   }, _react.default.createElement(_reactBootstrap.Form.Control, {
@@ -51175,13 +51154,10 @@ var LoginView = function LoginView(_ref) {
     value: password,
     onChange: onChange,
     required: true
-  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
-    type: "invalid"
-  }, "Please enter your password"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!")), _react.default.createElement(_reactBootstrap.Button, {
+  })), _react.default.createElement(_reactBootstrap.Button, {
     variant: "primary",
     type: "submit",
-    className: "w-100 btn-lg mb-3",
-    onClick: handleSubmit
+    className: "w-100 btn-lg mb-3"
   }, "Login")), _react.default.createElement("small", {
     className: "text-muted text-center d-block"
   }, "Not a member yet?", _react.default.createElement(_reactRouterDom.Link, {
@@ -51243,7 +51219,6 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var RegistrationView = function RegistrationView() {
-  // State for form input
   var _useState = (0, _react.useState)({
     username: '',
     email: '',
@@ -51257,27 +51232,10 @@ var RegistrationView = function RegistrationView() {
   var username = formData.username,
       email = formData.email,
       password = formData.password,
-      birthday = formData.birthday; // State for form validation
-
-  var _useState3 = (0, _react.useState)(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      validated = _useState4[0],
-      setValidated = _useState4[1];
+      birthday = formData.birthday;
 
   var handleRegister = function handleRegister(e) {
-    // Validation
-    var form = e.currentTarget;
-
-    if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    setValidated(true); // Timer to remove validation styling
-
-    setTimeout(function () {
-      setValidated(false);
-    }, 8000); // Validation
+    e.preventDefault();
 
     _axios.default.post('https://my-fight-flix.herokuapp.com/api/users', {
       Username: username,
@@ -51286,7 +51244,6 @@ var RegistrationView = function RegistrationView() {
       Birthday: birthday
     }).then(function (res) {
       var data = res.data;
-      console.log(data);
       window.open('/', '_self');
     }).catch(function (e) {
       return console.log('registration error');
@@ -51324,8 +51281,6 @@ var RegistrationView = function RegistrationView() {
     className: "text-primary"
   }, "Fight"), "Flix"), ' ', "for free"), _react.default.createElement(_reactBootstrap.Form, {
     className: "mb-2",
-    noValidate: true,
-    validated: validated,
     onSubmit: handleRegister
   }, _react.default.createElement(_reactBootstrap.Form.Group, {
     className: "mb-2",
@@ -51337,9 +51292,7 @@ var RegistrationView = function RegistrationView() {
     value: username,
     onChange: onChange,
     required: true
-  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
-    type: "invalid"
-  }, "Please choose a username"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!")), _react.default.createElement(_reactBootstrap.Form.Group, {
+  })), _react.default.createElement(_reactBootstrap.Form.Group, {
     className: "mb-2",
     controlId: "registerEmail"
   }, _react.default.createElement(_reactBootstrap.Form.Control, {
@@ -51349,9 +51302,7 @@ var RegistrationView = function RegistrationView() {
     value: email,
     onChange: onChange,
     required: true
-  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
-    type: "invalid"
-  }, "Please enter a valid email address"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!")), _react.default.createElement(_reactBootstrap.Form.Group, {
+  })), _react.default.createElement(_reactBootstrap.Form.Group, {
     className: "mb-2",
     controlId: "registerPassword"
   }, _react.default.createElement(_reactBootstrap.Form.Control, {
@@ -51362,9 +51313,7 @@ var RegistrationView = function RegistrationView() {
     onChange: onChange,
     required: true,
     minLength: "7"
-  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
-    type: "invalid"
-  }, "Password must be at least 7 characters long"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!")), _react.default.createElement(_reactBootstrap.Form.Group, {
+  })), _react.default.createElement(_reactBootstrap.Form.Group, {
     controlId: "registerBirthday",
     className: "mb-2 "
   }, _react.default.createElement(_reactBootstrap.Form.Label, {
@@ -51376,9 +51325,7 @@ var RegistrationView = function RegistrationView() {
     value: birthday,
     onChange: onChange,
     required: true
-  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
-    type: "invalid"
-  }, "Please enter your birthday"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!")), _react.default.createElement(_reactBootstrap.Button, {
+  })), _react.default.createElement(_reactBootstrap.Button, {
     variant: "primary",
     type: "submit",
     className: "w-100 btn-lg mb-3"
@@ -51555,6 +51502,8 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
 var _movieCard = _interopRequireDefault(require("../movie-card/movie-card"));
 
 var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
@@ -51613,7 +51562,6 @@ var ProfileView = /*#__PURE__*/function (_Component) {
 
     _classCallCheck(this, ProfileView);
 
-    console.log('constructor');
     _this = _super.call(this, props);
 
     _this.formatFavoriteMovies = function () {
@@ -51688,46 +51636,30 @@ var ProfileView = /*#__PURE__*/function (_Component) {
     };
 
     _this.handleUpdateAccount = function (e) {
-      // Validation
-      // const form = e.currentTarget;
-      // if (!form.checkValidity()) {
-      //   e.preventDefault();
-      //   e.stopPropagation();
-      // }
-      // this.setState({
-      //   validated: true,
-      // });
-      // // Timer to remove validation styling
-      // setTimeout(() => {
-      //   this.setState({
-      //     validated: false,
-      //   });
-      // }, 8000);
-      e.preventDefault(); // Credentials to access API route
-
-      var username = localStorage.getItem('user');
-      var token = localStorage.getItem('token'); // Form data for new user information
-
+      e.preventDefault();
       var _this$state = _this.state,
           newUsername = _this$state.newUsername,
           newPassword = _this$state.newPassword,
           newEmail = _this$state.newEmail,
           newBirthday = _this$state.newBirthday;
-
-      _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
-        // ***The Authorization header is not getting through on pre-flight***
+      var username = localStorage.getItem('user');
+      var token = localStorage.getItem('token');
+      var config = {
         headers: {
           Authorization: "Bearer ".concat(token)
-        },
-        data: {
-          Username: newUsername,
-          Password: newPassword,
-          Email: newEmail,
-          Birthday: newBirthday
         }
-      }).then(function (res) {
+      };
+
+      _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
+        Username: newUsername,
+        Password: newPassword,
+        Email: newEmail,
+        Birthday: newBirthday
+      }, config).then(function (res) {
         console.log('updated');
         window.open('/', '_self');
+
+        _this.props.handleLogout();
       }).catch(function (e) {
         return console.log('update error');
       });
@@ -51738,7 +51670,6 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       newEmail: '',
       newPassword: '',
       newBirthday: '',
-      validated: false,
       favoriteMovies: []
     };
     return _this;
@@ -51789,17 +51720,10 @@ var ProfileView = /*#__PURE__*/function (_Component) {
     } // Adds input data to state
     // Remove account and log out user, returning to loginView
     // Removes favorite movie
-    // *****TODO****** Reload profileView with updated list of favorites
-    // *** DOES NOT WORK ***
-    // The authorization header is not getting received by the server
-    // Seems to be related to pre-flight (OPTIONS) request
-    // Access-Control-Allow-Headers does not accept the auth header for some reason
 
   }, {
     key: "render",
     value: function render() {
-      // Using data from state
-      var validated = this.state.validated;
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
         className: "my-3"
       }, _react.default.createElement(_reactRouterDom.Link, {
@@ -51820,14 +51744,8 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         className: "mb-2"
       }, _react.default.createElement("h2", {
         className: "text-left h5 text-dark font-weight-bold mb-1"
-      }, "Update Your Information"), _react.default.createElement("small", {
-        className: "text-left text-dark font-italic"
-      }, "You are currently logged in as", _react.default.createElement("span", {
-        className: "text-primary"
-      }))), _react.default.createElement(_Form.default, {
+      }, "Update Your Information")), _react.default.createElement(_Form.default, {
         className: "mb-2",
-        noValidate: true,
-        validated: validated,
         onSubmit: this.handleUpdateAccount
       }, _react.default.createElement(_Form.default.Group, {
         className: "mb-2",
@@ -51838,9 +51756,7 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         name: "newUsername",
         onChange: this.handleInputChange,
         required: true
-      }), _react.default.createElement(_Form.default.Control.Feedback, {
-        type: "invalid"
-      }, "Please choose a username"), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!")), _react.default.createElement(_Form.default.Group, {
+      })), _react.default.createElement(_Form.default.Group, {
         className: "mb-2",
         controlId: "registerEmail"
       }, _react.default.createElement(_Form.default.Control, {
@@ -51849,9 +51765,7 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         name: "newEmail",
         onChange: this.handleInputChange,
         required: true
-      }), _react.default.createElement(_Form.default.Control.Feedback, {
-        type: "invalid"
-      }, "Please enter a valid email address"), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!")), _react.default.createElement(_Form.default.Group, {
+      })), _react.default.createElement(_Form.default.Group, {
         className: "mb-2",
         controlId: "registerPassword"
       }, _react.default.createElement(_Form.default.Control, {
@@ -51861,9 +51775,7 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         onChange: this.handleInputChange,
         required: true,
         minLength: "7"
-      }), _react.default.createElement(_Form.default.Control.Feedback, {
-        type: "invalid"
-      }, "Password must be at least 7 characters long"), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!")), _react.default.createElement(_Form.default.Group, {
+      })), _react.default.createElement(_Form.default.Group, {
         controlId: "registerBirthday",
         className: "mb-2 "
       }, _react.default.createElement(_Form.default.Label, {
@@ -51873,9 +51785,7 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         name: "newBirthday",
         onChange: this.handleInputChange,
         required: true
-      }), _react.default.createElement(_Form.default.Control.Feedback, {
-        type: "invalid"
-      }, "Please enter your birthday"), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!")), _react.default.createElement(_Button.default, {
+      })), _react.default.createElement(_Button.default, {
         variant: "primary",
         type: "submit",
         className: "w-100 btn-lg"
@@ -51886,16 +51796,21 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       }, _react.default.createElement("span", {
         className: "register text-primary",
         onClick: this.handleRemoveAccount
-      }, "remove your account")))), this.formatFavoriteMovies()));
+      }, "remove your account")))), _react.default.createElement("div", null, this.formatFavoriteMovies())));
     }
   }]);
 
   return ProfileView;
 }(_react.Component);
 
+ProfileView.propTypes = {
+  movies: _propTypes.default.array.isRequired,
+  userData: _propTypes.default.array.isRequired,
+  handleLogout: _propTypes.default.func.isRequired
+};
 var _default = ProfileView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/layout/NavBar.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/layout/NavBar.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -52125,88 +52040,50 @@ var MainView = /*#__PURE__*/function (_Component) {
     }()
   }, {
     key: "getMovies",
-    value: function () {
-      var _getMovies = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(token) {
-        var _yield$axios$get, movies;
+    value: function getMovies(token) {
+      var _this2 = this;
 
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return _axios.default.get('https://my-fight-flix.herokuapp.com/api/movies', {
-                  headers: {
-                    Authorization: "Bearer ".concat(token)
-                  }
-                });
+      var config = {
+        headers: {
+          Authorization: "Bearer ".concat(token)
+        }
+      };
 
-              case 2:
-                _yield$axios$get = _context2.sent;
-                movies = _yield$axios$get.data;
-                this.setState({
-                  movies: movies
-                });
-
-              case 5:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-
-      function getMovies(_x) {
-        return _getMovies.apply(this, arguments);
-      }
-
-      return getMovies;
-    }()
+      _axios.default.get('https://my-fight-flix.herokuapp.com/api/movies', config).then(function (res) {
+        _this2.setState({
+          movies: res.data
+        });
+      }).catch(function (e) {
+        return console.log('error getting movies');
+      });
+    }
   }, {
     key: "getUser",
-    value: function () {
-      var _getUser = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(token) {
-        var username, _yield$axios$get2, userData;
+    value: function getUser(token) {
+      var _this3 = this;
 
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                username = localStorage.getItem('user');
-                _context3.next = 3;
-                return _axios.default.get("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
-                  headers: {
-                    Authorization: "Bearer ".concat(token)
-                  }
-                });
+      var username = localStorage.getItem('user');
+      var config = {
+        headers: {
+          Authorization: "Bearer ".concat(token)
+        }
+      };
 
-              case 3:
-                _yield$axios$get2 = _context3.sent;
-                userData = _yield$axios$get2.data;
-                this.setState({
-                  userData: userData
-                });
-
-              case 6:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3, this);
-      }));
-
-      function getUser(_x2) {
-        return _getUser.apply(this, arguments);
-      }
-
-      return getUser;
-    }()
+      _axios.default.get("https://my-fight-flix.herokuapp.com/api/users/".concat(username), config).then(function (res) {
+        _this3.setState({
+          userData: res.data
+        });
+      }).catch(function (e) {
+        return console.log('error getting user data');
+      });
+    }
   }, {
     key: "getUserFavoriteMovies",
     value: function getUserFavoriteMovies() {}
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this4 = this;
 
       var _this$state = this.state,
           movies = _this$state.movies,
@@ -52222,18 +52099,18 @@ var MainView = /*#__PURE__*/function (_Component) {
           if (!user) {
             return _react.default.createElement(_loginView.default, {
               handleLoggedIn: function handleLoggedIn(user) {
-                return _this2.handleLoggedIn(user);
+                return _this4.handleLoggedIn(user);
               }
             });
           }
 
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this2.handleLogout
+            handleLogout: _this4.handleLogout
           }), _react.default.createElement("h2", {
             className: "my-1 h5 text-dark text-center"
           }, "Choose from", ' ', _react.default.createElement("span", {
             className: "text-primary"
-          }, _this2.state.movies.length), ' ', "exciting movies"), _react.default.createElement("div", {
+          }, _this4.state.movies.length), ' ', "exciting movies"), _react.default.createElement("div", {
             className: "container d-flex flex-wrap justify-content-center"
           }, movies.map(function (m) {
             return _react.default.createElement(_movieCard.default, {
@@ -52251,10 +52128,9 @@ var MainView = /*#__PURE__*/function (_Component) {
         path: "/profile",
         render: function render() {
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this2.handleLogout
+            handleLogout: _this4.handleLogout
           }), _react.default.createElement(_profileView.default, {
-            handleLogout: _this2.handleLogout,
-            getUserData: _this2.getUser,
+            handleLogout: _this4.handleLogout,
             userData: userData,
             movies: movies
           }));
@@ -52265,7 +52141,7 @@ var MainView = /*#__PURE__*/function (_Component) {
         render: function render(_ref) {
           var match = _ref.match;
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this2.handleLogout
+            handleLogout: _this4.handleLogout
           }), _react.default.createElement(_directorView.default, {
             movie: movies.find(function (m) {
               return m.Director.Name === match.params.directorName;
@@ -52281,7 +52157,7 @@ var MainView = /*#__PURE__*/function (_Component) {
         render: function render(_ref2) {
           var match = _ref2.match;
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this2.handleLogout
+            handleLogout: _this4.handleLogout
           }), _react.default.createElement(_genreView.default, {
             movie: movies.find(function (m) {
               return m.Genre.Name === match.params.genreName;
@@ -52297,7 +52173,7 @@ var MainView = /*#__PURE__*/function (_Component) {
         render: function render(_ref3) {
           var match = _ref3.match;
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this2.handleLogout
+            handleLogout: _this4.handleLogout
           }), _react.default.createElement(_movieView.default, {
             movie: movies.find(function (m) {
               return m._id === match.params.movieId;
@@ -52369,7 +52245,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43983" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33179" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
