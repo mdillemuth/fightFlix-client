@@ -9,17 +9,31 @@ import RegistrationView from '../registration-view/registration-view';
 import DirectorView from '../director-view/director-view';
 import GenreView from './../genre-view/genre-view';
 import ProfileView from '../profile-view/profile-view';
-import NavBar from './../layout/NavBar';
-import SubNavBar from './../layout/SubNavBar';
+import NavBar from '../common/NavBar';
+import SubNavBar from '../common/SubNavBar';
+
+import Button from 'react-bootstrap/Button';
 
 class MainView extends Component {
   constructor() {
     super();
     this.state = {
-      movies: [],
       user: null,
-      userData: [],
+      movies: [],
+      userData: {},
+      favoriteMovies: [],
     };
+  }
+
+  componentDidMount() {
+    let accessToken = localStorage.getItem('token');
+    if (accessToken !== null) {
+      this.setState({
+        user: localStorage.getItem('user'),
+      });
+      this.getMovies(accessToken);
+      this.getUser(accessToken);
+    }
   }
 
   handleLoggedIn = (authData) => {
@@ -29,6 +43,7 @@ class MainView extends Component {
 
     localStorage.setItem('token', authData.token);
     localStorage.setItem('user', authData.user.Username);
+
     this.getMovies(authData.token);
     this.getUser(authData.token);
   };
@@ -41,17 +56,6 @@ class MainView extends Component {
       user: null,
     });
   };
-
-  async componentDidMount() {
-    let accessToken = localStorage.getItem('token');
-    if (accessToken !== null) {
-      this.setState({
-        user: localStorage.getItem('user'),
-      });
-      await this.getMovies(accessToken);
-      await this.getUser(accessToken);
-    }
-  }
 
   getMovies(token) {
     const config = {
@@ -68,6 +72,57 @@ class MainView extends Component {
       .catch((e) => console.log('error getting movies'));
   }
 
+  // TODO
+  handleAddFavorite = (movieId) => {
+    const username = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+
+    axios
+      .post(
+        `https://my-fight-flix.herokuapp.com/api/users/${username}/${movieId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(`Movie ${movieId} added to favorites`);
+      })
+      .catch((e) => console.log('Error Adding Favorite'));
+
+    const favoriteMovies = [...this.state.favoriteMovies];
+    favoriteMovies.push(movieId);
+    this.setState({ favoriteMovies });
+  };
+
+  // TODO
+  handleRemoveFavorite = (movieId) => {
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('user');
+
+    axios
+      .delete(
+        `https://my-fight-flix.herokuapp.com/api/users/${username}/${movieId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((res) => {
+        console.log('favorite removed');
+      })
+      .catch((e) => console.log('error'));
+
+    const favoriteMovies = [...this.state.favoriteMovies];
+    const index = favoriteMovies.indexOf(movieId);
+    favoriteMovies[index] = { ...favoriteMovies[index] };
+    if (index > -1) {
+      favoriteMovies.splice(index, 1);
+    }
+    this.setState({ favoriteMovies });
+  };
+
   getUser(token) {
     const username = localStorage.getItem('user');
     const config = {
@@ -79,19 +134,24 @@ class MainView extends Component {
     axios
       .get(`https://my-fight-flix.herokuapp.com/api/users/${username}`, config)
       .then((res) => {
+        res.data.map((item) => {
+          this.setState({
+            userData: item,
+          });
+        });
         this.setState({
-          userData: res.data,
+          favoriteMovies: this.state.userData.FavoriteMovies,
         });
       })
-      .catch((e) => console.log('error getting user data'));
+      .catch((e) => console.log('Error Retrieving User Data'));
   }
 
-  getUserFavoriteMovies() {}
-
   render() {
-    const { movies, user, userData } = this.state;
+    const { movies, user, userData, favoriteMovies } = this.state;
 
-    if (!movies || !userData) return <div className='main-view' />;
+    if (!movies) return <div className='main-view' />;
+    if (!userData) return <div className='main-view' />;
+    if (!favoriteMovies) return <div className='main-view' />;
 
     return (
       <div>
@@ -128,15 +188,34 @@ class MainView extends Component {
         />
         <Route path='/register' render={() => <RegistrationView />} />
         <Route
+          exact
           path='/profile'
           render={() => (
             <React.Fragment>
               <NavBar handleLogout={this.handleLogout} />
-              <ProfileView
-                handleLogout={this.handleLogout}
-                userData={userData}
-                movies={movies}
-              />
+              <ProfileView handleLogout={this.handleLogout} movies={movies} />
+              <div>
+                <h3 className='text-dark text-center font-weight-bold h5 mt-4'>
+                  My <span className='text-primary'>Favorite</span> Movies
+                </h3>
+                <div className='container d-flex flex-wrap justify-content-center'>
+                  {favoriteMovies.map((movieId) => (
+                    <div>
+                      <MovieCard
+                        key={movieId}
+                        movie={movies.find((movie) => movie._id === movieId)}
+                      />
+                      <Button
+                        size='sm'
+                        className='btn btn-warning'
+                        onClick={() => this.handleRemoveFavorite(movieId)}
+                      >
+                        Remove Favorite
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </React.Fragment>
           )}
         />
@@ -182,6 +261,7 @@ class MainView extends Component {
               <NavBar handleLogout={this.handleLogout} />
               <MovieView
                 movie={movies.find((m) => m._id === match.params.movieId)}
+                onAddFavorite={this.handleAddFavorite}
               />
             </React.Fragment>
           )}

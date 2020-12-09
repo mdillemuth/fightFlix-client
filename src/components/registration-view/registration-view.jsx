@@ -60,6 +60,7 @@ const RegistrationView = () => {
         <Form className='mb-2' onSubmit={handleRegister}>
           <Form.Group className='mb-2' controlId='registerUsername'>
             <Form.Control
+              autoFocus
               type='text'
               placeholder='Username'
               name='username'

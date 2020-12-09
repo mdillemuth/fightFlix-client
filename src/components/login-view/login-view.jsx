@@ -16,11 +16,9 @@ const LoginView = ({ handleLoggedIn }) => {
 
   const { username, password } = formData;
 
-  // Handler for form input
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // Handler for form submission (validation & login)
   const handleLogin = (e) => {
     e.preventDefault();
 
@@ -34,7 +32,7 @@ const LoginView = ({ handleLoggedIn }) => {
         handleLoggedIn(data);
       })
       .catch((e) => {
-        console.log('invalid credentials');
+        console.log('Invalid Username or Password');
       });
   };
 
@@ -58,6 +56,7 @@ const LoginView = ({ handleLoggedIn }) => {
           <Form onSubmit={handleLogin} className='mb-2'>
             <Form.Group className='mb-2' controlId='loginUsername'>
               <Form.Control
+                autoFocus
                 type='text'
                 placeholder='Username'
                 name='username'

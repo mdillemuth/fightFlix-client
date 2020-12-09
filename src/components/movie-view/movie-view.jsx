@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './movie-view.scss';
 import Button from 'react-bootstrap/Button';
+import Favorite from '../common/Favorite';
+import './movie-view.scss';
 import { Link } from 'react-router-dom';
 
 class MovieView extends Component {
-  constructor() {
-    super();
-    this.state = {};
+  constructor(props) {
+    super(props);
   }
 
   render() {
-    const { movie } = this.props;
+    const { movie, onAddFavorite } = this.props;
 
     if (!movie) return null;
 
@@ -30,9 +30,11 @@ class MovieView extends Component {
                 <span className='value h2 text-primary mr-2 font-weight-semi-bold'>
                   {movie.Title || ''}
                 </span>
-                <p className='h4 text-dark ml-2'>
-                  <i className='star fa fa-star-o text-warning'></i>
-                </p>
+                <Favorite
+                  onClick={() => onAddFavorite(movie._id)}
+                  movieId={movie._id}
+                  // isFavorite={userData..liked}
+                />
               </div>
               <div className='text-left w-100 mb-3'>
                 <div className='movie-genre'>

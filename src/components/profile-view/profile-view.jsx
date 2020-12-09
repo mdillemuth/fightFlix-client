@@ -17,66 +17,40 @@ class ProfileView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userData: {},
       newUsername: '',
       newEmail: '',
       newPassword: '',
       newBirthday: '',
-      favoriteMovies: [],
     };
   }
 
-  async componentDidMount() {
-    const favoriteMovies = await this.getFavoriteMovies();
-    this.setState({
-      favoriteMovies,
-    });
-    this.setState({
-      userData: this.props.userData,
-    });
-  }
-
-  getFavoriteMovies() {
-    const favoriteMovies = this.props.userData.map((x) => x.FavoriteMovies)[0];
-    return favoriteMovies;
-  }
-
-  formatFavoriteMovies = () => {
-    const { movies } = this.props;
-    const { favoriteMovies } = this.state;
-    const numFavorites = favoriteMovies.length;
-
-    if (numFavorites === 0) {
-      return (
-        <h3 className='text-dark text-center font-weight-bold h5 mt-4'>
-          You Don't Have Any <span className='text-primary'>Favorite</span>{' '}
-          Movies!
-        </h3>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          <h3 className='text-dark text-center font-weight-bold h5 mt-4'>
-            My <span className='text-primary'>{numFavorites} Favorite</span>{' '}
-            Movies
-          </h3>
-          <div className='container d-flex flex-wrap justify-content-center'>
-            {favoriteMovies.map((i) => (
-              <div>
-                <MovieCard key={i} movie={movies.find((m) => m._id === i)} />
-                <Button
-                  size='sm'
-                  className='btn btn-warning'
-                  onClick={() => this.handleRemoveFavorite(i)}
-                >
-                  Remove Favorite
-                </Button>
-              </div>
-            ))}
-          </div>
-        </React.Fragment>
-      );
+  componentDidMount() {
+    const token = localStorage.getItem('token');
+    if (token !== null) {
+      this.getUser(token);
     }
-  };
+  }
+
+  getUser(token) {
+    const username = localStorage.getItem('user');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .get(`https://my-fight-flix.herokuapp.com/api/users/${username}`, config)
+      .then((res) => {
+        res.data.map((item) => {
+          this.setState({
+            userData: item,
+          });
+        });
+      })
+      .catch((e) => console.log('Error Retrieving User Data'));
+  }
 
   // Adds input data to state
   handleInputChange = (e) => this.setState({ [e.target.name]: e.target.value });
@@ -98,30 +72,15 @@ class ProfileView extends Component {
     this.props.handleLogout();
   };
 
-  // Removes favorite movie
-  handleRemoveFavorite = (movieId) => {
-    const token = localStorage.getItem('token');
-    const username = localStorage.getItem('user');
-
-    axios
-      .delete(
-        `https://my-fight-flix.herokuapp.com/api/users/${username}/${movieId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then((res) => {
-        console.log('favorite removed');
-      })
-      .catch((e) => console.log('error'));
-  };
-
   handleUpdateAccount = (e) => {
     e.preventDefault();
 
-    const { newUsername, newPassword, newEmail, newBirthday } = this.state;
+    // Credentials
     const username = localStorage.getItem('user');
     const token = localStorage.getItem('token');
+
+    // Form Data
+    const { newUsername, newPassword, newEmail, newBirthday } = this.state;
 
     const config = {
       headers: {
@@ -141,14 +100,17 @@ class ProfileView extends Component {
         config
       )
       .then((res) => {
-        console.log('updated');
+        console.log('Account Updated');
         window.open('/', '_self');
         this.props.handleLogout();
       })
-      .catch((e) => console.log('update error'));
+      .catch((e) => console.log('Update Error'));
   };
 
   render() {
+    const { userData } = this.state;
+    if (!userData) return null;
+
     return (
       <React.Fragment>
         <Container className='my-3'>
@@ -168,6 +130,7 @@ class ProfileView extends Component {
             <Form className='mb-2' onSubmit={this.handleUpdateAccount}>
               <Form.Group className='mb-2' controlId='registerUsername'>
                 <Form.Control
+                  autoFocus
                   type='text'
                   placeholder='New username'
                   name='newUsername'
@@ -221,7 +184,6 @@ class ProfileView extends Component {
               </Link>
             </small>
           </Col>
-          <div>{this.formatFavoriteMovies()}</div>
         </Container>
       </React.Fragment>
     );
@@ -230,7 +192,6 @@ class ProfileView extends Component {
 
 ProfileView.propTypes = {
   movies: PropTypes.array.isRequired,
-  userData: PropTypes.array.isRequired,
   handleLogout: PropTypes.func.isRequired,
 };
 
