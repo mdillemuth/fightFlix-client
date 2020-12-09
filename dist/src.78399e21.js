@@ -36150,7 +36150,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Favorite = function Favorite(props) {
   var classes = 'text-warning fa fa-star';
-  if (!props.isFavorite) classes += '-o';
+  if (props.isFavorite === -1) classes += '-o';
   return _react.default.createElement("i", {
     style: {
       cursor: 'pointer',
@@ -36233,7 +36233,8 @@ var MovieView = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this$props = this.props,
           movie = _this$props.movie,
-          onAddFavorite = _this$props.onAddFavorite;
+          onToggleFavorite = _this$props.onToggleFavorite,
+          isFavorite = _this$props.isFavorite;
       if (!movie) return null;
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("div", {
         className: "container"
@@ -36251,11 +36252,11 @@ var MovieView = /*#__PURE__*/function (_Component) {
       }, _react.default.createElement("span", {
         className: "value h2 text-primary mr-2 font-weight-semi-bold"
       }, movie.Title || ''), _react.default.createElement(_Favorite.default, {
+        isFavorite: isFavorite,
         onClick: function onClick() {
-          return onAddFavorite(movie._id);
+          return onToggleFavorite(movie._id);
         },
-        movieId: movie._id // isFavorite={userData..liked}
-
+        movieId: movie._id
       })), _react.default.createElement("div", {
         className: "text-left w-100 mb-3"
       }, _react.default.createElement("div", {
@@ -51599,17 +51600,21 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       var token = localStorage.getItem('token');
       var username = localStorage.getItem('user');
 
-      _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
-        headers: {
-          Authorization: "Bearer ".concat(token)
-        }
-      }).then(function (res) {
-        console.log('account deleted');
-      }).catch(function (e) {
-        return console.log('error');
-      });
+      if (window.confirm('Are you sure you wish to remove your account?')) {
+        _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
+          headers: {
+            Authorization: "Bearer ".concat(token)
+          }
+        }).then(function (res) {
+          console.log('account deleted');
+        }).catch(function (e) {
+          return console.log('error');
+        });
 
-      _this.props.handleLogout();
+        _this.props.handleLogout();
+      } else {
+        window.open('/profile', '_self');
+      }
     };
 
     _this.handleUpdateAccount = function (e) {
@@ -51694,11 +51699,13 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       if (!userData) return null;
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
         className: "my-3"
+      }, _react.default.createElement("div", {
+        className: "w-100 d-flex flex-column align-items-center mb-3"
       }, _react.default.createElement(_reactRouterDom.Link, {
         to: "/"
       }, _react.default.createElement(_Button.default, {
         className: "btn btn-primary"
-      }, "Back to Movies")), _react.default.createElement(_Col.default, {
+      }, "Back to Movies"))), _react.default.createElement(_Col.default, {
         md: {
           span: 6,
           offset: 3
@@ -51970,9 +51977,23 @@ var MainView = /*#__PURE__*/function (_Component) {
       });
     };
 
+    _this.handleToggleFavorite = function (movieId) {
+      var favoriteMovies = _this.state.favoriteMovies;
+
+      if (favoriteMovies.indexOf(movieId) === -1) {
+        _this.handleAddFavorite(movieId);
+      } else {
+        _this.handleRemoveFavorite(movieId);
+      }
+    };
+
     _this.handleAddFavorite = function (movieId) {
       var username = localStorage.getItem('user');
       var token = localStorage.getItem('token');
+
+      if (_this.state.favoriteMovies.indexOf(movieId) > -1) {
+        return console.log('Movie already in favorites');
+      }
 
       _axios.default.post("https://my-fight-flix.herokuapp.com/api/users/".concat(username, "/").concat(movieId), {}, {
         headers: {
@@ -51996,6 +52017,10 @@ var MainView = /*#__PURE__*/function (_Component) {
     _this.handleRemoveFavorite = function (movieId) {
       var token = localStorage.getItem('token');
       var username = localStorage.getItem('user');
+
+      if (_this.state.favoriteMovies.indexOf(movieId) === -1) {
+        return console.log('Movie not in favorites');
+      }
 
       _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username, "/").concat(movieId), {
         headers: {
@@ -52044,30 +52069,9 @@ var MainView = /*#__PURE__*/function (_Component) {
       }
     }
   }, {
-    key: "getMovies",
-    value: function getMovies(token) {
-      var _this2 = this;
-
-      var config = {
-        headers: {
-          Authorization: "Bearer ".concat(token)
-        }
-      };
-
-      _axios.default.get('https://my-fight-flix.herokuapp.com/api/movies', config).then(function (res) {
-        _this2.setState({
-          movies: res.data
-        });
-      }).catch(function (e) {
-        return console.log('error getting movies');
-      });
-    } // TODO
-    // TODO
-
-  }, {
     key: "getUser",
     value: function getUser(token) {
-      var _this3 = this;
+      var _this2 = this;
 
       var username = localStorage.getItem('user');
       var config = {
@@ -52078,16 +52082,35 @@ var MainView = /*#__PURE__*/function (_Component) {
 
       _axios.default.get("https://my-fight-flix.herokuapp.com/api/users/".concat(username), config).then(function (res) {
         res.data.map(function (item) {
-          _this3.setState({
+          _this2.setState({
             userData: item
           });
         });
 
-        _this3.setState({
-          favoriteMovies: _this3.state.userData.FavoriteMovies
+        _this2.setState({
+          favoriteMovies: _this2.state.userData.FavoriteMovies
         });
       }).catch(function (e) {
         return console.log('Error Retrieving User Data');
+      });
+    }
+  }, {
+    key: "getMovies",
+    value: function getMovies(token) {
+      var _this3 = this;
+
+      var config = {
+        headers: {
+          Authorization: "Bearer ".concat(token)
+        }
+      };
+
+      _axios.default.get('https://my-fight-flix.herokuapp.com/api/movies', config).then(function (res) {
+        _this3.setState({
+          movies: res.data
+        });
+      }).catch(function (e) {
+        return console.log('error getting movies');
       });
     }
   }, {
@@ -52124,7 +52147,7 @@ var MainView = /*#__PURE__*/function (_Component) {
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
             handleLogout: _this4.handleLogout
           }), _react.default.createElement("h2", {
-            className: "my-1 h5 text-dark text-center"
+            className: "my-1 h3 text-dark text-center"
           }, "Choose from", ' ', _react.default.createElement("span", {
             className: "text-primary"
           }, _this4.state.movies.length), ' ', "exciting movies"), _react.default.createElement("div", {
@@ -52155,16 +52178,19 @@ var MainView = /*#__PURE__*/function (_Component) {
           }, "My ", _react.default.createElement("span", {
             className: "text-primary"
           }, "Favorite"), " Movies"), _react.default.createElement("div", {
-            className: "container d-flex flex-wrap justify-content-center"
+            className: "container d-flex flex-wrap justify-content-center mb-5"
           }, favoriteMovies.map(function (movieId) {
-            return _react.default.createElement("div", null, _react.default.createElement(_movieCard.default, {
+            return _react.default.createElement("div", {
+              className: "d-flex flex-column align-items-center"
+            }, _react.default.createElement(_movieCard.default, {
               key: movieId,
               movie: movies.find(function (movie) {
                 return movie._id === movieId;
               })
             }), _react.default.createElement(_Button.default, {
               size: "sm",
-              className: "btn btn-warning",
+              variant: "warning",
+              className: "w-75",
               onClick: function onClick() {
                 return _this4.handleRemoveFavorite(movieId);
               }
@@ -52211,10 +52237,11 @@ var MainView = /*#__PURE__*/function (_Component) {
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
             handleLogout: _this4.handleLogout
           }), _react.default.createElement(_movieView.default, {
+            isFavorite: favoriteMovies.indexOf(match.params.movieId),
             movie: movies.find(function (m) {
               return m._id === match.params.movieId;
             }),
-            onAddFavorite: _this4.handleAddFavorite
+            onToggleFavorite: _this4.handleToggleFavorite
           }));
         }
       }));
@@ -52282,7 +52309,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34823" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44009" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

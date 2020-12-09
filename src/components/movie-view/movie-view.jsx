@@ -11,7 +11,7 @@ class MovieView extends Component {
   }
 
   render() {
-    const { movie, onAddFavorite } = this.props;
+    const { movie, onToggleFavorite, isFavorite } = this.props;
 
     if (!movie) return null;
 
@@ -31,9 +31,9 @@ class MovieView extends Component {
                   {movie.Title || ''}
                 </span>
                 <Favorite
-                  onClick={() => onAddFavorite(movie._id)}
+                  isFavorite={isFavorite}
+                  onClick={() => onToggleFavorite(movie._id)}
                   movieId={movie._id}
-                  // isFavorite={userData..liked}
                 />
               </div>
               <div className='text-left w-100 mb-3'>

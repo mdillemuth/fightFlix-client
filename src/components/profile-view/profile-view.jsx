@@ -60,16 +60,20 @@ class ProfileView extends Component {
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('user');
 
-    axios
-      .delete(`https://my-fight-flix.herokuapp.com/api/users/${username}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        console.log('account deleted');
-      })
-      .catch((e) => console.log('error'));
+    if (window.confirm('Are you sure you wish to remove your account?')) {
+      axios
+        .delete(`https://my-fight-flix.herokuapp.com/api/users/${username}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          console.log('account deleted');
+        })
+        .catch((e) => console.log('error'));
 
-    this.props.handleLogout();
+      this.props.handleLogout();
+    } else {
+      window.open('/profile', '_self');
+    }
   };
 
   handleUpdateAccount = (e) => {
@@ -114,9 +118,11 @@ class ProfileView extends Component {
     return (
       <React.Fragment>
         <Container className='my-3'>
-          <Link to='/'>
-            <Button className='btn btn-primary'>Back to Movies</Button>
-          </Link>
+          <div className='w-100 d-flex flex-column align-items-center mb-3'>
+            <Link to='/'>
+              <Button className='btn btn-primary'>Back to Movies</Button>
+            </Link>
+          </div>
           <Col
             md={{ span: 6, offset: 3 }}
             lg={{ span: 4, offset: 4 }}

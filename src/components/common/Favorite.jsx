@@ -2,7 +2,7 @@ import React from 'react';
 
 const Favorite = (props) => {
   let classes = 'text-warning fa fa-star';
-  if (!props.isFavorite) classes += '-o';
+  if (props.isFavorite === -1) classes += '-o';
 
   return (
     <i
