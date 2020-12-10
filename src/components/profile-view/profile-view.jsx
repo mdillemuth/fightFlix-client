@@ -242,6 +242,7 @@ class ProfileView extends Component {
               Or you can{' '}
               <Link to='/'>
                 <span
+                  style={{ cursor: 'pointer' }}
                   className='register text-primary'
                   onClick={this.handleRemoveAccount}
                 >

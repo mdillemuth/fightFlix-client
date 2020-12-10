@@ -51117,12 +51117,7 @@ var CustomAlert = function CustomAlert(_ref) {
 
 var _default = CustomAlert;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap/Alert":"../node_modules/react-bootstrap/esm/Alert.js"}],"components/login-view/login-view.scss":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/login-view/login-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap/Alert":"../node_modules/react-bootstrap/esm/Alert.js"}],"components/login-view/login-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51141,8 +51136,6 @@ var _reactRouterDom = require("react-router-dom");
 var _reactBootstrap = require("react-bootstrap");
 
 var _CustomAlert = _interopRequireDefault(require("../common/CustomAlert"));
-
-require("./login-view.scss");
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -51301,12 +51294,7 @@ LoginView.propTypes = {
 };
 var _default = LoginView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","../common/CustomAlert":"components/common/CustomAlert.jsx","./login-view.scss":"components/login-view/login-view.scss"}],"components/registration-view/registration-view.scss":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/registration-view/registration-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","../common/CustomAlert":"components/common/CustomAlert.jsx"}],"components/registration-view/registration-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51318,11 +51306,11 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _reactBootstrap = require("react-bootstrap");
 
-require("./registration-view.scss");
-
 var _axios = _interopRequireDefault(require("axios"));
 
 var _reactRouterDom = require("react-router-dom");
+
+var _CustomAlert = _interopRequireDefault(require("./../common/CustomAlert"));
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -51368,7 +51356,13 @@ var RegistrationView = function RegistrationView() {
   var _useState3 = (0, _react.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
       validated = _useState4[0],
-      setValidated = _useState4[1]; // Handler for form input
+      setValidated = _useState4[1]; // State for server-side form validation
+
+
+  var _useState5 = (0, _react.useState)(false),
+      _useState6 = _slicedToArray(_useState5, 2),
+      serverInvalidated = _useState6[0],
+      setServerInvalidated = _useState6[1]; // Handler for form input
 
 
   var onChange = function onChange(e) {
@@ -51404,7 +51398,8 @@ var RegistrationView = function RegistrationView() {
         console.log('Account Registered');
         window.open('/', '_self');
       }).catch(function (e) {
-        return console.log('Registration Error');
+        setServerInvalidated(true);
+        console.log('Registration Error');
       });
     }
   };
@@ -51433,7 +51428,11 @@ var RegistrationView = function RegistrationView() {
     className: "font-italic"
   }, "my", _react.default.createElement("span", {
     className: "text-primary"
-  }, "Fight"), "Flix"), ' ', "for free"), _react.default.createElement(_reactBootstrap.Form, {
+  }, "Fight"), "Flix"), ' ', "for free"), _react.default.createElement(_CustomAlert.default, {
+    showAlert: serverInvalidated,
+    alertHeading: "Registration Error",
+    alertBody: "Username is already taken or there is already an account with this email address"
+  }), _react.default.createElement(_reactBootstrap.Form, {
     noValidate: true,
     validated: validated,
     className: "mb-2",
@@ -51512,13 +51511,16 @@ var RegistrationView = function RegistrationView() {
   }, "Already a member?", _react.default.createElement(_reactRouterDom.Link, {
     to: "/"
   }, _react.default.createElement("span", {
-    className: "return text-primary ml-2"
+    style: {
+      cursor: 'pointer'
+    },
+    className: "text-primary ml-2"
   }, "Login here")))));
 };
 
 var _default = RegistrationView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","./registration-view.scss":"components/registration-view/registration-view.scss","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/director-view/director-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./../common/CustomAlert":"components/common/CustomAlert.jsx"}],"components/director-view/director-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51961,6 +51963,9 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       }, "Or you can", ' ', _react.default.createElement(_reactRouterDom.Link, {
         to: "/"
       }, _react.default.createElement("span", {
+        style: {
+          cursor: 'pointer'
+        },
         className: "register text-primary",
         onClick: this.handleRemoveAccount
       }, "remove your account"))))));
@@ -52500,7 +52505,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35593" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36465" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

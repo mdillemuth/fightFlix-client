@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 // Import Styles
 import { Container, Col, Form, Button } from 'react-bootstrap';
 import CustomAlert from '../common/CustomAlert';
-import './login-view.scss';
 
 const LoginView = ({ handleLoggedIn }) => {
   // State for form input

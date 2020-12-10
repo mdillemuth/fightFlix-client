@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Container, Col, Form, Button } from 'react-bootstrap';
-import './registration-view.scss';
 
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+
+import CustomAlert from './../common/CustomAlert';
 
 const RegistrationView = () => {
   // State for form input
@@ -18,6 +19,9 @@ const RegistrationView = () => {
 
   // State for client-side form validation
   const [validated, setValidated] = useState(false);
+
+  // State for server-side form validation
+  const [serverInvalidated, setServerInvalidated] = useState(false);
 
   // Handler for form input
   const onChange = (e) =>
@@ -56,7 +60,10 @@ const RegistrationView = () => {
           console.log('Account Registered');
           window.open('/', '_self');
         })
-        .catch((e) => console.log('Registration Error'));
+        .catch((e) => {
+          setServerInvalidated(true);
+          console.log('Registration Error');
+        });
     }
   };
 
@@ -73,7 +80,6 @@ const RegistrationView = () => {
             my<span className='text-primary'>Fight</span>Flix
           </span>
         </h1>
-
         <h2 className='text-left h6 text-dark font-weight-bold mb-3'>
           Join{' '}
           <span className='font-italic'>
@@ -81,6 +87,11 @@ const RegistrationView = () => {
           </span>{' '}
           for free
         </h2>
+        <CustomAlert
+          showAlert={serverInvalidated}
+          alertHeading='Registration Error'
+          alertBody='Username is already taken or there is already an account with this email address'
+        />
         <Form
           noValidate
           validated={validated}
@@ -170,7 +181,9 @@ const RegistrationView = () => {
         <small className='text-muted text-center d-block'>
           Already a member?
           <Link to='/'>
-            <span className='return text-primary ml-2'>Login here</span>
+            <span style={{ cursor: 'pointer' }} className='text-primary ml-2'>
+              Login here
+            </span>
           </Link>
         </small>
       </Col>
