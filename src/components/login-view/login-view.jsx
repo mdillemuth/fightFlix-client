@@ -45,6 +45,7 @@ const LoginView = ({ handleLoggedIn }) => {
         })
         .then((res) => {
           const data = res.data;
+          console.log('Account Logged In');
           handleLoggedIn(data);
         })
         .catch((e) => {

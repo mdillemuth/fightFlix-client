@@ -51154,6 +51154,7 @@ var LoginView = function LoginView(_ref) {
         Password: password
       }).then(function (res) {
         var data = res.data;
+        console.log('Account Logged In');
         handleLoggedIn(data);
       }).catch(function (e) {
         console.log('Invalid Username or Password');
@@ -51282,6 +51283,7 @@ var RegistrationView = function RegistrationView() {
     username: '',
     email: '',
     password: '',
+    confirmPassword: '',
     birthday: ''
   }),
       _useState2 = _slicedToArray(_useState, 2),
@@ -51291,6 +51293,7 @@ var RegistrationView = function RegistrationView() {
   var username = formData.username,
       email = formData.email,
       password = formData.password,
+      confirmPassword = formData.confirmPassword,
       birthday = formData.birthday; // State for form validation
 
   var _useState3 = (0, _react.useState)(false),
@@ -51305,7 +51308,11 @@ var RegistrationView = function RegistrationView() {
 
   var handleRegister = function handleRegister(e) {
     // Handling Validation & UI Feedback
-    var form = e.currentTarget;
+    var form = e.currentTarget; // Returns if passwords do not match
+
+    if (password !== confirmPassword) {
+      return alert('Passwords do not match');
+    }
 
     if (!form.checkValidity()) {
       console.log('Invalid input, form not submitted');
@@ -51325,6 +51332,7 @@ var RegistrationView = function RegistrationView() {
         Birthday: birthday
       }).then(function (res) {
         var data = res.data;
+        console.log('Account Registered');
         window.open('/', '_self');
       }).catch(function (e) {
         return console.log('Registration Error');
@@ -51394,6 +51402,19 @@ var RegistrationView = function RegistrationView() {
     placeholder: "Password",
     name: "password",
     value: password,
+    onChange: onChange,
+    required: true,
+    minLength: "7"
+  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Password must be at least 7 characters")), _react.default.createElement(_reactBootstrap.Form.Group, {
+    className: "mb-2",
+    controlId: "registerConfirmPassword"
+  }, _react.default.createElement(_reactBootstrap.Form.Control, {
+    type: "password",
+    placeholder: "Confirm password",
+    name: "confirmPassword",
+    value: confirmPassword,
     onChange: onChange,
     required: true,
     minLength: "7"
@@ -51674,8 +51695,20 @@ var ProfileView = /*#__PURE__*/function (_Component) {
     };
 
     _this.handleUpdateAccount = function (e) {
-      // Handling Validation & UI Feedback
       var form = e.currentTarget;
+      var username = localStorage.getItem('user');
+      var token = localStorage.getItem('token');
+      var _this$state = _this.state,
+          newUsername = _this$state.newUsername,
+          newPassword = _this$state.newPassword,
+          newConfirmPassword = _this$state.newConfirmPassword,
+          newEmail = _this$state.newEmail,
+          newBirthday = _this$state.newBirthday; // Returns if passwords do not match
+
+      if (newPassword !== newConfirmPassword) {
+        return alert('Passwords do not match');
+      } // Validates form inputs
+
 
       if (!form.checkValidity()) {
         console.log('Invalid input, form not submitted');
@@ -51685,17 +51718,9 @@ var ProfileView = /*#__PURE__*/function (_Component) {
 
       _this.setState({
         validated: true
-      }); // Form submission
-
+      });
 
       e.preventDefault();
-      var username = localStorage.getItem('user');
-      var token = localStorage.getItem('token');
-      var _this$state = _this.state,
-          newUsername = _this$state.newUsername,
-          newPassword = _this$state.newPassword,
-          newEmail = _this$state.newEmail,
-          newBirthday = _this$state.newBirthday;
       var config = {
         headers: {
           Authorization: "Bearer ".concat(token)
@@ -51724,6 +51749,7 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       newUsername: '',
       newEmail: '',
       newPassword: '',
+      newConfirmPassword: '',
       newBirthday: '',
       validated: false
     };
@@ -51828,6 +51854,18 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         type: "password",
         placeholder: "New password",
         name: "newPassword",
+        onChange: this.handleInputChange,
+        required: true,
+        minLength: "7"
+      }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+        type: "invalid"
+      }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
+        className: "mb-2",
+        controlId: "registerConfirmPassword"
+      }, _react.default.createElement(_Form.default.Control, {
+        type: "password",
+        placeholder: "Confirm new password",
+        name: "newConfirmPassword",
         onChange: this.handleInputChange,
         required: true,
         minLength: "7"
@@ -52393,7 +52431,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37755" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38451" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

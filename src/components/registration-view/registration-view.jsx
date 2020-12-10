@@ -11,9 +11,10 @@ const RegistrationView = () => {
     username: '',
     email: '',
     password: '',
+    confirmPassword: '',
     birthday: '',
   });
-  const { username, email, password, birthday } = formData;
+  const { username, email, password, confirmPassword, birthday } = formData;
 
   // State for form validation
   const [validated, setValidated] = useState(false);
@@ -25,6 +26,12 @@ const RegistrationView = () => {
   const handleRegister = (e) => {
     // Handling Validation & UI Feedback
     const form = e.currentTarget;
+
+    // Returns if passwords do not match
+    if (password !== confirmPassword) {
+      return alert('Passwords do not match');
+    }
+
     if (!form.checkValidity()) {
       console.log('Invalid input, form not submitted');
       e.preventDefault();
@@ -46,6 +53,7 @@ const RegistrationView = () => {
         })
         .then((res) => {
           const data = res.data;
+          console.log('Account Registered');
           window.open('/', '_self');
         })
         .catch((e) => console.log('Registration Error'));
@@ -114,6 +122,21 @@ const RegistrationView = () => {
               placeholder='Password'
               name='password'
               value={password}
+              onChange={onChange}
+              required
+              minLength='7'
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Password must be at least 7 characters
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className='mb-2' controlId='registerConfirmPassword'>
+            <Form.Control
+              type='password'
+              placeholder='Confirm password'
+              name='confirmPassword'
+              value={confirmPassword}
               onChange={onChange}
               required
               minLength='7'

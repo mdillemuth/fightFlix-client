@@ -21,6 +21,7 @@ class ProfileView extends Component {
       newUsername: '',
       newEmail: '',
       newPassword: '',
+      newConfirmPassword: '',
       newBirthday: '',
       validated: false,
     };
@@ -79,8 +80,23 @@ class ProfileView extends Component {
 
   // Update account and log out user, return to loginView
   handleUpdateAccount = (e) => {
-    // Handling Validation & UI Feedback
     const form = e.currentTarget;
+    const username = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    const {
+      newUsername,
+      newPassword,
+      newConfirmPassword,
+      newEmail,
+      newBirthday,
+    } = this.state;
+
+    // Returns if passwords do not match
+    if (newPassword !== newConfirmPassword) {
+      return alert('Passwords do not match');
+    }
+
+    // Validates form inputs
     if (!form.checkValidity()) {
       console.log('Invalid input, form not submitted');
       e.preventDefault();
@@ -90,12 +106,7 @@ class ProfileView extends Component {
       validated: true,
     });
 
-    // Form submission
     e.preventDefault();
-
-    const username = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-    const { newUsername, newPassword, newEmail, newBirthday } = this.state;
 
     const config = {
       headers: {
@@ -185,6 +196,20 @@ class ProfileView extends Component {
                   type='password'
                   placeholder='New password'
                   name='newPassword'
+                  onChange={this.handleInputChange}
+                  required
+                  minLength='7'
+                />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                <Form.Control.Feedback type='invalid'>
+                  Password must be at least 7 characters
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group className='mb-2' controlId='registerConfirmPassword'>
+                <Form.Control
+                  type='password'
+                  placeholder='Confirm new password'
+                  name='newConfirmPassword'
                   onChange={this.handleInputChange}
                   required
                   minLength='7'
