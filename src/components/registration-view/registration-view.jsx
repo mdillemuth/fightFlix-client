@@ -6,35 +6,51 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const RegistrationView = () => {
+  // State for form input
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
     birthday: '',
   });
-
   const { username, email, password, birthday } = formData;
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-
-    axios
-      .post('https://my-fight-flix.herokuapp.com/api/users', {
-        Username: username,
-        Password: password,
-        Email: email,
-        Birthday: birthday,
-      })
-      .then((res) => {
-        const data = res.data;
-        window.open('/', '_self');
-      })
-      .catch((e) => console.log('registration error'));
-  };
+  // State for form validation
+  const [validated, setValidated] = useState(false);
 
   // Handler for form input
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleRegister = (e) => {
+    // Handling Validation & UI Feedback
+    const form = e.currentTarget;
+    if (!form.checkValidity()) {
+      console.log('Invalid input, form not submitted');
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setValidated(true);
+
+    // Submission & Logging in the User
+    e.preventDefault();
+
+    // Only calls API if form passes client-side validation
+    if (form.checkValidity()) {
+      axios
+        .post('https://my-fight-flix.herokuapp.com/api/users', {
+          Username: username,
+          Password: password,
+          Email: email,
+          Birthday: birthday,
+        })
+        .then((res) => {
+          const data = res.data;
+          window.open('/', '_self');
+        })
+        .catch((e) => console.log('Registration Error'));
+    }
+  };
 
   return (
     <Container className='my-3'>
@@ -57,7 +73,12 @@ const RegistrationView = () => {
           </span>{' '}
           for free
         </h2>
-        <Form className='mb-2' onSubmit={handleRegister}>
+        <Form
+          noValidate
+          validated={validated}
+          className='mb-2'
+          onSubmit={handleRegister}
+        >
           <Form.Group className='mb-2' controlId='registerUsername'>
             <Form.Control
               autoFocus
@@ -68,6 +89,10 @@ const RegistrationView = () => {
               onChange={onChange}
               required
             />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Please choose a username
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className='mb-2' controlId='registerEmail'>
             <Form.Control
@@ -78,6 +103,10 @@ const RegistrationView = () => {
               onChange={onChange}
               required
             />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Please enter a valid email address
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className='mb-2' controlId='registerPassword'>
             <Form.Control
@@ -89,6 +118,10 @@ const RegistrationView = () => {
               required
               minLength='7'
             />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Password must be at least 7 characters
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId='registerBirthday' className='mb-2 '>
             <Form.Label className='mb-1 text-muted font-weight-bold'>
@@ -102,8 +135,11 @@ const RegistrationView = () => {
               onChange={onChange}
               required
             />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Birthday is required
+            </Form.Control.Feedback>
           </Form.Group>
-
           <Button variant='primary' type='submit' className='w-100 btn-lg mb-3'>
             Sign Up
           </Button>

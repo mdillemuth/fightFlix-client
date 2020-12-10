@@ -22,6 +22,7 @@ class ProfileView extends Component {
       newEmail: '',
       newPassword: '',
       newBirthday: '',
+      validated: false,
     };
   }
 
@@ -52,10 +53,10 @@ class ProfileView extends Component {
       .catch((e) => console.log('Error Retrieving User Data'));
   }
 
-  // Adds input data to state
+  // Handler for form input
   handleInputChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
-  // Remove account and log out user, returning to loginView
+  // Remove account and log out user, return to loginView
   handleRemoveAccount = () => {
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('user');
@@ -76,14 +77,24 @@ class ProfileView extends Component {
     }
   };
 
+  // Update account and log out user, return to loginView
   handleUpdateAccount = (e) => {
+    // Handling Validation & UI Feedback
+    const form = e.currentTarget;
+    if (!form.checkValidity()) {
+      console.log('Invalid input, form not submitted');
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    this.setState({
+      validated: true,
+    });
+
+    // Form submission
     e.preventDefault();
 
-    // Credentials
     const username = localStorage.getItem('user');
     const token = localStorage.getItem('token');
-
-    // Form Data
     const { newUsername, newPassword, newEmail, newBirthday } = this.state;
 
     const config = {
@@ -92,27 +103,30 @@ class ProfileView extends Component {
       },
     };
 
-    axios
-      .put(
-        `https://my-fight-flix.herokuapp.com/api/users/${username}`,
-        {
-          Username: newUsername,
-          Password: newPassword,
-          Email: newEmail,
-          Birthday: newBirthday,
-        },
-        config
-      )
-      .then((res) => {
-        console.log('Account Updated');
-        window.open('/', '_self');
-        this.props.handleLogout();
-      })
-      .catch((e) => console.log('Update Error'));
+    // Only calls API if form passes client-side validation
+    if (form.checkValidity()) {
+      axios
+        .put(
+          `https://my-fight-flix.herokuapp.com/api/users/${username}`,
+          {
+            Username: newUsername,
+            Password: newPassword,
+            Email: newEmail,
+            Birthday: newBirthday,
+          },
+          config
+        )
+        .then((res) => {
+          console.log('Account Updated');
+          window.open('/', '_self');
+          this.props.handleLogout();
+        })
+        .catch((e) => console.log('Update Error'));
+    }
   };
 
   render() {
-    const { userData } = this.state;
+    const { userData, validated } = this.state;
     if (!userData) return null;
 
     return (
@@ -133,7 +147,12 @@ class ProfileView extends Component {
                 Update Your Information
               </h2>
             </div>
-            <Form className='mb-2' onSubmit={this.handleUpdateAccount}>
+            <Form
+              noValidate
+              validated={validated}
+              className='mb-2'
+              onSubmit={this.handleUpdateAccount}
+            >
               <Form.Group className='mb-2' controlId='registerUsername'>
                 <Form.Control
                   autoFocus
@@ -143,6 +162,10 @@ class ProfileView extends Component {
                   onChange={this.handleInputChange}
                   required
                 />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                <Form.Control.Feedback type='invalid'>
+                  Please enter a username
+                </Form.Control.Feedback>
               </Form.Group>
               <Form.Group className='mb-2' controlId='registerEmail'>
                 <Form.Control
@@ -152,6 +175,10 @@ class ProfileView extends Component {
                   onChange={this.handleInputChange}
                   required
                 />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                <Form.Control.Feedback type='invalid'>
+                  Please enter a valid email address
+                </Form.Control.Feedback>
               </Form.Group>
               <Form.Group className='mb-2' controlId='registerPassword'>
                 <Form.Control
@@ -162,6 +189,10 @@ class ProfileView extends Component {
                   required
                   minLength='7'
                 />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                <Form.Control.Feedback type='invalid'>
+                  Password must be at least 7 characters
+                </Form.Control.Feedback>
               </Form.Group>
               <Form.Group controlId='registerBirthday' className='mb-2 '>
                 <Form.Label className='mb-1 text-muted font-weight-bold'>
@@ -173,6 +204,10 @@ class ProfileView extends Component {
                   onChange={this.handleInputChange}
                   required
                 />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                <Form.Control.Feedback type='invalid'>
+                  Birthday is required
+                </Form.Control.Feedback>
               </Form.Group>
               <Button variant='primary' type='submit' className='w-100 btn-lg'>
                 Submit

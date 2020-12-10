@@ -51121,24 +51121,44 @@ var LoginView = function LoginView(_ref) {
       setFormData = _useState2[1];
 
   var username = formData.username,
-      password = formData.password;
+      password = formData.password; // State for form validation
+
+  var _useState3 = (0, _react.useState)(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      validated = _useState4[0],
+      setValidated = _useState4[1]; // Handler for updating state on input
+
 
   var onChange = function onChange(e) {
     return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
-  };
+  }; // Handler for form submission (validation & login)
+
 
   var handleLogin = function handleLogin(e) {
-    e.preventDefault();
+    // Handling Validation & UI Feedback
+    var form = e.currentTarget;
 
-    _axios.default.post('https://my-fight-flix.herokuapp.com/api/login', {
-      Username: username,
-      Password: password
-    }).then(function (res) {
-      var data = res.data;
-      handleLoggedIn(data);
-    }).catch(function (e) {
-      console.log('Invalid Username or Password');
-    });
+    if (!form.checkValidity()) {
+      console.log('Invalid input, form not submitted');
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    setValidated(true); // Submission & Logging in the User
+
+    e.preventDefault(); // Only calls API if form passes client-side validation
+
+    if (form.checkValidity()) {
+      _axios.default.post('https://my-fight-flix.herokuapp.com/api/login', {
+        Username: username,
+        Password: password
+      }).then(function (res) {
+        var data = res.data;
+        handleLoggedIn(data);
+      }).catch(function (e) {
+        console.log('Invalid Username or Password');
+      });
+    }
   };
 
   return _react.default.createElement("div", null, _react.default.createElement(_reactBootstrap.Container, {
@@ -51162,6 +51182,8 @@ var LoginView = function LoginView(_ref) {
   }, "Fight"), "Flix")), _react.default.createElement("h2", {
     className: "text-left h6 text-dark font-weight-bold mb-2"
   }, "Login to Your Account"), _react.default.createElement(_reactBootstrap.Form, {
+    noValidate: true,
+    validated: validated,
     onSubmit: handleLogin,
     className: "mb-2"
   }, _react.default.createElement(_reactBootstrap.Form.Group, {
@@ -51175,7 +51197,9 @@ var LoginView = function LoginView(_ref) {
     value: username,
     onChange: onChange,
     required: true
-  })), _react.default.createElement(_reactBootstrap.Form.Group, {
+  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Please enter your username")), _react.default.createElement(_reactBootstrap.Form.Group, {
     controlId: "loginPassword",
     className: "mb-2"
   }, _react.default.createElement(_reactBootstrap.Form.Control, {
@@ -51184,8 +51208,11 @@ var LoginView = function LoginView(_ref) {
     name: "password",
     value: password,
     onChange: onChange,
-    required: true
-  })), _react.default.createElement(_reactBootstrap.Button, {
+    required: true,
+    minLength: "7"
+  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Password must be at least 7 characters")), _react.default.createElement(_reactBootstrap.Button, {
     variant: "primary",
     type: "submit",
     className: "w-100 btn-lg mb-3"
@@ -51250,6 +51277,7 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var RegistrationView = function RegistrationView() {
+  // State for form input
   var _useState = (0, _react.useState)({
     username: '',
     email: '',
@@ -51263,27 +51291,45 @@ var RegistrationView = function RegistrationView() {
   var username = formData.username,
       email = formData.email,
       password = formData.password,
-      birthday = formData.birthday;
+      birthday = formData.birthday; // State for form validation
 
-  var handleRegister = function handleRegister(e) {
-    e.preventDefault();
-
-    _axios.default.post('https://my-fight-flix.herokuapp.com/api/users', {
-      Username: username,
-      Password: password,
-      Email: email,
-      Birthday: birthday
-    }).then(function (res) {
-      var data = res.data;
-      window.open('/', '_self');
-    }).catch(function (e) {
-      return console.log('registration error');
-    });
-  }; // Handler for form input
+  var _useState3 = (0, _react.useState)(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      validated = _useState4[0],
+      setValidated = _useState4[1]; // Handler for form input
 
 
   var onChange = function onChange(e) {
     return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
+  };
+
+  var handleRegister = function handleRegister(e) {
+    // Handling Validation & UI Feedback
+    var form = e.currentTarget;
+
+    if (!form.checkValidity()) {
+      console.log('Invalid input, form not submitted');
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    setValidated(true); // Submission & Logging in the User
+
+    e.preventDefault(); // Only calls API if form passes client-side validation
+
+    if (form.checkValidity()) {
+      _axios.default.post('https://my-fight-flix.herokuapp.com/api/users', {
+        Username: username,
+        Password: password,
+        Email: email,
+        Birthday: birthday
+      }).then(function (res) {
+        var data = res.data;
+        window.open('/', '_self');
+      }).catch(function (e) {
+        return console.log('Registration Error');
+      });
+    }
   };
 
   return _react.default.createElement(_reactBootstrap.Container, {
@@ -51311,6 +51357,8 @@ var RegistrationView = function RegistrationView() {
   }, "my", _react.default.createElement("span", {
     className: "text-primary"
   }, "Fight"), "Flix"), ' ', "for free"), _react.default.createElement(_reactBootstrap.Form, {
+    noValidate: true,
+    validated: validated,
     className: "mb-2",
     onSubmit: handleRegister
   }, _react.default.createElement(_reactBootstrap.Form.Group, {
@@ -51324,7 +51372,9 @@ var RegistrationView = function RegistrationView() {
     value: username,
     onChange: onChange,
     required: true
-  })), _react.default.createElement(_reactBootstrap.Form.Group, {
+  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Please choose a username")), _react.default.createElement(_reactBootstrap.Form.Group, {
     className: "mb-2",
     controlId: "registerEmail"
   }, _react.default.createElement(_reactBootstrap.Form.Control, {
@@ -51334,7 +51384,9 @@ var RegistrationView = function RegistrationView() {
     value: email,
     onChange: onChange,
     required: true
-  })), _react.default.createElement(_reactBootstrap.Form.Group, {
+  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Please enter a valid email address")), _react.default.createElement(_reactBootstrap.Form.Group, {
     className: "mb-2",
     controlId: "registerPassword"
   }, _react.default.createElement(_reactBootstrap.Form.Control, {
@@ -51345,7 +51397,9 @@ var RegistrationView = function RegistrationView() {
     onChange: onChange,
     required: true,
     minLength: "7"
-  })), _react.default.createElement(_reactBootstrap.Form.Group, {
+  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Password must be at least 7 characters")), _react.default.createElement(_reactBootstrap.Form.Group, {
     controlId: "registerBirthday",
     className: "mb-2 "
   }, _react.default.createElement(_reactBootstrap.Form.Label, {
@@ -51357,7 +51411,9 @@ var RegistrationView = function RegistrationView() {
     value: birthday,
     onChange: onChange,
     required: true
-  })), _react.default.createElement(_reactBootstrap.Button, {
+  }), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, null, "Looks good!"), _react.default.createElement(_reactBootstrap.Form.Control.Feedback, {
+    type: "invalid"
+  }, "Birthday is required")), _react.default.createElement(_reactBootstrap.Button, {
     variant: "primary",
     type: "submit",
     className: "w-100 btn-lg mb-3"
@@ -51618,11 +51674,23 @@ var ProfileView = /*#__PURE__*/function (_Component) {
     };
 
     _this.handleUpdateAccount = function (e) {
-      e.preventDefault(); // Credentials
+      // Handling Validation & UI Feedback
+      var form = e.currentTarget;
 
+      if (!form.checkValidity()) {
+        console.log('Invalid input, form not submitted');
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      _this.setState({
+        validated: true
+      }); // Form submission
+
+
+      e.preventDefault();
       var username = localStorage.getItem('user');
-      var token = localStorage.getItem('token'); // Form Data
-
+      var token = localStorage.getItem('token');
       var _this$state = _this.state,
           newUsername = _this$state.newUsername,
           newPassword = _this$state.newPassword,
@@ -51632,21 +51700,23 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         headers: {
           Authorization: "Bearer ".concat(token)
         }
-      };
+      }; // Only calls API if form passes client-side validation
 
-      _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
-        Username: newUsername,
-        Password: newPassword,
-        Email: newEmail,
-        Birthday: newBirthday
-      }, config).then(function (res) {
-        console.log('Account Updated');
-        window.open('/', '_self');
+      if (form.checkValidity()) {
+        _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
+          Username: newUsername,
+          Password: newPassword,
+          Email: newEmail,
+          Birthday: newBirthday
+        }, config).then(function (res) {
+          console.log('Account Updated');
+          window.open('/', '_self');
 
-        _this.props.handleLogout();
-      }).catch(function (e) {
-        return console.log('Update Error');
-      });
+          _this.props.handleLogout();
+        }).catch(function (e) {
+          return console.log('Update Error');
+        });
+      }
     };
 
     _this.state = {
@@ -51654,7 +51724,8 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       newUsername: '',
       newEmail: '',
       newPassword: '',
-      newBirthday: ''
+      newBirthday: '',
+      validated: false
     };
     return _this;
   }
@@ -51689,13 +51760,16 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       }).catch(function (e) {
         return console.log('Error Retrieving User Data');
       });
-    } // Adds input data to state
-    // Remove account and log out user, returning to loginView
+    } // Handler for form input
+    // Remove account and log out user, return to loginView
+    // Update account and log out user, return to loginView
 
   }, {
     key: "render",
     value: function render() {
-      var userData = this.state.userData;
+      var _this$state2 = this.state,
+          userData = _this$state2.userData,
+          validated = _this$state2.validated;
       if (!userData) return null;
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
         className: "my-3"
@@ -51720,6 +51794,8 @@ var ProfileView = /*#__PURE__*/function (_Component) {
       }, _react.default.createElement("h2", {
         className: "text-left h5 text-dark font-weight-bold mb-1"
       }, "Update Your Information")), _react.default.createElement(_Form.default, {
+        noValidate: true,
+        validated: validated,
         className: "mb-2",
         onSubmit: this.handleUpdateAccount
       }, _react.default.createElement(_Form.default.Group, {
@@ -51732,7 +51808,9 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         name: "newUsername",
         onChange: this.handleInputChange,
         required: true
-      })), _react.default.createElement(_Form.default.Group, {
+      }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+        type: "invalid"
+      }, "Please enter a username")), _react.default.createElement(_Form.default.Group, {
         className: "mb-2",
         controlId: "registerEmail"
       }, _react.default.createElement(_Form.default.Control, {
@@ -51741,7 +51819,9 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         name: "newEmail",
         onChange: this.handleInputChange,
         required: true
-      })), _react.default.createElement(_Form.default.Group, {
+      }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+        type: "invalid"
+      }, "Please enter a valid email address")), _react.default.createElement(_Form.default.Group, {
         className: "mb-2",
         controlId: "registerPassword"
       }, _react.default.createElement(_Form.default.Control, {
@@ -51751,7 +51831,9 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         onChange: this.handleInputChange,
         required: true,
         minLength: "7"
-      })), _react.default.createElement(_Form.default.Group, {
+      }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+        type: "invalid"
+      }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
         controlId: "registerBirthday",
         className: "mb-2 "
       }, _react.default.createElement(_Form.default.Label, {
@@ -51761,7 +51843,9 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         name: "newBirthday",
         onChange: this.handleInputChange,
         required: true
-      })), _react.default.createElement(_Button.default, {
+      }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+        type: "invalid"
+      }, "Birthday is required")), _react.default.createElement(_Button.default, {
         variant: "primary",
         type: "submit",
         className: "w-100 btn-lg"
@@ -52309,7 +52393,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44009" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37755" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

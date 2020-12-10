@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 // Import Styles
-import { Container, Col, Form, Button } from 'react-bootstrap';
+import { Container, Col, Form, FormControl, Button } from 'react-bootstrap';
 import './login-view.scss';
 
 const LoginView = ({ handleLoggedIn }) => {
@@ -13,27 +13,44 @@ const LoginView = ({ handleLoggedIn }) => {
     username: '',
     password: '',
   });
-
   const { username, password } = formData;
 
+  // State for form validation
+  const [validated, setValidated] = useState(false);
+
+  // Handler for updating state on input
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  // Handler for form submission (validation & login)
   const handleLogin = (e) => {
+    // Handling Validation & UI Feedback
+    const form = e.currentTarget;
+    if (!form.checkValidity()) {
+      console.log('Invalid input, form not submitted');
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setValidated(true);
+
+    // Submission & Logging in the User
     e.preventDefault();
 
-    axios
-      .post('https://my-fight-flix.herokuapp.com/api/login', {
-        Username: username,
-        Password: password,
-      })
-      .then((res) => {
-        const data = res.data;
-        handleLoggedIn(data);
-      })
-      .catch((e) => {
-        console.log('Invalid Username or Password');
-      });
+    // Only calls API if form passes client-side validation
+    if (form.checkValidity()) {
+      axios
+        .post('https://my-fight-flix.herokuapp.com/api/login', {
+          Username: username,
+          Password: password,
+        })
+        .then((res) => {
+          const data = res.data;
+          handleLoggedIn(data);
+        })
+        .catch((e) => {
+          console.log('Invalid Username or Password');
+        });
+    }
   };
 
   return (
@@ -53,7 +70,12 @@ const LoginView = ({ handleLoggedIn }) => {
           <h2 className='text-left h6 text-dark font-weight-bold mb-2'>
             Login to Your Account
           </h2>
-          <Form onSubmit={handleLogin} className='mb-2'>
+          <Form
+            noValidate
+            validated={validated}
+            onSubmit={handleLogin}
+            className='mb-2'
+          >
             <Form.Group className='mb-2' controlId='loginUsername'>
               <Form.Control
                 autoFocus
@@ -64,6 +86,10 @@ const LoginView = ({ handleLoggedIn }) => {
                 onChange={onChange}
                 required
               />
+              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              <Form.Control.Feedback type='invalid'>
+                Please enter your username
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId='loginPassword' className='mb-2'>
               <Form.Control
@@ -73,7 +99,12 @@ const LoginView = ({ handleLoggedIn }) => {
                 value={password}
                 onChange={onChange}
                 required
+                minLength='7'
               />
+              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              <Form.Control.Feedback type='invalid'>
+                Password must be at least 7 characters
+              </Form.Control.Feedback>
             </Form.Group>
             <Button
               variant='primary'
