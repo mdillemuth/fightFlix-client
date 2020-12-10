@@ -74,8 +74,8 @@ const LoginView = ({ handleLoggedIn }) => {
           </h1>
           <CustomAlert
             showAlert={serverInvalidated}
-            alertHeading='Invalid Credentials'
-            alertBody='Please try logging in again'
+            alertHeading='Login Error'
+            alertBody='Incorrect username or password. Please try again.'
           />
           <h2 className='text-left h6 text-dark font-weight-bold mb-2'>
             Login to Your Account

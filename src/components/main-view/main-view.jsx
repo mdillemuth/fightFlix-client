@@ -216,9 +216,11 @@ class MainView extends Component {
                 </h3>
                 <div className='container d-flex flex-wrap justify-content-center mb-5'>
                   {favoriteMovies.map((movieId) => (
-                    <div className='d-flex flex-column align-items-center'>
+                    <div
+                      key={movieId}
+                      className='d-flex flex-column align-items-center'
+                    >
                       <MovieCard
-                        key={movieId}
                         movie={movies.find((movie) => movie._id === movieId)}
                       />
                       <Button

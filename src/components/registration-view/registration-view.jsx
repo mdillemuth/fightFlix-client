@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Container, Col, Form, Button } from 'react-bootstrap';
-
+import CustomAlert from './../common/CustomAlert';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
-import CustomAlert from './../common/CustomAlert';
 
 const RegistrationView = () => {
   // State for form input

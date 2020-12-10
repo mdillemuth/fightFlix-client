@@ -1,8 +1,7 @@
 import React from 'react';
 import MovieCard from './../movie-card/movie-card';
-
+import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
-
 import { Link } from 'react-router-dom';
 
 const GenreView = ({ movie, other }) => {
@@ -38,6 +37,11 @@ const GenreView = ({ movie, other }) => {
       </div>
     </React.Fragment>
   );
+};
+
+GenreView.propTypes = {
+  movie: PropTypes.object.isRequired,
+  other: PropTypes.array.isRequired,
 };
 
 export default GenreView;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import MovieCard from './../movie-card/movie-card';
-
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 class DirectorView extends Component {
@@ -43,5 +43,10 @@ class DirectorView extends Component {
     );
   }
 }
+
+DirectorView.propTypes = {
+  movie: PropTypes.object.isRequired,
+  other: PropTypes.array.isRequired,
+};
 
 export default DirectorView;

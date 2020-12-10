@@ -51073,6 +51073,8 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _Alert = _interopRequireDefault(require("react-bootstrap/Alert"));
 
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -51096,7 +51098,6 @@ var CustomAlert = function CustomAlert(_ref) {
       alertHeading = _ref.alertHeading,
       alertBody = _ref.alertBody;
 
-  // Internal state for when user closes the alert
   var _useState = (0, _react.useState)(true),
       _useState2 = _slicedToArray(_useState, 2),
       closeAlert = _useState2[0],
@@ -51115,9 +51116,14 @@ var CustomAlert = function CustomAlert(_ref) {
   return _react.default.createElement(_react.default.Fragment, null);
 };
 
+CustomAlert.propTypes = {
+  showAlert: _propTypes.default.bool.isRequired,
+  alertHeading: _propTypes.default.string.isRequired,
+  alertBody: _propTypes.default.string.isRequired
+};
 var _default = CustomAlert;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap/Alert":"../node_modules/react-bootstrap/esm/Alert.js"}],"components/login-view/login-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap/Alert":"../node_modules/react-bootstrap/esm/Alert.js","prop-types":"../node_modules/prop-types/index.js"}],"components/login-view/login-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51240,8 +51246,8 @@ var LoginView = function LoginView(_ref) {
     className: "text-primary"
   }, "Fight"), "Flix")), _react.default.createElement(_CustomAlert.default, {
     showAlert: serverInvalidated,
-    alertHeading: "Invalid Credentials",
-    alertBody: "Please try logging in again"
+    alertHeading: "Login Error",
+    alertBody: "Incorrect username or password. Please try again."
   }), _react.default.createElement("h2", {
     className: "text-left h6 text-dark font-weight-bold mb-2"
   }, "Login to Your Account"), _react.default.createElement(_reactBootstrap.Form, {
@@ -51306,11 +51312,11 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _reactBootstrap = require("react-bootstrap");
 
+var _CustomAlert = _interopRequireDefault(require("./../common/CustomAlert"));
+
 var _axios = _interopRequireDefault(require("axios"));
 
 var _reactRouterDom = require("react-router-dom");
-
-var _CustomAlert = _interopRequireDefault(require("./../common/CustomAlert"));
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -51520,7 +51526,7 @@ var RegistrationView = function RegistrationView() {
 
 var _default = RegistrationView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./../common/CustomAlert":"components/common/CustomAlert.jsx"}],"components/director-view/director-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","./../common/CustomAlert":"components/common/CustomAlert.jsx","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/director-view/director-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51533,6 +51539,8 @@ var _react = _interopRequireWildcard(require("react"));
 var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
 var _movieCard = _interopRequireDefault(require("./../movie-card/movie-card"));
+
+var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _reactRouterDom = require("react-router-dom");
 
@@ -51617,9 +51625,13 @@ var DirectorView = /*#__PURE__*/function (_Component) {
   return DirectorView;
 }(_react.Component);
 
+DirectorView.propTypes = {
+  movie: _propTypes.default.object.isRequired,
+  other: _propTypes.default.array.isRequired
+};
 var _default = DirectorView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/genre-view/genre-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/genre-view/genre-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51630,6 +51642,8 @@ exports.default = void 0;
 var _react = _interopRequireDefault(require("react"));
 
 var _movieCard = _interopRequireDefault(require("./../movie-card/movie-card"));
+
+var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
@@ -51670,9 +51684,13 @@ var GenreView = function GenreView(_ref) {
   }))));
 };
 
+GenreView.propTypes = {
+  movie: _propTypes.default.object.isRequired,
+  other: _propTypes.default.array.isRequired
+};
 var _default = GenreView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/profile-view/profile-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/profile-view/profile-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -52377,9 +52395,9 @@ var MainView = /*#__PURE__*/function (_Component) {
             className: "container d-flex flex-wrap justify-content-center mb-5"
           }, favoriteMovies.map(function (movieId) {
             return _react.default.createElement("div", {
+              key: movieId,
               className: "d-flex flex-column align-items-center"
             }, _react.default.createElement(_movieCard.default, {
-              key: movieId,
               movie: movies.find(function (movie) {
                 return movie._id === movieId;
               })
@@ -52505,7 +52523,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36465" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42595" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

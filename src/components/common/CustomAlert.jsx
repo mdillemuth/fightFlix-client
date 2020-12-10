@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Alert from 'react-bootstrap/Alert';
+import PropTypes from 'prop-types';
 
 const CustomAlert = ({ showAlert, alertHeading, alertBody }) => {
-  // Internal state for when user closes the alert
   const [closeAlert, setCloseAlert] = useState(true);
 
   if (closeAlert && showAlert === true) {
@@ -15,6 +15,12 @@ const CustomAlert = ({ showAlert, alertHeading, alertBody }) => {
   }
 
   return <React.Fragment></React.Fragment>;
+};
+
+CustomAlert.propTypes = {
+  showAlert: PropTypes.bool.isRequired,
+  alertHeading: PropTypes.string.isRequired,
+  alertBody: PropTypes.string.isRequired,
 };
 
 export default CustomAlert;
