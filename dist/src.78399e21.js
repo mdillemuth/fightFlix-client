@@ -51081,49 +51081,70 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+var CustomAlert = function CustomAlert(props) {
+  var onShowAlert = props.onShowAlert,
+      onCloseAlert = props.onCloseAlert,
+      alertHeading = props.alertHeading,
+      alertBody = props.alertBody;
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-var CustomAlert = function CustomAlert(_ref) {
-  var showAlert = _ref.showAlert,
-      alertHeading = _ref.alertHeading,
-      alertBody = _ref.alertBody;
-
-  var _useState = (0, _react.useState)(true),
-      _useState2 = _slicedToArray(_useState, 2),
-      closeAlert = _useState2[0],
-      setCloseAlert = _useState2[1];
-
-  if (closeAlert && showAlert === true) {
+  if (onShowAlert) {
     return _react.default.createElement(_Alert.default, {
       variant: "danger",
-      onClose: function onClose() {
-        return setCloseAlert(false);
-      },
+      onClose: onCloseAlert,
       dismissible: true
-    }, _react.default.createElement(_Alert.default.Heading, null, alertHeading), _react.default.createElement("p", null, alertBody));
+    }, _react.default.createElement(_Alert.default.Heading, {
+      className: "h6 font-weight-bold"
+    }, alertHeading), _react.default.createElement("p", null, alertBody));
+  } else {
+    return null;
   }
-
-  return _react.default.createElement(_react.default.Fragment, null);
 };
 
 CustomAlert.propTypes = {
-  showAlert: _propTypes.default.bool.isRequired,
+  onShowAlert: _propTypes.default.bool.isRequired,
+  onCloseAlert: _propTypes.default.func.isRequired,
   alertHeading: _propTypes.default.string.isRequired,
   alertBody: _propTypes.default.string.isRequired
 };
 var _default = CustomAlert;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap/Alert":"../node_modules/react-bootstrap/esm/Alert.js","prop-types":"../node_modules/prop-types/index.js"}],"components/login-view/login-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap/Alert":"../node_modules/react-bootstrap/esm/Alert.js","prop-types":"../node_modules/prop-types/index.js"}],"img/spinner.gif":[function(require,module,exports) {
+module.exports = "/spinner.d72bb748.gif";
+},{}],"components/common/LoadingSpinner.jsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _spinner = _interopRequireDefault(require("./../../img/spinner.gif"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var LoadingSpinner = function LoadingSpinner(props) {
+  var show = props.show;
+
+  if (show) {
+    return _react.default.createElement("div", null, _react.default.createElement("img", {
+      src: _spinner.default,
+      style: {
+        width: '75px',
+        margin: 'auto',
+        display: 'block'
+      },
+      alt: "Loading..."
+    }));
+  } else {
+    return null;
+  }
+};
+
+var _default = LoadingSpinner;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","./../../img/spinner.gif":"img/spinner.gif"}],"components/login-view/login-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51142,6 +51163,8 @@ var _reactRouterDom = require("react-router-dom");
 var _reactBootstrap = require("react-bootstrap");
 
 var _CustomAlert = _interopRequireDefault(require("../common/CustomAlert"));
+
+var _LoadingSpinner = _interopRequireDefault(require("../common/LoadingSpinner"));
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -51189,22 +51212,34 @@ var LoginView = function LoginView(_ref) {
   var _useState5 = (0, _react.useState)(false),
       _useState6 = _slicedToArray(_useState5, 2),
       serverInvalidated = _useState6[0],
-      setServerInvalidated = _useState6[1]; // Handler for updating state on input
+      setServerInvalidated = _useState6[1]; // State for spinner gif when logging in user
+
+
+  var _useState7 = (0, _react.useState)(false),
+      _useState8 = _slicedToArray(_useState7, 2),
+      isLoading = _useState8[0],
+      setIsLoading = _useState8[1]; // Handler for updating state on input
 
 
   var onChange = function onChange(e) {
     return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
+  };
+
+  var handleCloseAlert = function handleCloseAlert() {
+    setServerInvalidated(false);
   }; // Handler for form submission (validation & login)
 
 
   var handleLogin = function handleLogin(e) {
-    // Handling Validation & UI Feedback
+    setIsLoading(true); // Handling Validation & UI Feedback
+
     var form = e.currentTarget;
 
     if (!form.checkValidity()) {
       console.log('Invalid input, form not submitted');
       e.preventDefault();
       e.stopPropagation();
+      setIsLoading(false);
     }
 
     setValidated(true); // Submission & Logging in the User
@@ -51219,9 +51254,11 @@ var LoginView = function LoginView(_ref) {
         var data = res.data;
         console.log('Account Logged In');
         handleLoggedIn(data);
+        setIsLoading(false);
       }).catch(function (e) {
         console.log('Invalid Username or Password');
         setServerInvalidated(true);
+        setIsLoading(false);
       });
     }
   };
@@ -51244,8 +51281,11 @@ var LoginView = function LoginView(_ref) {
     className: "font-italic"
   }, "my", _react.default.createElement("span", {
     className: "text-primary"
-  }, "Fight"), "Flix")), _react.default.createElement(_CustomAlert.default, {
-    showAlert: serverInvalidated,
+  }, "Fight"), "Flix")), _react.default.createElement(_LoadingSpinner.default, {
+    show: isLoading
+  }), _react.default.createElement(_CustomAlert.default, {
+    onShowAlert: serverInvalidated,
+    onCloseAlert: handleCloseAlert,
     alertHeading: "Login Error",
     alertBody: "Incorrect username or password. Please try again."
   }), _react.default.createElement("h2", {
@@ -51300,7 +51340,7 @@ LoginView.propTypes = {
 };
 var _default = LoginView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","../common/CustomAlert":"components/common/CustomAlert.jsx"}],"components/registration-view/registration-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","../common/CustomAlert":"components/common/CustomAlert.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx"}],"components/registration-view/registration-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -52523,7 +52563,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42595" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33231" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

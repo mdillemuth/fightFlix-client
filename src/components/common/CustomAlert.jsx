@@ -2,23 +2,26 @@ import React, { useState } from 'react';
 import Alert from 'react-bootstrap/Alert';
 import PropTypes from 'prop-types';
 
-const CustomAlert = ({ showAlert, alertHeading, alertBody }) => {
-  const [closeAlert, setCloseAlert] = useState(true);
+const CustomAlert = (props) => {
+  const { onShowAlert, onCloseAlert, alertHeading, alertBody } = props;
 
-  if (closeAlert && showAlert === true) {
+  if (onShowAlert) {
     return (
-      <Alert variant='danger' onClose={() => setCloseAlert(false)} dismissible>
-        <Alert.Heading>{alertHeading}</Alert.Heading>
+      <Alert variant='danger' onClose={onCloseAlert} dismissible>
+        <Alert.Heading className='h6 font-weight-bold'>
+          {alertHeading}
+        </Alert.Heading>
         <p>{alertBody}</p>
       </Alert>
     );
+  } else {
+    return null;
   }
-
-  return <React.Fragment></React.Fragment>;
 };
 
 CustomAlert.propTypes = {
-  showAlert: PropTypes.bool.isRequired,
+  onShowAlert: PropTypes.bool.isRequired,
+  onCloseAlert: PropTypes.func.isRequired,
   alertHeading: PropTypes.string.isRequired,
   alertBody: PropTypes.string.isRequired,
 };

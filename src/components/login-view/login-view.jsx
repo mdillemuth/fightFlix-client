@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { Container, Col, Form, Button } from 'react-bootstrap';
 import CustomAlert from '../common/CustomAlert';
 
+import LoadingSpinner from '../common/LoadingSpinner';
+
 const LoginView = ({ handleLoggedIn }) => {
   // State for form input
   const [formData, setFormData] = useState({
@@ -21,18 +23,27 @@ const LoginView = ({ handleLoggedIn }) => {
   // State for server-side form validation
   const [serverInvalidated, setServerInvalidated] = useState(false);
 
+  // State for spinner gif when logging in user
+  const [isLoading, setIsLoading] = useState(false);
+
   // Handler for updating state on input
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  const handleCloseAlert = () => {
+    setServerInvalidated(false);
+  };
+
   // Handler for form submission (validation & login)
   const handleLogin = (e) => {
+    setIsLoading(true);
     // Handling Validation & UI Feedback
     const form = e.currentTarget;
     if (!form.checkValidity()) {
       console.log('Invalid input, form not submitted');
       e.preventDefault();
       e.stopPropagation();
+      setIsLoading(false);
     }
     setValidated(true);
 
@@ -50,10 +61,12 @@ const LoginView = ({ handleLoggedIn }) => {
           const data = res.data;
           console.log('Account Logged In');
           handleLoggedIn(data);
+          setIsLoading(false);
         })
         .catch((e) => {
           console.log('Invalid Username or Password');
           setServerInvalidated(true);
+          setIsLoading(false);
         });
     }
   };
@@ -72,8 +85,10 @@ const LoginView = ({ handleLoggedIn }) => {
               my<span className='text-primary'>Fight</span>Flix
             </span>
           </h1>
+          <LoadingSpinner show={isLoading} />
           <CustomAlert
-            showAlert={serverInvalidated}
+            onShowAlert={serverInvalidated}
+            onCloseAlert={handleCloseAlert}
             alertHeading='Login Error'
             alertBody='Incorrect username or password. Please try again.'
           />
