@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Container, Col, Form, Button } from 'react-bootstrap';
 import CustomAlert from './../common/CustomAlert';
+import LoadingSpinner from '../common/LoadingSpinner';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const RegistrationView = () => {
-  // State for form input
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -13,38 +13,42 @@ const RegistrationView = () => {
     confirmPassword: '',
     birthday: '',
   });
-  const { username, email, password, confirmPassword, birthday } = formData;
 
-  // State for client-side form validation
-  const [validated, setValidated] = useState(false);
-
-  // State for server-side form validation
-  const [serverInvalidated, setServerInvalidated] = useState(false);
+  const { username, email, password, confirmPassword, birthday } = formData; // Form input
+  const [validated, setValidated] = useState(false); // Client-side validation
+  const [serverInvalidated, setServerInvalidated] = useState(false); // Server-side validation
+  const [isLoading, setIsLoading] = useState(false); // Loading spinner gif
 
   // Handler for form input
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleRegister = (e) => {
-    // Handling Validation & UI Feedback
-    const form = e.currentTarget;
+  // Handler for closing alert message
+  const handleCloseAlert = () => {
+    setServerInvalidated(false);
+  };
 
-    // Returns if passwords do not match
+  const handleRegister = (e) => {
+    setIsLoading(true); // Starts the loading spinner gif
+
+    // Checking passwords
     if (password !== confirmPassword) {
       return alert('Passwords do not match');
     }
 
+    // Client-side validation
+    const form = e.currentTarget;
     if (!form.checkValidity()) {
       console.log('Invalid input, form not submitted');
       e.preventDefault();
       e.stopPropagation();
+      setIsLoading(false); // Stops spinner gif
     }
     setValidated(true);
 
-    // Submission & Logging in the User
-    e.preventDefault();
+    e.preventDefault(); // Removes default HTML5 behavior
 
-    // Only calls API if form passes client-side validation
+    // API Call
     if (form.checkValidity()) {
       axios
         .post('https://my-fight-flix.herokuapp.com/api/users', {
@@ -54,13 +58,14 @@ const RegistrationView = () => {
           Birthday: birthday,
         })
         .then((res) => {
-          const data = res.data;
           console.log('Account Registered');
+          setIsLoading(false); // Stops spinner gif
           window.open('/', '_self');
         })
         .catch((e) => {
-          setServerInvalidated(true);
           console.log('Registration Error');
+          setServerInvalidated(true); // Displays alert message
+          setIsLoading(false); // Stops spinner gif
         });
     }
   };
@@ -85,8 +90,10 @@ const RegistrationView = () => {
           </span>{' '}
           for free
         </h2>
+        <LoadingSpinner show={isLoading} />
         <CustomAlert
-          showAlert={serverInvalidated}
+          onShowAlert={serverInvalidated}
+          onCloseAlert={handleCloseAlert}
           alertHeading='Registration Error'
           alertBody='Username is already taken or there is already an account with this email address'
         />

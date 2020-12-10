@@ -42,6 +42,7 @@ class ProfileView extends Component {
       },
     };
 
+    // API Call
     axios
       .get(`https://my-fight-flix.herokuapp.com/api/users/${username}`, config)
       .then((res) => {
@@ -114,7 +115,7 @@ class ProfileView extends Component {
       },
     };
 
-    // Only calls API if form passes client-side validation
+    // API Call
     if (form.checkValidity()) {
       axios
         .put(
@@ -258,7 +259,6 @@ class ProfileView extends Component {
 }
 
 ProfileView.propTypes = {
-  movies: PropTypes.array.isRequired,
   handleLogout: PropTypes.func.isRequired,
 };
 

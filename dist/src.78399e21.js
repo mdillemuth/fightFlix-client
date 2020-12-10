@@ -36092,24 +36092,29 @@ var MovieCard = /*#__PURE__*/function (_Component) {
     key: "render",
     value: function render() {
       var movie = this.props.movie;
-      return _react.default.createElement("div", {
-        className: "movie-card bg-white m-2 p-2 rounded d-flex flex-column justify-content-between align-items-center"
-      }, _react.default.createElement("div", {
-        className: "d-flex flex-column align-items-center"
-      }, _react.default.createElement("img", {
-        src: movie.ImagePath,
-        className: "movie-card-img rounded mb-2"
-      }), _react.default.createElement("p", {
-        className: "h5 text-center text-dark font-weight-semi-bold"
-      }, movie.Title)), _react.default.createElement("p", {
-        className: "movie-card-description text-muted"
-      }, movie.Description), _react.default.createElement(_reactRouterDom.Link, {
-        to: "/movies/".concat(movie._id)
-      }, _react.default.createElement(_Button.default, {
-        size: "sm",
-        variant: "primary",
-        className: "w-100"
-      }, "View")));
+
+      if (movie) {
+        return _react.default.createElement("div", {
+          className: "movie-card bg-white m-2 p-2 rounded d-flex flex-column justify-content-between align-items-center"
+        }, _react.default.createElement("div", {
+          className: "d-flex flex-column align-items-center"
+        }, _react.default.createElement("img", {
+          src: movie.ImagePath,
+          className: "movie-card-img rounded mb-2"
+        }), _react.default.createElement("p", {
+          className: "h5 text-center text-dark font-weight-semi-bold"
+        }, movie.Title)), _react.default.createElement("p", {
+          className: "movie-card-description text-muted"
+        }, movie.Description), _react.default.createElement(_reactRouterDom.Link, {
+          to: "/movies/".concat(movie._id)
+        }, _react.default.createElement(_Button.default, {
+          size: "sm",
+          variant: "primary",
+          className: "w-100"
+        }, "View")));
+      } else {
+        return null;
+      }
     }
   }]);
 
@@ -51191,7 +51196,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var LoginView = function LoginView(_ref) {
   var handleLoggedIn = _ref.handleLoggedIn;
 
-  // State for form input
   var _useState = (0, _react.useState)({
     username: '',
     password: ''
@@ -51201,37 +51205,39 @@ var LoginView = function LoginView(_ref) {
       setFormData = _useState2[1];
 
   var username = formData.username,
-      password = formData.password; // State for client-side form validation
+      password = formData.password; // Form input
 
   var _useState3 = (0, _react.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
       validated = _useState4[0],
-      setValidated = _useState4[1]; // State for server-side form validation
+      setValidated = _useState4[1]; // Client-side validation
 
 
   var _useState5 = (0, _react.useState)(false),
       _useState6 = _slicedToArray(_useState5, 2),
       serverInvalidated = _useState6[0],
-      setServerInvalidated = _useState6[1]; // State for spinner gif when logging in user
+      setServerInvalidated = _useState6[1]; // Server-side validation
 
 
   var _useState7 = (0, _react.useState)(false),
       _useState8 = _slicedToArray(_useState7, 2),
       isLoading = _useState8[0],
-      setIsLoading = _useState8[1]; // Handler for updating state on input
+      setIsLoading = _useState8[1]; // Loading spinner gif
+  // Handler for form input
 
 
   var onChange = function onChange(e) {
     return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
-  };
+  }; // Handler for closing alert message
+
 
   var handleCloseAlert = function handleCloseAlert() {
     setServerInvalidated(false);
-  }; // Handler for form submission (validation & login)
-
+  };
 
   var handleLogin = function handleLogin(e) {
-    setIsLoading(true); // Handling Validation & UI Feedback
+    setIsLoading(true); // Starts the spinner gif
+    // Client-side validation
 
     var form = e.currentTarget;
 
@@ -51239,26 +51245,27 @@ var LoginView = function LoginView(_ref) {
       console.log('Invalid input, form not submitted');
       e.preventDefault();
       e.stopPropagation();
-      setIsLoading(false);
+      setIsLoading(false); // Stops spinner gif
     }
 
-    setValidated(true); // Submission & Logging in the User
-
-    e.preventDefault(); // Only calls API if form passes client-side validation
+    setValidated(true);
+    e.preventDefault(); // Removes default HTML5 behavior
+    // API Call
 
     if (form.checkValidity()) {
       _axios.default.post('https://my-fight-flix.herokuapp.com/api/login', {
         Username: username,
         Password: password
       }).then(function (res) {
-        var data = res.data;
         console.log('Account Logged In');
-        handleLoggedIn(data);
-        setIsLoading(false);
+        handleLoggedIn(res.data); // Logs in user
+
+        setIsLoading(false); // Stops spinner gif
       }).catch(function (e) {
         console.log('Invalid Username or Password');
-        setServerInvalidated(true);
-        setIsLoading(false);
+        setServerInvalidated(true); // Displays alert message
+
+        setIsLoading(false); // Stops spinner gif
       });
     }
   };
@@ -51354,6 +51361,8 @@ var _reactBootstrap = require("react-bootstrap");
 
 var _CustomAlert = _interopRequireDefault(require("./../common/CustomAlert"));
 
+var _LoadingSpinner = _interopRequireDefault(require("../common/LoadingSpinner"));
+
 var _axios = _interopRequireDefault(require("axios"));
 
 var _reactRouterDom = require("react-router-dom");
@@ -51381,7 +51390,6 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var RegistrationView = function RegistrationView() {
-  // State for form input
   var _useState = (0, _react.useState)({
     username: '',
     email: '',
@@ -51397,41 +51405,57 @@ var RegistrationView = function RegistrationView() {
       email = formData.email,
       password = formData.password,
       confirmPassword = formData.confirmPassword,
-      birthday = formData.birthday; // State for client-side form validation
+      birthday = formData.birthday; // Form input
 
   var _useState3 = (0, _react.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
       validated = _useState4[0],
-      setValidated = _useState4[1]; // State for server-side form validation
+      setValidated = _useState4[1]; // Client-side validation
 
 
   var _useState5 = (0, _react.useState)(false),
       _useState6 = _slicedToArray(_useState5, 2),
       serverInvalidated = _useState6[0],
-      setServerInvalidated = _useState6[1]; // Handler for form input
+      setServerInvalidated = _useState6[1]; // Server-side validation
+
+
+  var _useState7 = (0, _react.useState)(false),
+      _useState8 = _slicedToArray(_useState7, 2),
+      isLoading = _useState8[0],
+      setIsLoading = _useState8[1]; // Loading spinner gif
+  // Handler for form input
 
 
   var onChange = function onChange(e) {
     return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
+  }; // Handler for closing alert message
+
+
+  var handleCloseAlert = function handleCloseAlert() {
+    setServerInvalidated(false);
   };
 
   var handleRegister = function handleRegister(e) {
-    // Handling Validation & UI Feedback
-    var form = e.currentTarget; // Returns if passwords do not match
+    setIsLoading(true); // Starts the loading spinner gif
+    // Checking passwords
 
     if (password !== confirmPassword) {
       return alert('Passwords do not match');
-    }
+    } // Client-side validation
+
+
+    var form = e.currentTarget;
 
     if (!form.checkValidity()) {
       console.log('Invalid input, form not submitted');
       e.preventDefault();
       e.stopPropagation();
+      setIsLoading(false); // Stops spinner gif
     }
 
-    setValidated(true); // Submission & Logging in the User
-
-    e.preventDefault(); // Only calls API if form passes client-side validation
+    setValidated(true);
+    e.preventDefault(); // Removes default HTML5 behavior
+    // API Call
 
     if (form.checkValidity()) {
       _axios.default.post('https://my-fight-flix.herokuapp.com/api/users', {
@@ -51440,12 +51464,15 @@ var RegistrationView = function RegistrationView() {
         Email: email,
         Birthday: birthday
       }).then(function (res) {
-        var data = res.data;
         console.log('Account Registered');
+        setIsLoading(false); // Stops spinner gif
+
         window.open('/', '_self');
       }).catch(function (e) {
-        setServerInvalidated(true);
         console.log('Registration Error');
+        setServerInvalidated(true); // Displays alert message
+
+        setIsLoading(false); // Stops spinner gif
       });
     }
   };
@@ -51474,8 +51501,11 @@ var RegistrationView = function RegistrationView() {
     className: "font-italic"
   }, "my", _react.default.createElement("span", {
     className: "text-primary"
-  }, "Fight"), "Flix"), ' ', "for free"), _react.default.createElement(_CustomAlert.default, {
-    showAlert: serverInvalidated,
+  }, "Fight"), "Flix"), ' ', "for free"), _react.default.createElement(_LoadingSpinner.default, {
+    show: isLoading
+  }), _react.default.createElement(_CustomAlert.default, {
+    onShowAlert: serverInvalidated,
+    onCloseAlert: handleCloseAlert,
     alertHeading: "Registration Error",
     alertBody: "Username is already taken or there is already an account with this email address"
   }), _react.default.createElement(_reactBootstrap.Form, {
@@ -51566,7 +51596,7 @@ var RegistrationView = function RegistrationView() {
 
 var _default = RegistrationView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","./../common/CustomAlert":"components/common/CustomAlert.jsx","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/director-view/director-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","./../common/CustomAlert":"components/common/CustomAlert.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/director-view/director-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51854,7 +51884,7 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         headers: {
           Authorization: "Bearer ".concat(token)
         }
-      }; // Only calls API if form passes client-side validation
+      }; // API Call
 
       if (form.checkValidity()) {
         _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
@@ -51904,7 +51934,7 @@ var ProfileView = /*#__PURE__*/function (_Component) {
         headers: {
           Authorization: "Bearer ".concat(token)
         }
-      };
+      }; // API Call
 
       _axios.default.get("https://my-fight-flix.herokuapp.com/api/users/".concat(username), config).then(function (res) {
         res.data.map(function (item) {
@@ -52034,7 +52064,6 @@ var ProfileView = /*#__PURE__*/function (_Component) {
 }(_react.Component);
 
 ProfileView.propTypes = {
-  movies: _propTypes.default.array.isRequired,
   handleLogout: _propTypes.default.func.isRequired
 };
 var _default = ProfileView;
@@ -52425,8 +52454,7 @@ var MainView = /*#__PURE__*/function (_Component) {
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
             handleLogout: _this4.handleLogout
           }), _react.default.createElement(_profileView.default, {
-            handleLogout: _this4.handleLogout,
-            movies: movies
+            handleLogout: _this4.handleLogout
           }), _react.default.createElement("div", null, _react.default.createElement("h3", {
             className: "text-dark text-center font-weight-bold h5 mt-4"
           }, "My ", _react.default.createElement("span", {
@@ -52563,7 +52591,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33231" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36379" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

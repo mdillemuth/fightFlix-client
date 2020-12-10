@@ -209,7 +209,7 @@ class MainView extends Component {
           render={() => (
             <React.Fragment>
               <NavBar handleLogout={this.handleLogout} />
-              <ProfileView handleLogout={this.handleLogout} movies={movies} />
+              <ProfileView handleLogout={this.handleLogout} />
               <div>
                 <h3 className='text-dark text-center font-weight-bold h5 mt-4'>
                   My <span className='text-primary'>Favorite</span> Movies

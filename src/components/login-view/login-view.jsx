@@ -10,47 +10,40 @@ import CustomAlert from '../common/CustomAlert';
 import LoadingSpinner from '../common/LoadingSpinner';
 
 const LoginView = ({ handleLoggedIn }) => {
-  // State for form input
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
-  const { username, password } = formData;
+  const { username, password } = formData; // Form input
+  const [validated, setValidated] = useState(false); // Client-side validation
+  const [serverInvalidated, setServerInvalidated] = useState(false); // Server-side validation
+  const [isLoading, setIsLoading] = useState(false); // Loading spinner gif
 
-  // State for client-side form validation
-  const [validated, setValidated] = useState(false);
-
-  // State for server-side form validation
-  const [serverInvalidated, setServerInvalidated] = useState(false);
-
-  // State for spinner gif when logging in user
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Handler for updating state on input
+  // Handler for form input
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  // Handler for closing alert message
   const handleCloseAlert = () => {
     setServerInvalidated(false);
   };
 
-  // Handler for form submission (validation & login)
   const handleLogin = (e) => {
-    setIsLoading(true);
-    // Handling Validation & UI Feedback
+    setIsLoading(true); // Starts the spinner gif
+
+    // Client-side validation
     const form = e.currentTarget;
     if (!form.checkValidity()) {
       console.log('Invalid input, form not submitted');
       e.preventDefault();
       e.stopPropagation();
-      setIsLoading(false);
+      setIsLoading(false); // Stops spinner gif
     }
     setValidated(true);
 
-    // Submission & Logging in the User
-    e.preventDefault();
+    e.preventDefault(); // Removes default HTML5 behavior
 
-    // Only calls API if form passes client-side validation
+    // API Call
     if (form.checkValidity()) {
       axios
         .post('https://my-fight-flix.herokuapp.com/api/login', {
@@ -58,15 +51,14 @@ const LoginView = ({ handleLoggedIn }) => {
           Password: password,
         })
         .then((res) => {
-          const data = res.data;
           console.log('Account Logged In');
-          handleLoggedIn(data);
-          setIsLoading(false);
+          handleLoggedIn(res.data); // Logs in user
+          setIsLoading(false); // Stops spinner gif
         })
         .catch((e) => {
           console.log('Invalid Username or Password');
-          setServerInvalidated(true);
-          setIsLoading(false);
+          setServerInvalidated(true); // Displays alert message
+          setIsLoading(false); // Stops spinner gif
         });
     }
   };
