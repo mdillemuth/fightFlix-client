@@ -16,7 +16,7 @@ const RegistrationView = () => {
   });
   const { username, email, password, confirmPassword, birthday } = formData;
 
-  // State for form validation
+  // State for client-side form validation
   const [validated, setValidated] = useState(false);
 
   // Handler for form input

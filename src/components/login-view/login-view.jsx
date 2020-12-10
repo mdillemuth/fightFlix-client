@@ -4,7 +4,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 // Import Styles
-import { Container, Col, Form, FormControl, Button } from 'react-bootstrap';
+import { Container, Col, Form, Button } from 'react-bootstrap';
+import CustomAlert from '../common/CustomAlert';
 import './login-view.scss';
 
 const LoginView = ({ handleLoggedIn }) => {
@@ -15,8 +16,11 @@ const LoginView = ({ handleLoggedIn }) => {
   });
   const { username, password } = formData;
 
-  // State for form validation
+  // State for client-side form validation
   const [validated, setValidated] = useState(false);
+
+  // State for server-side form validation
+  const [serverInvalidated, setServerInvalidated] = useState(false);
 
   // Handler for updating state on input
   const onChange = (e) =>
@@ -50,6 +54,7 @@ const LoginView = ({ handleLoggedIn }) => {
         })
         .catch((e) => {
           console.log('Invalid Username or Password');
+          setServerInvalidated(true);
         });
     }
   };
@@ -68,6 +73,11 @@ const LoginView = ({ handleLoggedIn }) => {
               my<span className='text-primary'>Fight</span>Flix
             </span>
           </h1>
+          <CustomAlert
+            showAlert={serverInvalidated}
+            alertHeading='Invalid Credentials'
+            alertBody='Please try logging in again'
+          />
           <h2 className='text-left h6 text-dark font-weight-bold mb-2'>
             Login to Your Account
           </h2>
