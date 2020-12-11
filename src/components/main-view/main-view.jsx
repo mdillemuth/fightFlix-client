@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Route } from 'react-router-dom';
 
-import MovieCard from '../movie-card/movie-card';
+import MoviesView from '../movies-view/movies-view';
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
 import RegistrationView from '../registration-view/registration-view';
 import DirectorView from '../director-view/director-view';
 import GenreView from './../genre-view/genre-view';
 import ProfileView from '../profile-view/profile-view';
+import FavoritesView from '../favorites-view/favorites-view';
 import NavBar from '../common/NavBar';
 import SubNavBar from '../common/SubNavBar';
-
-import Button from 'react-bootstrap/Button';
 
 class MainView extends Component {
   constructor() {
@@ -165,10 +164,6 @@ class MainView extends Component {
   render() {
     const { movies, user, userData, favoriteMovies } = this.state;
 
-    if (!movies) return <div className='main-view' />;
-    if (!userData) return <div className='main-view' />;
-    if (!favoriteMovies) return <div className='main-view' />;
-
     return (
       <div>
         <Route
@@ -186,18 +181,7 @@ class MainView extends Component {
               <React.Fragment>
                 <NavBar onLogout={this.handleLogout} />
                 {/* <SubNavBar /> */}
-                <h2 className='my-1 h3 text-dark text-center'>
-                  Choose from{' '}
-                  <span className='text-primary'>
-                    {this.state.movies.length}
-                  </span>{' '}
-                  exciting movies
-                </h2>
-                <div className='container d-flex flex-wrap justify-content-center'>
-                  {movies.map((m) => (
-                    <MovieCard key={m._id} movie={m} />
-                  ))}
-                </div>
+                <MoviesView movies={movies} />
               </React.Fragment>
             );
           }}
@@ -210,31 +194,11 @@ class MainView extends Component {
             <React.Fragment>
               <NavBar onLogout={this.handleLogout} />
               <ProfileView onLogout={this.handleLogout} />
-              <div>
-                <h3 className='text-dark text-center font-weight-bold h5 mt-4'>
-                  My <span className='text-primary'>Favorite</span> Movies
-                </h3>
-                <div className='container d-flex flex-wrap justify-content-center mb-5'>
-                  {favoriteMovies.map((movieId) => (
-                    <div
-                      key={movieId}
-                      className='d-flex flex-column align-items-center'
-                    >
-                      <MovieCard
-                        movie={movies.find((movie) => movie._id === movieId)}
-                      />
-                      <Button
-                        size='sm'
-                        variant='warning'
-                        className='w-75'
-                        onClick={() => this.handleRemoveFavorite(movieId)}
-                      >
-                        Remove Favorite
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <FavoritesView
+                favoriteMovies={favoriteMovies}
+                movies={movies}
+                onRemoveFavorite={this.handleRemoveFavorite}
+              />
             </React.Fragment>
           )}
         />
