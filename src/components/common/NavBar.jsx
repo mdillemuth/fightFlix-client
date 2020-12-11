@@ -5,21 +5,15 @@ import Button from 'react-bootstrap/Button';
 
 import { Link } from 'react-router-dom';
 
-const NavBar = (props) => {
-  const { onLogout } = props;
+const NavBar = ({ onLogout, user }) => {
+  const username = localStorage.getItem('user');
 
-  return (
-    <React.Fragment>
-      <Navbar
-        bg='white'
-        className='d-flex justify-content-between align-items-center px-3'
-      >
-        <Navbar.Brand className='text-dark font-italic h2 font-weight-bold p-0 m-0'>
-          my<span className='text-primary'>Fight</span>Flix
-        </Navbar.Brand>
+  const renderButtons = (user) => {
+    if (user !== null) {
+      return (
         <div>
           <Link to='/profile'>
-            <Button className='mr-1'>{localStorage.getItem('user')}</Button>
+            <Button className='mr-1'>{username}</Button>
           </Link>
           <Link to='/'>
             <Button
@@ -31,6 +25,20 @@ const NavBar = (props) => {
             </Button>
           </Link>
         </div>
+      );
+    }
+  };
+
+  return (
+    <React.Fragment>
+      <Navbar
+        bg='white'
+        className='d-flex justify-content-between align-items-center px-3'
+      >
+        <Navbar.Brand className='text-dark font-italic h2 font-weight-bold p-0 m-0'>
+          my<span className='text-primary'>Fight</span>Flix
+        </Navbar.Brand>
+        <div>{renderButtons(user)}</div>
       </Navbar>
     </React.Fragment>
   );
@@ -38,6 +46,7 @@ const NavBar = (props) => {
 
 NavBar.propTypes = {
   onLogout: PropTypes.func.isRequired,
+  user: PropTypes.string,
 };
 
 export default NavBar;

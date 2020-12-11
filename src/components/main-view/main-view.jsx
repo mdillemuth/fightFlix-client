@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import { Route } from 'react-router-dom';
-
 import MoviesView from '../movies-view/movies-view';
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
@@ -11,7 +8,8 @@ import GenreView from './../genre-view/genre-view';
 import ProfileView from '../profile-view/profile-view';
 import FavoritesView from '../favorites-view/favorites-view';
 import NavBar from '../common/NavBar';
-import SubNavBar from '../common/SubNavBar';
+import axios from 'axios';
+import { Route, Switch } from 'react-router-dom';
 
 class MainView extends Component {
   constructor() {
@@ -162,52 +160,15 @@ class MainView extends Component {
   };
 
   render() {
-    const { movies, user, userData, favoriteMovies } = this.state;
+    const { movies, user, favoriteMovies } = this.state;
 
     return (
       <div>
-        <Route
-          exact
-          path='/'
-          render={() => {
-            if (!user) {
-              return (
-                <LoginView
-                  handleLoggedIn={(user) => this.handleLoggedIn(user)}
-                />
-              );
-            }
-            return (
-              <React.Fragment>
-                <NavBar onLogout={this.handleLogout} />
-                {/* <SubNavBar /> */}
-                <MoviesView movies={movies} />
-              </React.Fragment>
-            );
-          }}
-        />
-        <Route path='/register' render={() => <RegistrationView />} />
-        <Route
-          exact
-          path='/profile'
-          render={() => (
-            <React.Fragment>
-              <NavBar onLogout={this.handleLogout} />
-              <ProfileView onLogout={this.handleLogout} />
-              <FavoritesView
-                favoriteMovies={favoriteMovies}
-                movies={movies}
-                onRemoveFavorite={this.handleRemoveFavorite}
-              />
-            </React.Fragment>
-          )}
-        />
-        <Route
-          exact
-          path='/directors/:directorName'
-          render={({ match }) => (
-            <React.Fragment>
-              <NavBar onLogout={this.handleLogout} />
+        <NavBar onLogout={this.handleLogout} user={user} />
+        <Switch>
+          <Route
+            path='/directors/:directorName'
+            render={({ match }) => (
               <DirectorView
                 movie={movies.find(
                   (m) => m.Director.Name === match.params.directorName
@@ -216,15 +177,11 @@ class MainView extends Component {
                   (m) => m.Director.Name === match.params.directorName
                 )}
               />
-            </React.Fragment>
-          )}
-        />
-        <Route
-          exact
-          path='/genres/:genreName'
-          render={({ match }) => (
-            <React.Fragment>
-              <NavBar onLogout={this.handleLogout} />
+            )}
+          />
+          <Route
+            path='/genres/:genreName'
+            render={({ match }) => (
               <GenreView
                 movie={movies.find(
                   (m) => m.Genre.Name === match.params.genreName
@@ -233,23 +190,46 @@ class MainView extends Component {
                   (m) => m.Genre.Name === match.params.genreName
                 )}
               />
-            </React.Fragment>
-          )}
-        />
-        <Route
-          exact
-          path='/movies/:movieId'
-          render={({ match }) => (
-            <React.Fragment>
-              <NavBar onLogout={this.handleLogout} />
+            )}
+          />
+          <Route
+            path='/movies/:movieId'
+            render={({ match }) => (
               <MovieView
                 isFavorite={favoriteMovies.indexOf(match.params.movieId)}
                 movie={movies.find((m) => m._id === match.params.movieId)}
                 onToggleFavorite={this.handleToggleFavorite}
               />
-            </React.Fragment>
-          )}
-        />
+            )}
+          />
+          <Route
+            path='/profile'
+            render={() => (
+              <div>
+                <ProfileView onLogout={this.handleLogout} />
+                <FavoritesView
+                  favoriteMovies={favoriteMovies}
+                  movies={movies}
+                  onRemoveFavorite={this.handleRemoveFavorite}
+                />
+              </div>
+            )}
+          />
+          <Route path='/register' render={() => <RegistrationView />} />
+          <Route
+            path='/'
+            render={() => {
+              if (!user) {
+                return (
+                  <LoginView
+                    handleLoggedIn={(user) => this.handleLoggedIn(user)}
+                  />
+                );
+              }
+              return <MoviesView movies={movies} />;
+            }}
+          />
+        </Switch>
       </div>
     );
   }
