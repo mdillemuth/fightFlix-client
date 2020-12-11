@@ -1,54 +1,50 @@
 import React, { useState } from 'react';
-import { Container, Col, Form, Button } from 'react-bootstrap';
+import RegistrationForm from './registration-form';
 import CustomAlert from './../common/CustomAlert';
 import LoadingSpinner from '../common/LoadingSpinner';
+import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
 const RegistrationView = () => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    passwordConfirm: '',
     birthday: '',
   });
 
-  const { username, email, password, confirmPassword, birthday } = formData; // Form input
-  const [validated, setValidated] = useState(false); // Client-side validation
-  const [serverInvalidated, setServerInvalidated] = useState(false); // Server-side validation
-  const [isLoading, setIsLoading] = useState(false); // Loading spinner gif
+  const { username, email, password, passwordConfirm, birthday } = formData;
+  const [isClientValidated, setIsClientValidated] = useState(false);
+  const [isServerInvalidated, setIsServerInvalidated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Handler for form input
-  const onChange = (e) =>
+  const handleFormChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // Handler for closing alert message
   const handleCloseAlert = () => {
-    setServerInvalidated(false);
+    setIsServerInvalidated(false);
   };
 
-  const handleRegister = (e) => {
-    setIsLoading(true); // Starts the loading spinner gif
+  const handleRegistration = (e) => {
+    setIsLoading(true);
 
-    // Checking passwords
-    if (password !== confirmPassword) {
+    if (password !== passwordConfirm) {
       return alert('Passwords do not match');
     }
 
-    // Client-side validation
     const form = e.currentTarget;
     if (!form.checkValidity()) {
       console.log('Invalid input, form not submitted');
       e.preventDefault();
       e.stopPropagation();
-      setIsLoading(false); // Stops spinner gif
+      setIsLoading(false);
     }
-    setValidated(true);
+    setIsClientValidated(true);
 
-    e.preventDefault(); // Removes default HTML5 behavior
+    e.preventDefault();
 
-    // API Call
     if (form.checkValidity()) {
       axios
         .post('https://my-fight-flix.herokuapp.com/api/users', {
@@ -59,13 +55,13 @@ const RegistrationView = () => {
         })
         .then((res) => {
           console.log('Account Registered');
-          setIsLoading(false); // Stops spinner gif
+          setIsLoading(false);
           window.open('/', '_self');
         })
         .catch((e) => {
           console.log('Registration Error');
-          setServerInvalidated(true); // Displays alert message
-          setIsLoading(false); // Stops spinner gif
+          setIsServerInvalidated(true);
+          setIsLoading(false);
         });
     }
   };
@@ -92,105 +88,21 @@ const RegistrationView = () => {
         </h2>
         <LoadingSpinner show={isLoading} />
         <CustomAlert
-          onShowAlert={serverInvalidated}
-          onCloseAlert={handleCloseAlert}
           alertHeading='Registration Error'
           alertBody='Username is already taken or there is already an account with this email address'
+          isShowAlert={isServerInvalidated}
+          onCloseAlert={handleCloseAlert}
         />
-        <Form
-          noValidate
-          validated={validated}
-          className='mb-2'
-          onSubmit={handleRegister}
-        >
-          <Form.Group className='mb-2' controlId='registerUsername'>
-            <Form.Control
-              autoFocus
-              type='text'
-              placeholder='Username'
-              name='username'
-              value={username}
-              onChange={onChange}
-              required
-            />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            <Form.Control.Feedback type='invalid'>
-              Please choose a username
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group className='mb-2' controlId='registerEmail'>
-            <Form.Control
-              type='email'
-              placeholder='Email'
-              name='email'
-              value={email}
-              onChange={onChange}
-              required
-            />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            <Form.Control.Feedback type='invalid'>
-              Please enter a valid email address
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group className='mb-2' controlId='registerPassword'>
-            <Form.Control
-              type='password'
-              placeholder='Password'
-              name='password'
-              value={password}
-              onChange={onChange}
-              required
-              minLength='7'
-            />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            <Form.Control.Feedback type='invalid'>
-              Password must be at least 7 characters
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group className='mb-2' controlId='registerConfirmPassword'>
-            <Form.Control
-              type='password'
-              placeholder='Confirm password'
-              name='confirmPassword'
-              value={confirmPassword}
-              onChange={onChange}
-              required
-              minLength='7'
-            />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            <Form.Control.Feedback type='invalid'>
-              Password must be at least 7 characters
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group controlId='registerBirthday' className='mb-2 '>
-            <Form.Label className='mb-1 text-muted font-weight-bold'>
-              Please enter your birthday
-            </Form.Label>
-            <Form.Control
-              type='date'
-              name='birthday'
-              placeholder='Birthday'
-              value={birthday}
-              onChange={onChange}
-              required
-            />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            <Form.Control.Feedback type='invalid'>
-              Birthday is required
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Button variant='primary' type='submit' className='w-100 btn-lg mb-3'>
-            Sign Up
-          </Button>
-        </Form>
-        <small className='text-muted text-center d-block'>
-          Already a member?
-          <Link to='/'>
-            <span style={{ cursor: 'pointer' }} className='text-primary ml-2'>
-              Login here
-            </span>
-          </Link>
-        </small>
+        <RegistrationForm
+          usernameValue={username}
+          emailValue={email}
+          passwordValue={password}
+          passwordConfirmValue={passwordConfirm}
+          birthdayValue={birthday}
+          isClientValidated={isClientValidated}
+          onFormChange={handleFormChange}
+          onRegistration={handleRegistration}
+        />
       </Col>
     </Container>
   );

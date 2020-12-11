@@ -1,15 +1,10 @@
 // Import components
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import MovieCard from '../movie-card/movie-card';
-
-// Import styling
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
-
-// Import routing
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -42,7 +37,6 @@ class ProfileView extends Component {
       },
     };
 
-    // API Call
     axios
       .get(`https://my-fight-flix.herokuapp.com/api/users/${username}`, config)
       .then((res) => {
@@ -55,10 +49,8 @@ class ProfileView extends Component {
       .catch((e) => console.log('Error Retrieving User Data'));
   }
 
-  // Handler for form input
   handleInputChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
-  // Remove account and log out user, return to loginView
   handleRemoveAccount = () => {
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('user');
@@ -79,7 +71,6 @@ class ProfileView extends Component {
     }
   };
 
-  // Update account and log out user, return to loginView
   handleUpdateAccount = (e) => {
     const form = e.currentTarget;
     const username = localStorage.getItem('user');
@@ -92,12 +83,10 @@ class ProfileView extends Component {
       newBirthday,
     } = this.state;
 
-    // Returns if passwords do not match
     if (newPassword !== newConfirmPassword) {
       return alert('Passwords do not match');
     }
 
-    // Validates form inputs
     if (!form.checkValidity()) {
       console.log('Invalid input, form not submitted');
       e.preventDefault();
@@ -115,7 +104,6 @@ class ProfileView extends Component {
       },
     };
 
-    // API Call
     if (form.checkValidity()) {
       axios
         .put(
