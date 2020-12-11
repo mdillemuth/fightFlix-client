@@ -82,8 +82,7 @@ const LoginView = ({ handleLoggedIn }) => {
             Login to Your Account
           </h2>
           <LoginForm
-            usernameValue={username}
-            passwordValue={password}
+            formInputs={formData}
             isClientValidated={isClientValidated}
             onFormChange={handleFormChange}
             onLogin={handleLogin}

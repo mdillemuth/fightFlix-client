@@ -37492,11 +37492,12 @@ var _reactRouterDom = require("react-router-dom");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var LoginForm = function LoginForm(props) {
-  var usernameValue = props.usernameValue,
-      passwordValue = props.passwordValue,
+  var formInputs = props.formInputs,
       isClientValidated = props.isClientValidated,
       onFormChange = props.onFormChange,
       onLogin = props.onLogin;
+  var username = formInputs.username,
+      password = formInputs.password;
   return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Form.default, {
     noValidate: true,
     validated: isClientValidated,
@@ -37510,7 +37511,7 @@ var LoginForm = function LoginForm(props) {
     type: "text",
     placeholder: "Username",
     name: "username",
-    value: usernameValue,
+    value: username,
     onChange: onFormChange,
     required: true
   }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
@@ -37522,7 +37523,7 @@ var LoginForm = function LoginForm(props) {
     type: "password",
     placeholder: "Password",
     name: "password",
-    value: passwordValue,
+    value: password,
     onChange: onFormChange,
     required: true,
     minLength: "7"
@@ -37542,8 +37543,7 @@ var LoginForm = function LoginForm(props) {
 };
 
 LoginForm.propTypes = {
-  usernameValue: _propTypes.default.string.isRequired,
-  passwordValue: _propTypes.default.string.isRequired,
+  formInputs: _propTypes.default.object.isRequired,
   isClientValidated: _propTypes.default.bool.isRequired,
   onFormChange: _propTypes.default.func.isRequired,
   onLogin: _propTypes.default.func.isRequired
@@ -39669,8 +39669,7 @@ var LoginView = function LoginView(_ref) {
   }), _react.default.createElement("h2", {
     className: "text-left h6 text-dark font-weight-bold mb-2"
   }, "Login to Your Account"), _react.default.createElement(_loginForm.default, {
-    usernameValue: username,
-    passwordValue: password,
+    formInputs: formData,
     isClientValidated: isClientValidated,
     onFormChange: handleFormChange,
     onLogin: handleLogin
@@ -39704,14 +39703,15 @@ var _reactRouterDom = require("react-router-dom");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var RegistrationForm = function RegistrationForm(props) {
-  var usernameValue = props.usernameValue,
-      emailValue = props.emailValue,
-      passwordValue = props.passwordValue,
-      passwordConfirmValue = props.passwordConfirmValue,
-      birthdayValue = props.birthdayValue,
+  var formInputs = props.formInputs,
       isClientValidated = props.isClientValidated,
       onFormChange = props.onFormChange,
       onRegistration = props.onRegistration;
+  var username = formInputs.username,
+      email = formInputs.email,
+      password = formInputs.password,
+      passwordConfirm = formInputs.passwordConfirm,
+      birthday = formInputs.birthday;
   return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Form.default, {
     noValidate: true,
     validated: isClientValidated,
@@ -39725,7 +39725,7 @@ var RegistrationForm = function RegistrationForm(props) {
     type: "text",
     placeholder: "Username",
     name: "username",
-    value: usernameValue,
+    value: username,
     onChange: onFormChange,
     required: true
   }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
@@ -39737,7 +39737,7 @@ var RegistrationForm = function RegistrationForm(props) {
     type: "email",
     placeholder: "Email",
     name: "email",
-    value: emailValue,
+    value: email,
     onChange: onFormChange,
     required: true
   }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
@@ -39749,7 +39749,7 @@ var RegistrationForm = function RegistrationForm(props) {
     type: "password",
     placeholder: "Password",
     name: "password",
-    value: passwordValue,
+    value: password,
     onChange: onFormChange,
     required: true,
     minLength: "7"
@@ -39762,7 +39762,7 @@ var RegistrationForm = function RegistrationForm(props) {
     type: "password",
     placeholder: "Confirm password",
     name: "passwordConfirm",
-    value: passwordConfirmValue,
+    value: passwordConfirm,
     onChange: onFormChange,
     required: true,
     minLength: "7"
@@ -39777,7 +39777,7 @@ var RegistrationForm = function RegistrationForm(props) {
     type: "date",
     name: "birthday",
     placeholder: "Birthday",
-    value: birthdayValue,
+    value: birthday,
     onChange: onFormChange,
     required: true
   }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
@@ -39799,11 +39799,7 @@ var RegistrationForm = function RegistrationForm(props) {
 };
 
 RegistrationForm.propTypes = {
-  usernameValue: _propTypes.default.string.isRequired,
-  emailValue: _propTypes.default.string.isRequired,
-  passwordValue: _propTypes.default.string.isRequired,
-  passwordConfirmValue: _propTypes.default.string.isRequired,
-  birthdayValue: _propTypes.default.string.isRequired,
+  formInputs: _propTypes.default.object.isRequired,
   isClientValidated: _propTypes.default.bool.isRequired,
   onFormChange: _propTypes.default.func.isRequired,
   onRegistration: _propTypes.default.func.isRequired
@@ -39964,11 +39960,7 @@ var RegistrationView = function RegistrationView() {
     isShowAlert: isServerInvalidated,
     onCloseAlert: handleCloseAlert
   }), _react.default.createElement(_registrationForm.default, {
-    usernameValue: username,
-    emailValue: email,
-    passwordValue: password,
-    passwordConfirmValue: passwordConfirm,
-    birthdayValue: birthday,
+    formInputs: formData,
     isClientValidated: isClientValidated,
     onFormChange: handleFormChange,
     onRegistration: handleRegistration
@@ -40162,15 +40154,16 @@ var _reactRouterDom = require("react-router-dom");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var ProfileForm = function ProfileForm(props) {
-  var newUsernameValue = props.newUsernameValue,
-      newEmailValue = props.newEmailValue,
-      newPasswordValue = props.newPasswordValue,
-      newPasswordConfirmValue = props.newPasswordConfirmValue,
-      newBirthdayValue = props.newBirthdayValue,
+  var formInputs = props.formInputs,
       isClientValidated = props.isClientValidated,
       onFormChange = props.onFormChange,
       onUpdateAccount = props.onUpdateAccount,
       onRemoveAccount = props.onRemoveAccount;
+  var newUsername = formInputs.newUsername,
+      newEmail = formInputs.newEmail,
+      newPassword = formInputs.newPassword,
+      newPasswordConfirm = formInputs.newPasswordConfirm,
+      newBirthday = formInputs.newBirthday;
   return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Form.default, {
     noValidate: true,
     validated: isClientValidated,
@@ -40184,7 +40177,7 @@ var ProfileForm = function ProfileForm(props) {
     type: "text",
     placeholder: "New username",
     name: "newUsername",
-    value: newUsernameValue,
+    value: newUsername,
     onChange: onFormChange,
     required: true
   }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
@@ -40196,7 +40189,7 @@ var ProfileForm = function ProfileForm(props) {
     type: "email",
     placeholder: "New email",
     name: "newEmail",
-    value: newEmailValue,
+    value: newEmail,
     onChange: onFormChange,
     required: true
   }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
@@ -40208,7 +40201,7 @@ var ProfileForm = function ProfileForm(props) {
     type: "password",
     placeholder: "New password",
     name: "newPassword",
-    value: newPasswordValue,
+    value: newPassword,
     onChange: onFormChange,
     required: true,
     minLength: "7"
@@ -40221,7 +40214,7 @@ var ProfileForm = function ProfileForm(props) {
     type: "password",
     placeholder: "Confirm new password",
     name: "newPasswordConfirm",
-    value: newPasswordConfirmValue,
+    value: newPasswordConfirm,
     onChange: onFormChange,
     required: true,
     minLength: "7"
@@ -40235,7 +40228,7 @@ var ProfileForm = function ProfileForm(props) {
   }, "Birthday"), _react.default.createElement(_Form.default.Control, {
     type: "date",
     name: "newBirthday",
-    value: newBirthdayValue,
+    value: newBirthday,
     onChange: onFormChange,
     required: true
   }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
@@ -40258,11 +40251,7 @@ var ProfileForm = function ProfileForm(props) {
 };
 
 ProfileForm.propTypes = {
-  newUsernameValue: _propTypes.default.string.isRequired,
-  newPasswordValue: _propTypes.default.string.isRequired,
-  newPasswordConfirmValue: _propTypes.default.string.isRequired,
-  newEmailValue: _propTypes.default.string.isRequired,
-  newBirthdayValue: _propTypes.default.string.isRequired,
+  formInputs: _propTypes.default.object.isRequired,
   isClientValidated: _propTypes.default.bool.isRequired,
   onFormChange: _propTypes.default.func.isRequired,
   onUpdateAccount: _propTypes.default.func.isRequired,
@@ -40457,11 +40446,7 @@ var ProfileView = function ProfileView(props) {
     isShowAlert: isServerInvalidated,
     onCloseAlert: handleCloseAlert
   }), _react.default.createElement(_profileForm.default, {
-    newUsernameValue: newUsername,
-    newEmailValue: newEmail,
-    newPasswordValue: newPassword,
-    newPasswordConfirmValue: newPasswordConfirm,
-    newBirthdayValue: newBirthday,
+    formInputs: formData,
     isClientValidated: isClientValidated,
     onFormChange: handleFormChange,
     onUpdateAccount: handleUpdateAccount,
@@ -40470,7 +40455,7 @@ var ProfileView = function ProfileView(props) {
 };
 
 ProfileView.propTypes = {
-  handleLogout: _propTypes.default.func.isRequired
+  onLogout: _propTypes.default.func.isRequired
 };
 var _default = ProfileView;
 exports.default = _default;
@@ -45848,7 +45833,7 @@ var MainView = /*#__PURE__*/function (_Component) {
           }
 
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this4.handleLogout
+            onLogout: _this4.handleLogout
           }), _react.default.createElement("h2", {
             className: "my-1 h3 text-dark text-center"
           }, "Choose from", ' ', _react.default.createElement("span", {
@@ -45905,7 +45890,7 @@ var MainView = /*#__PURE__*/function (_Component) {
         render: function render(_ref) {
           var match = _ref.match;
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this4.handleLogout
+            onLogout: _this4.handleLogout
           }), _react.default.createElement(_directorView.default, {
             movie: movies.find(function (m) {
               return m.Director.Name === match.params.directorName;
@@ -45921,7 +45906,7 @@ var MainView = /*#__PURE__*/function (_Component) {
         render: function render(_ref2) {
           var match = _ref2.match;
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this4.handleLogout
+            onLogout: _this4.handleLogout
           }), _react.default.createElement(_genreView.default, {
             movie: movies.find(function (m) {
               return m.Genre.Name === match.params.genreName;
@@ -45937,7 +45922,7 @@ var MainView = /*#__PURE__*/function (_Component) {
         render: function render(_ref3) {
           var match = _ref3.match;
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this4.handleLogout
+            onLogout: _this4.handleLogout
           }), _react.default.createElement(_movieView.default, {
             isFavorite: favoriteMovies.indexOf(match.params.movieId),
             movie: movies.find(function (m) {
@@ -46011,7 +45996,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41893" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36959" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

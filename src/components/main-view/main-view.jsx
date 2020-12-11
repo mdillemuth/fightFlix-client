@@ -184,7 +184,7 @@ class MainView extends Component {
             }
             return (
               <React.Fragment>
-                <NavBar handleLogout={this.handleLogout} />
+                <NavBar onLogout={this.handleLogout} />
                 {/* <SubNavBar /> */}
                 <h2 className='my-1 h3 text-dark text-center'>
                   Choose from{' '}
@@ -243,7 +243,7 @@ class MainView extends Component {
           path='/directors/:directorName'
           render={({ match }) => (
             <React.Fragment>
-              <NavBar handleLogout={this.handleLogout} />
+              <NavBar onLogout={this.handleLogout} />
               <DirectorView
                 movie={movies.find(
                   (m) => m.Director.Name === match.params.directorName
@@ -260,7 +260,7 @@ class MainView extends Component {
           path='/genres/:genreName'
           render={({ match }) => (
             <React.Fragment>
-              <NavBar handleLogout={this.handleLogout} />
+              <NavBar onLogout={this.handleLogout} />
               <GenreView
                 movie={movies.find(
                   (m) => m.Genre.Name === match.params.genreName
@@ -277,7 +277,7 @@ class MainView extends Component {
           path='/movies/:movieId'
           render={({ match }) => (
             <React.Fragment>
-              <NavBar handleLogout={this.handleLogout} />
+              <NavBar onLogout={this.handleLogout} />
               <MovieView
                 isFavorite={favoriteMovies.indexOf(match.params.movieId)}
                 movie={movies.find((m) => m._id === match.params.movieId)}

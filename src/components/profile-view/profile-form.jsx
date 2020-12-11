@@ -6,16 +6,20 @@ import { Link } from 'react-router-dom';
 
 const ProfileForm = (props) => {
   const {
-    newUsernameValue,
-    newEmailValue,
-    newPasswordValue,
-    newPasswordConfirmValue,
-    newBirthdayValue,
+    formInputs,
     isClientValidated,
     onFormChange,
     onUpdateAccount,
     onRemoveAccount,
   } = props;
+
+  const {
+    newUsername,
+    newEmail,
+    newPassword,
+    newPasswordConfirm,
+    newBirthday,
+  } = formInputs;
 
   return (
     <React.Fragment>
@@ -31,7 +35,7 @@ const ProfileForm = (props) => {
             type='text'
             placeholder='New username'
             name='newUsername'
-            value={newUsernameValue}
+            value={newUsername}
             onChange={onFormChange}
             required
           />
@@ -45,7 +49,7 @@ const ProfileForm = (props) => {
             type='email'
             placeholder='New email'
             name='newEmail'
-            value={newEmailValue}
+            value={newEmail}
             onChange={onFormChange}
             required
           />
@@ -59,7 +63,7 @@ const ProfileForm = (props) => {
             type='password'
             placeholder='New password'
             name='newPassword'
-            value={newPasswordValue}
+            value={newPassword}
             onChange={onFormChange}
             required
             minLength='7'
@@ -74,7 +78,7 @@ const ProfileForm = (props) => {
             type='password'
             placeholder='Confirm new password'
             name='newPasswordConfirm'
-            value={newPasswordConfirmValue}
+            value={newPasswordConfirm}
             onChange={onFormChange}
             required
             minLength='7'
@@ -91,7 +95,7 @@ const ProfileForm = (props) => {
           <Form.Control
             type='date'
             name='newBirthday'
-            value={newBirthdayValue}
+            value={newBirthday}
             onChange={onFormChange}
             required
           />
@@ -121,11 +125,7 @@ const ProfileForm = (props) => {
 };
 
 ProfileForm.propTypes = {
-  newUsernameValue: PropTypes.string.isRequired,
-  newPasswordValue: PropTypes.string.isRequired,
-  newPasswordConfirmValue: PropTypes.string.isRequired,
-  newEmailValue: PropTypes.string.isRequired,
-  newBirthdayValue: PropTypes.string.isRequired,
+  formInputs: PropTypes.object.isRequired,
   isClientValidated: PropTypes.bool.isRequired,
   onFormChange: PropTypes.func.isRequired,
   onUpdateAccount: PropTypes.func.isRequired,

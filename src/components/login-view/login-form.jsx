@@ -5,13 +5,9 @@ import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 
 const LoginForm = (props) => {
-  const {
-    usernameValue,
-    passwordValue,
-    isClientValidated,
-    onFormChange,
-    onLogin,
-  } = props;
+  const { formInputs, isClientValidated, onFormChange, onLogin } = props;
+
+  const { username, password } = formInputs;
 
   return (
     <React.Fragment>
@@ -27,7 +23,7 @@ const LoginForm = (props) => {
             type='text'
             placeholder='Username'
             name='username'
-            value={usernameValue}
+            value={username}
             onChange={onFormChange}
             required
           />
@@ -41,7 +37,7 @@ const LoginForm = (props) => {
             type='password'
             placeholder='Password'
             name='password'
-            value={passwordValue}
+            value={password}
             onChange={onFormChange}
             required
             minLength='7'
@@ -66,8 +62,7 @@ const LoginForm = (props) => {
 };
 
 LoginForm.propTypes = {
-  usernameValue: PropTypes.string.isRequired,
-  passwordValue: PropTypes.string.isRequired,
+  formInputs: PropTypes.object.isRequired,
   isClientValidated: PropTypes.bool.isRequired,
   onFormChange: PropTypes.func.isRequired,
   onLogin: PropTypes.func.isRequired,

@@ -94,11 +94,7 @@ const RegistrationView = () => {
           onCloseAlert={handleCloseAlert}
         />
         <RegistrationForm
-          usernameValue={username}
-          emailValue={email}
-          passwordValue={password}
-          passwordConfirmValue={passwordConfirm}
-          birthdayValue={birthday}
+          formInputs={formData}
           isClientValidated={isClientValidated}
           onFormChange={handleFormChange}
           onRegistration={handleRegistration}

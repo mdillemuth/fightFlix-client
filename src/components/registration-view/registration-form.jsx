@@ -5,16 +5,9 @@ import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 
 const RegistrationForm = (props) => {
-  const {
-    usernameValue,
-    emailValue,
-    passwordValue,
-    passwordConfirmValue,
-    birthdayValue,
-    isClientValidated,
-    onFormChange,
-    onRegistration,
-  } = props;
+  const { formInputs, isClientValidated, onFormChange, onRegistration } = props;
+
+  const { username, email, password, passwordConfirm, birthday } = formInputs;
 
   return (
     <React.Fragment>
@@ -30,7 +23,7 @@ const RegistrationForm = (props) => {
             type='text'
             placeholder='Username'
             name='username'
-            value={usernameValue}
+            value={username}
             onChange={onFormChange}
             required
           />
@@ -44,7 +37,7 @@ const RegistrationForm = (props) => {
             type='email'
             placeholder='Email'
             name='email'
-            value={emailValue}
+            value={email}
             onChange={onFormChange}
             required
           />
@@ -58,7 +51,7 @@ const RegistrationForm = (props) => {
             type='password'
             placeholder='Password'
             name='password'
-            value={passwordValue}
+            value={password}
             onChange={onFormChange}
             required
             minLength='7'
@@ -73,7 +66,7 @@ const RegistrationForm = (props) => {
             type='password'
             placeholder='Confirm password'
             name='passwordConfirm'
-            value={passwordConfirmValue}
+            value={passwordConfirm}
             onChange={onFormChange}
             required
             minLength='7'
@@ -91,7 +84,7 @@ const RegistrationForm = (props) => {
             type='date'
             name='birthday'
             placeholder='Birthday'
-            value={birthdayValue}
+            value={birthday}
             onChange={onFormChange}
             required
           />
@@ -117,11 +110,7 @@ const RegistrationForm = (props) => {
 };
 
 RegistrationForm.propTypes = {
-  usernameValue: PropTypes.string.isRequired,
-  emailValue: PropTypes.string.isRequired,
-  passwordValue: PropTypes.string.isRequired,
-  passwordConfirmValue: PropTypes.string.isRequired,
-  birthdayValue: PropTypes.string.isRequired,
+  formInputs: PropTypes.object.isRequired,
   isClientValidated: PropTypes.bool.isRequired,
   onFormChange: PropTypes.func.isRequired,
   onRegistration: PropTypes.func.isRequired,

@@ -137,11 +137,7 @@ const ProfileView = (props) => {
             onCloseAlert={handleCloseAlert}
           />
           <ProfileForm
-            newUsernameValue={newUsername}
-            newEmailValue={newEmail}
-            newPasswordValue={newPassword}
-            newPasswordConfirmValue={newPasswordConfirm}
-            newBirthdayValue={newBirthday}
+            formInputs={formData}
             isClientValidated={isClientValidated}
             onFormChange={handleFormChange}
             onUpdateAccount={handleUpdateAccount}
@@ -154,7 +150,7 @@ const ProfileView = (props) => {
 };
 
 ProfileView.propTypes = {
-  handleLogout: PropTypes.func.isRequired,
+  onLogout: PropTypes.func.isRequired,
 };
 
 export default ProfileView;
