@@ -1,10 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 
 import { Link } from 'react-router-dom';
 
-const NavBar = ({ handleLogout }) => {
+const NavBar = (props) => {
+  const { onLogout } = props;
+
   return (
     <React.Fragment>
       <Navbar
@@ -20,7 +23,7 @@ const NavBar = ({ handleLogout }) => {
           </Link>
           <Link to='/'>
             <Button
-              onClick={handleLogout}
+              onClick={onLogout}
               className='ml-1'
               variant='outline-primary'
             >
@@ -31,6 +34,10 @@ const NavBar = ({ handleLogout }) => {
       </Navbar>
     </React.Fragment>
   );
+};
+
+NavBar.propTypes = {
+  onLogout: PropTypes.func.isRequired,
 };
 
 export default NavBar;

@@ -40141,7 +40141,136 @@ GenreView.propTypes = {
 };
 var _default = GenreView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/profile-view/profile-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/profile-view/profile-form.jsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
+var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
+
+var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
+
+var _reactRouterDom = require("react-router-dom");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ProfileForm = function ProfileForm(props) {
+  var newUsernameValue = props.newUsernameValue,
+      newEmailValue = props.newEmailValue,
+      newPasswordValue = props.newPasswordValue,
+      newPasswordConfirmValue = props.newPasswordConfirmValue,
+      newBirthdayValue = props.newBirthdayValue,
+      isClientValidated = props.isClientValidated,
+      onFormChange = props.onFormChange,
+      onUpdateAccount = props.onUpdateAccount,
+      onRemoveAccount = props.onRemoveAccount;
+  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Form.default, {
+    noValidate: true,
+    validated: isClientValidated,
+    className: "mb-2",
+    onSubmit: onUpdateAccount
+  }, _react.default.createElement(_Form.default.Group, {
+    className: "mb-2",
+    controlId: "registerUsername"
+  }, _react.default.createElement(_Form.default.Control, {
+    autoFocus: true,
+    type: "text",
+    placeholder: "New username",
+    name: "newUsername",
+    value: newUsernameValue,
+    onChange: onFormChange,
+    required: true
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Please enter a username")), _react.default.createElement(_Form.default.Group, {
+    className: "mb-2",
+    controlId: "registerEmail"
+  }, _react.default.createElement(_Form.default.Control, {
+    type: "email",
+    placeholder: "New email",
+    name: "newEmail",
+    value: newEmailValue,
+    onChange: onFormChange,
+    required: true
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Please enter a valid email address")), _react.default.createElement(_Form.default.Group, {
+    className: "mb-2",
+    controlId: "registerPassword"
+  }, _react.default.createElement(_Form.default.Control, {
+    type: "password",
+    placeholder: "New password",
+    name: "newPassword",
+    value: newPasswordValue,
+    onChange: onFormChange,
+    required: true,
+    minLength: "7"
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
+    className: "mb-2",
+    controlId: "registerConfirmPassword"
+  }, _react.default.createElement(_Form.default.Control, {
+    type: "password",
+    placeholder: "Confirm new password",
+    name: "newPasswordConfirm",
+    value: newPasswordConfirmValue,
+    onChange: onFormChange,
+    required: true,
+    minLength: "7"
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
+    controlId: "registerBirthday",
+    className: "mb-2 "
+  }, _react.default.createElement(_Form.default.Label, {
+    className: "mb-1 text-muted font-weight-bold"
+  }, "Birthday"), _react.default.createElement(_Form.default.Control, {
+    type: "date",
+    name: "newBirthday",
+    value: newBirthdayValue,
+    onChange: onFormChange,
+    required: true
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Birthday is required")), _react.default.createElement(_Button.default, {
+    variant: "primary",
+    type: "submit",
+    className: "w-100 btn-lg"
+  }, "Submit")), _react.default.createElement("small", {
+    className: "text-muted text-center d-block"
+  }, "Or you can", ' ', _react.default.createElement(_reactRouterDom.Link, {
+    to: "/"
+  }, _react.default.createElement("span", {
+    style: {
+      cursor: 'pointer'
+    },
+    className: "text-primary",
+    onClick: onRemoveAccount
+  }, "remove your account"))));
+};
+
+ProfileForm.propTypes = {
+  newUsernameValue: _propTypes.default.string.isRequired,
+  newPasswordValue: _propTypes.default.string.isRequired,
+  newPasswordConfirmValue: _propTypes.default.string.isRequired,
+  newEmailValue: _propTypes.default.string.isRequired,
+  newBirthdayValue: _propTypes.default.string.isRequired,
+  isClientValidated: _propTypes.default.bool.isRequired,
+  onFormChange: _propTypes.default.func.isRequired,
+  onUpdateAccount: _propTypes.default.func.isRequired,
+  onRemoveAccount: _propTypes.default.func.isRequired
+};
+var _default = ProfileForm;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/profile-view/profile-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -40153,9 +40282,13 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
+var _profileForm = _interopRequireDefault(require("./profile-form"));
 
-var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
+var _CustomAlert = _interopRequireDefault(require("../common/CustomAlert"));
+
+var _LoadingSpinner = _interopRequireDefault(require("../common/LoadingSpinner"));
+
+var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
 var _Container = _interopRequireDefault(require("react-bootstrap/Container"));
 
@@ -40165,285 +40298,183 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _reactRouterDom = require("react-router-dom");
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+var ProfileView = function ProfileView(props) {
+  var onLogout = props.onLogout;
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+  var _useState = (0, _react.useState)({
+    newUsername: '',
+    newEmail: '',
+    newPassword: '',
+    newPasswordConfirm: '',
+    newBirthday: ''
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      formData = _useState2[0],
+      setFormData = _useState2[1];
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+  var newUsername = formData.newUsername,
+      newEmail = formData.newEmail,
+      newPassword = formData.newPassword,
+      newPasswordConfirm = formData.newPasswordConfirm,
+      newBirthday = formData.newBirthday;
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+  var _useState3 = (0, _react.useState)(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      isClientValidated = _useState4[0],
+      setIsClientValidated = _useState4[1];
 
-var ProfileView = /*#__PURE__*/function (_Component) {
-  _inherits(ProfileView, _Component);
+  var _useState5 = (0, _react.useState)(false),
+      _useState6 = _slicedToArray(_useState5, 2),
+      isServerInvalidated = _useState6[0],
+      setIsServerInvalidated = _useState6[1];
 
-  var _super = _createSuper(ProfileView);
+  var _useState7 = (0, _react.useState)(false),
+      _useState8 = _slicedToArray(_useState7, 2),
+      isLoading = _useState8[0],
+      setIsLoading = _useState8[1];
 
-  function ProfileView(props) {
-    var _this;
+  var handleFormChange = function handleFormChange(e) {
+    return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
+  };
 
-    _classCallCheck(this, ProfileView);
+  var handleCloseAlert = function handleCloseAlert() {
+    setIsServerInvalidated(false);
+  };
 
-    _this = _super.call(this, props);
+  var handleRemoveAccount = function handleRemoveAccount() {
+    var token = localStorage.getItem('token');
+    var username = localStorage.getItem('user');
 
-    _this.handleInputChange = function (e) {
-      return _this.setState(_defineProperty({}, e.target.name, e.target.value));
-    };
-
-    _this.handleRemoveAccount = function () {
-      var token = localStorage.getItem('token');
-      var username = localStorage.getItem('user');
-
-      if (window.confirm('Are you sure you wish to remove your account?')) {
-        _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
-          headers: {
-            Authorization: "Bearer ".concat(token)
-          }
-        }).then(function (res) {
-          console.log('account deleted');
-        }).catch(function (e) {
-          return console.log('error');
-        });
-
-        _this.props.handleLogout();
-      } else {
-        window.open('/profile', '_self');
-      }
-    };
-
-    _this.handleUpdateAccount = function (e) {
-      var form = e.currentTarget;
-      var username = localStorage.getItem('user');
-      var token = localStorage.getItem('token');
-      var _this$state = _this.state,
-          newUsername = _this$state.newUsername,
-          newPassword = _this$state.newPassword,
-          newConfirmPassword = _this$state.newConfirmPassword,
-          newEmail = _this$state.newEmail,
-          newBirthday = _this$state.newBirthday;
-
-      if (newPassword !== newConfirmPassword) {
-        return alert('Passwords do not match');
-      }
-
-      if (!form.checkValidity()) {
-        console.log('Invalid input, form not submitted');
-        e.preventDefault();
-        e.stopPropagation();
-      }
-
-      _this.setState({
-        validated: true
-      });
-
-      e.preventDefault();
-      var config = {
+    if (window.confirm('Are you sure you wish to remove your account?')) {
+      _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
         headers: {
           Authorization: "Bearer ".concat(token)
         }
-      };
-
-      if (form.checkValidity()) {
-        _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
-          Username: newUsername,
-          Password: newPassword,
-          Email: newEmail,
-          Birthday: newBirthday
-        }, config).then(function (res) {
-          console.log('Account Updated');
-          window.open('/', '_self');
-
-          _this.props.handleLogout();
-        }).catch(function (e) {
-          return console.log('Update Error');
-        });
-      }
-    };
-
-    _this.state = {
-      userData: {},
-      newUsername: '',
-      newEmail: '',
-      newPassword: '',
-      newConfirmPassword: '',
-      newBirthday: '',
-      validated: false
-    };
-    return _this;
-  }
-
-  _createClass(ProfileView, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var token = localStorage.getItem('token');
-
-      if (token !== null) {
-        this.getUser(token);
-      }
-    }
-  }, {
-    key: "getUser",
-    value: function getUser(token) {
-      var _this2 = this;
-
-      var username = localStorage.getItem('user');
-      var config = {
-        headers: {
-          Authorization: "Bearer ".concat(token)
-        }
-      };
-
-      _axios.default.get("https://my-fight-flix.herokuapp.com/api/users/".concat(username), config).then(function (res) {
-        res.data.map(function (item) {
-          _this2.setState({
-            userData: item
-          });
-        });
+      }).then(function (res) {
+        console.log('account deleted');
+        onLogout();
       }).catch(function (e) {
-        return console.log('Error Retrieving User Data');
+        return console.log('error');
+      });
+    } else {
+      window.open('/profile', '_self');
+    }
+  };
+
+  var handleUpdateAccount = function handleUpdateAccount(e) {
+    var username = localStorage.getItem('user');
+    var token = localStorage.getItem('token');
+    var form = e.currentTarget;
+    setIsLoading(true);
+
+    if (newPassword !== newPasswordConfirm) {
+      return alert('Passwords do not match');
+    }
+
+    if (!form.checkValidity()) {
+      console.log('Invalid input, form not submitted');
+      e.preventDefault();
+      e.stopPropagation();
+      setIsLoading(false);
+    }
+
+    setIsClientValidated(true);
+    e.preventDefault();
+    var config = {
+      headers: {
+        Authorization: "Bearer ".concat(token)
+      }
+    };
+
+    if (form.checkValidity()) {
+      _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
+        Username: newUsername,
+        Password: newPassword,
+        Email: newEmail,
+        Birthday: newBirthday
+      }, config).then(function (res) {
+        console.log('Account Updated');
+        setIsLoading(false);
+        window.open('/', '_self');
+        onLogout();
+      }).catch(function (e) {
+        console.log('Update Error');
+        setIsServerInvalidated(true);
+        setIsLoading(false);
       });
     }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this$state2 = this.state,
-          userData = _this$state2.userData,
-          validated = _this$state2.validated;
-      if (!userData) return null;
-      return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
-        className: "my-3"
-      }, _react.default.createElement("div", {
-        className: "w-100 d-flex flex-column align-items-center mb-3"
-      }, _react.default.createElement(_reactRouterDom.Link, {
-        to: "/"
-      }, _react.default.createElement(_Button.default, {
-        className: "btn btn-primary"
-      }, "Back to Movies"))), _react.default.createElement(_Col.default, {
-        md: {
-          span: 6,
-          offset: 3
-        },
-        lg: {
-          span: 4,
-          offset: 4
-        },
-        className: "bg-white rounded p-3"
-      }, _react.default.createElement("div", {
-        className: "mb-2"
-      }, _react.default.createElement("h2", {
-        className: "text-left h5 text-dark font-weight-bold mb-1"
-      }, "Update Your Information")), _react.default.createElement(_Form.default, {
-        noValidate: true,
-        validated: validated,
-        className: "mb-2",
-        onSubmit: this.handleUpdateAccount
-      }, _react.default.createElement(_Form.default.Group, {
-        className: "mb-2",
-        controlId: "registerUsername"
-      }, _react.default.createElement(_Form.default.Control, {
-        autoFocus: true,
-        type: "text",
-        placeholder: "New username",
-        name: "newUsername",
-        onChange: this.handleInputChange,
-        required: true
-      }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-        type: "invalid"
-      }, "Please enter a username")), _react.default.createElement(_Form.default.Group, {
-        className: "mb-2",
-        controlId: "registerEmail"
-      }, _react.default.createElement(_Form.default.Control, {
-        type: "email",
-        placeholder: "New email",
-        name: "newEmail",
-        onChange: this.handleInputChange,
-        required: true
-      }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-        type: "invalid"
-      }, "Please enter a valid email address")), _react.default.createElement(_Form.default.Group, {
-        className: "mb-2",
-        controlId: "registerPassword"
-      }, _react.default.createElement(_Form.default.Control, {
-        type: "password",
-        placeholder: "New password",
-        name: "newPassword",
-        onChange: this.handleInputChange,
-        required: true,
-        minLength: "7"
-      }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-        type: "invalid"
-      }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
-        className: "mb-2",
-        controlId: "registerConfirmPassword"
-      }, _react.default.createElement(_Form.default.Control, {
-        type: "password",
-        placeholder: "Confirm new password",
-        name: "newConfirmPassword",
-        onChange: this.handleInputChange,
-        required: true,
-        minLength: "7"
-      }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-        type: "invalid"
-      }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
-        controlId: "registerBirthday",
-        className: "mb-2 "
-      }, _react.default.createElement(_Form.default.Label, {
-        className: "mb-1 text-muted font-weight-bold"
-      }, "Birthday"), _react.default.createElement(_Form.default.Control, {
-        type: "date",
-        name: "newBirthday",
-        onChange: this.handleInputChange,
-        required: true
-      }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-        type: "invalid"
-      }, "Birthday is required")), _react.default.createElement(_Button.default, {
-        variant: "primary",
-        type: "submit",
-        className: "w-100 btn-lg"
-      }, "Submit")), _react.default.createElement("small", {
-        className: "text-muted text-center d-block"
-      }, "Or you can", ' ', _react.default.createElement(_reactRouterDom.Link, {
-        to: "/"
-      }, _react.default.createElement("span", {
-        style: {
-          cursor: 'pointer'
-        },
-        className: "register text-primary",
-        onClick: this.handleRemoveAccount
-      }, "remove your account"))))));
-    }
-  }]);
+  };
 
-  return ProfileView;
-}(_react.Component);
+  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
+    className: "my-3"
+  }, _react.default.createElement("div", {
+    className: "w-100 d-flex flex-column align-items-center mb-3"
+  }, _react.default.createElement(_reactRouterDom.Link, {
+    to: "/"
+  }, _react.default.createElement(_Button.default, {
+    className: "btn btn-primary"
+  }, "Back to Movies"))), _react.default.createElement(_Col.default, {
+    md: {
+      span: 6,
+      offset: 3
+    },
+    lg: {
+      span: 4,
+      offset: 4
+    },
+    className: "bg-white rounded p-3"
+  }, _react.default.createElement("div", {
+    className: "mb-2"
+  }, _react.default.createElement("h2", {
+    className: "text-left h5 text-dark font-weight-bold mb-1"
+  }, "Update Your Information")), _react.default.createElement(_LoadingSpinner.default, {
+    show: isLoading
+  }), _react.default.createElement(_CustomAlert.default, {
+    alertHeading: "Update Error",
+    alertBody: "Username is already taken or there is already an account with this email address",
+    isShowAlert: isServerInvalidated,
+    onCloseAlert: handleCloseAlert
+  }), _react.default.createElement(_profileForm.default, {
+    newUsernameValue: newUsername,
+    newEmailValue: newEmail,
+    newPasswordValue: newPassword,
+    newPasswordConfirmValue: newPasswordConfirm,
+    newBirthdayValue: newBirthday,
+    isClientValidated: isClientValidated,
+    onFormChange: handleFormChange,
+    onUpdateAccount: handleUpdateAccount,
+    onRemoveAccount: handleRemoveAccount
+  }))));
+};
 
 ProfileView.propTypes = {
   handleLogout: _propTypes.default.func.isRequired
 };
 var _default = ProfileView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"../node_modules/react-bootstrap/esm/NavbarBrand.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","./profile-form":"components/profile-view/profile-form.jsx","../common/CustomAlert":"components/common/CustomAlert.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"../node_modules/react-bootstrap/esm/NavbarBrand.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -40886,6 +40917,8 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
 var _Navbar = _interopRequireDefault(require("react-bootstrap/Navbar"));
 
 var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
@@ -40894,8 +40927,8 @@ var _reactRouterDom = require("react-router-dom");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var NavBar = function NavBar(_ref) {
-  var handleLogout = _ref.handleLogout;
+var NavBar = function NavBar(props) {
+  var onLogout = props.onLogout;
   return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Navbar.default, {
     bg: "white",
     className: "d-flex justify-content-between align-items-center px-3"
@@ -40910,15 +40943,18 @@ var NavBar = function NavBar(_ref) {
   }, localStorage.getItem('user'))), _react.default.createElement(_reactRouterDom.Link, {
     to: "/"
   }, _react.default.createElement(_Button.default, {
-    onClick: handleLogout,
+    onClick: onLogout,
     className: "ml-1",
     variant: "outline-primary"
   }, "Logout")))));
 };
 
+NavBar.propTypes = {
+  onLogout: _propTypes.default.func.isRequired
+};
 var _default = NavBar;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap/Navbar":"../node_modules/react-bootstrap/esm/Navbar.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"../node_modules/dom-helpers/esm/matches.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Navbar":"../node_modules/react-bootstrap/esm/Navbar.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"../node_modules/dom-helpers/esm/matches.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -45836,9 +45872,9 @@ var MainView = /*#__PURE__*/function (_Component) {
         path: "/profile",
         render: function render() {
           return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_NavBar.default, {
-            handleLogout: _this4.handleLogout
+            onLogout: _this4.handleLogout
           }), _react.default.createElement(_profileView.default, {
-            handleLogout: _this4.handleLogout
+            onLogout: _this4.handleLogout
           }), _react.default.createElement("div", null, _react.default.createElement("h3", {
             className: "text-dark text-center font-weight-bold h5 mt-4"
           }, "My ", _react.default.createElement("span", {
@@ -45975,7 +46011,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42735" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41893" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
