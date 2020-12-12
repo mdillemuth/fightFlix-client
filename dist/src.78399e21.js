@@ -35779,8 +35779,6 @@ var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
 
 var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
-var _reactRouterDom = require("react-router-dom");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var LoginForm = function LoginForm(props) {
@@ -35790,7 +35788,7 @@ var LoginForm = function LoginForm(props) {
       onLogin = props.onLogin;
   var username = formInputs.username,
       password = formInputs.password;
-  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Form.default, {
+  return _react.default.createElement(_Form.default, {
     noValidate: true,
     validated: isClientValidated,
     onSubmit: onLogin,
@@ -35825,13 +35823,7 @@ var LoginForm = function LoginForm(props) {
     variant: "primary",
     type: "submit",
     className: "w-100 btn-lg mb-3"
-  }, "Login")), _react.default.createElement("small", {
-    className: "text-muted text-center d-block"
-  }, "Not a member yet?", _react.default.createElement(_reactRouterDom.Link, {
-    to: "/register"
-  }, _react.default.createElement("span", {
-    className: "register text-primary ml-2"
-  }, "Sign up for free"))));
+  }, "Login"));
 };
 
 LoginForm.propTypes = {
@@ -35842,7 +35834,7 @@ LoginForm.propTypes = {
 };
 var _default = LoginForm;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"../node_modules/invariant/browser.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js"}],"../node_modules/invariant/browser.js":[function(require,module,exports) {
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -39626,6 +39618,8 @@ var _Container = _interopRequireDefault(require("react-bootstrap/Container"));
 
 var _Col = _interopRequireDefault(require("react-bootstrap/Col"));
 
+var _reactRouterDom = require("react-router-dom");
+
 var _axios = _interopRequireDefault(require("axios"));
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -39749,7 +39743,13 @@ var LoginView = function LoginView(_ref) {
     isClientValidated: isClientValidated,
     onFormChange: handleFormChange,
     onLogin: handleLogin
-  }))));
+  }), _react.default.createElement("small", {
+    className: "text-muted text-center d-block"
+  }, "Not a member yet?", _react.default.createElement(_reactRouterDom.Link, {
+    to: "/register"
+  }, _react.default.createElement("span", {
+    className: "register text-primary ml-2"
+  }, "Sign up for free"))))));
 }; // PropTypes
 
 
@@ -39758,7 +39758,7 @@ LoginView.propTypes = {
 };
 var _default = LoginView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","./login-form":"components/login-view/login-form.jsx","../common/CustomAlert":"components/common/CustomAlert.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","axios":"../node_modules/axios/index.js"}],"components/registration-view/registration-form.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","./login-form":"components/login-view/login-form.jsx","../common/CustomAlert":"components/common/CustomAlert.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","axios":"../node_modules/axios/index.js"}],"components/registration-view/registration-form.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -39788,7 +39788,7 @@ var RegistrationForm = function RegistrationForm(props) {
       password = formInputs.password,
       passwordConfirm = formInputs.passwordConfirm,
       birthday = formInputs.birthday;
-  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Form.default, {
+  return _react.default.createElement(_Form.default, {
     noValidate: true,
     validated: isClientValidated,
     className: "mb-2",
@@ -39862,16 +39862,7 @@ var RegistrationForm = function RegistrationForm(props) {
     variant: "primary",
     type: "submit",
     className: "w-100 btn-lg mb-3"
-  }, "Sign Up")), _react.default.createElement("small", {
-    className: "text-muted text-center d-block"
-  }, "Already a member?", _react.default.createElement(_reactRouterDom.Link, {
-    to: "/"
-  }, _react.default.createElement("span", {
-    style: {
-      cursor: 'pointer'
-    },
-    className: "text-primary ml-2"
-  }, "Login here"))));
+  }, "Sign Up"));
 };
 
 RegistrationForm.propTypes = {
@@ -39901,6 +39892,8 @@ var _LoadingSpinner = _interopRequireDefault(require("../common/LoadingSpinner")
 var _Container = _interopRequireDefault(require("react-bootstrap/Container"));
 
 var _Col = _interopRequireDefault(require("react-bootstrap/Col"));
+
+var _reactRouterDom = require("react-router-dom");
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -40040,12 +40033,21 @@ var RegistrationView = function RegistrationView() {
     isClientValidated: isClientValidated,
     onFormChange: handleFormChange,
     onRegistration: handleRegistration
-  })));
+  }), _react.default.createElement("small", {
+    className: "text-muted text-center d-block"
+  }, "Already a member?", _react.default.createElement(_reactRouterDom.Link, {
+    to: "/"
+  }, _react.default.createElement("span", {
+    style: {
+      cursor: 'pointer'
+    },
+    className: "text-primary ml-2"
+  }, "Login here")))));
 };
 
 var _default = RegistrationView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./registration-form":"components/registration-view/registration-form.jsx","./../common/CustomAlert":"components/common/CustomAlert.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","axios":"../node_modules/axios/index.js"}],"components/director-view/director-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./registration-form":"components/registration-view/registration-form.jsx","./../common/CustomAlert":"components/common/CustomAlert.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","axios":"../node_modules/axios/index.js"}],"components/director-view/director-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -41115,7 +41117,29 @@ NavBar.propTypes = {
 };
 var _default = NavBar;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Navbar":"../node_modules/react-bootstrap/esm/Navbar.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/main-view/main-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Navbar":"../node_modules/react-bootstrap/esm/Navbar.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/not-found/not-found.jsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var NotFound = function NotFound() {
+  return _react.default.createElement("h1", {
+    className: "mt-3 text-center"
+  }, "Page ", _react.default.createElement("span", {
+    className: "text-primary"
+  }, "Not "), "Found");
+};
+
+var _default = NotFound;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js"}],"components/main-view/main-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -41143,9 +41167,11 @@ var _favoritesView = _interopRequireDefault(require("../favorites-view/favorites
 
 var _NavBar = _interopRequireDefault(require("../common/NavBar"));
 
-var _axios = _interopRequireDefault(require("axios"));
+var _notFound = _interopRequireDefault(require("../not-found/not-found"));
 
 var _reactRouterDom = require("react-router-dom");
+
+var _axios = _interopRequireDefault(require("axios"));
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -41426,6 +41452,7 @@ var MainView = /*#__PURE__*/function (_Component) {
           return _react.default.createElement(_registrationView.default, null);
         }
       }), _react.default.createElement(_reactRouterDom.Route, {
+        exact: true,
         path: "/",
         render: function render() {
           if (!user) {
@@ -41440,6 +41467,14 @@ var MainView = /*#__PURE__*/function (_Component) {
             movies: movies
           });
         }
+      }), _react.default.createElement(_reactRouterDom.Route, {
+        path: "/not-found",
+        component: _notFound.default
+      }), _react.default.createElement(_reactRouterDom.Redirect, {
+        from: "/movies",
+        to: "/"
+      }), _react.default.createElement(_reactRouterDom.Redirect, {
+        to: "/not-found"
       })));
     }
   }]);
@@ -41449,7 +41484,7 @@ var MainView = /*#__PURE__*/function (_Component) {
 
 var _default = MainView;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../movies-view/movies-view":"components/movies-view/movies-view.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../login-view/login-view":"components/login-view/login-view.jsx","../registration-view/registration-view":"components/registration-view/registration-view.jsx","../director-view/director-view":"components/director-view/director-view.jsx","./../genre-view/genre-view":"components/genre-view/genre-view.jsx","../profile-view/profile-view":"components/profile-view/profile-view.jsx","../favorites-view/favorites-view":"components/favorites-view/favorites-view.jsx","../common/NavBar":"components/common/NavBar.jsx","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"app.scss":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../movies-view/movies-view":"components/movies-view/movies-view.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../login-view/login-view":"components/login-view/login-view.jsx","../registration-view/registration-view":"components/registration-view/registration-view.jsx","../director-view/director-view":"components/director-view/director-view.jsx","./../genre-view/genre-view":"components/genre-view/genre-view.jsx","../profile-view/profile-view":"components/profile-view/profile-view.jsx","../favorites-view/favorites-view":"components/favorites-view/favorites-view.jsx","../common/NavBar":"components/common/NavBar.jsx","../not-found/not-found":"components/not-found/not-found.jsx","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","axios":"../node_modules/axios/index.js"}],"app.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -41505,7 +41540,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35931" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34507" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -8,8 +8,9 @@ import GenreView from './../genre-view/genre-view';
 import ProfileView from '../profile-view/profile-view';
 import FavoritesView from '../favorites-view/favorites-view';
 import NavBar from '../common/NavBar';
+import NotFound from '../not-found/not-found';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import axios from 'axios';
-import { Route, Switch } from 'react-router-dom';
 
 class MainView extends Component {
   constructor() {
@@ -217,6 +218,7 @@ class MainView extends Component {
           />
           <Route path='/register' render={() => <RegistrationView />} />
           <Route
+            exact
             path='/'
             render={() => {
               if (!user) {
@@ -229,6 +231,9 @@ class MainView extends Component {
               return <MoviesView movies={movies} />;
             }}
           />
+          <Route path='/not-found' component={NotFound} />
+          <Redirect from='/movies' to='/' />
+          <Redirect to='/not-found' />
         </Switch>
       </div>
     );

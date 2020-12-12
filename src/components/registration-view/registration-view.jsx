@@ -4,6 +4,7 @@ import CustomAlert from './../common/CustomAlert';
 import LoadingSpinner from '../common/LoadingSpinner';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const RegistrationView = () => {
@@ -99,6 +100,14 @@ const RegistrationView = () => {
           onFormChange={handleFormChange}
           onRegistration={handleRegistration}
         />
+        <small className='text-muted text-center d-block'>
+          Already a member?
+          <Link to='/'>
+            <span style={{ cursor: 'pointer' }} className='text-primary ml-2'>
+              Login here
+            </span>
+          </Link>
+        </small>
       </Col>
     </Container>
   );
