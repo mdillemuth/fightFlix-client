@@ -41104,11 +41104,13 @@ var NavBar = function NavBar(_ref) {
   return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Navbar.default, {
     bg: "white",
     className: "d-flex justify-content-between align-items-center px-3"
+  }, _react.default.createElement(_reactRouterDom.Link, {
+    to: "/"
   }, _react.default.createElement(_Navbar.default.Brand, {
     className: "text-dark font-italic h2 font-weight-bold p-0 m-0"
   }, "my", _react.default.createElement("span", {
     className: "text-primary"
-  }, "Fight"), "Flix"), _react.default.createElement("div", null, renderButtons(user))));
+  }, "Fight"), "Flix")), _react.default.createElement("div", null, renderButtons(user))));
 };
 
 NavBar.propTypes = {
@@ -41540,7 +41542,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34507" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44867" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

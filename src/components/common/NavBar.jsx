@@ -35,9 +35,11 @@ const NavBar = ({ onLogout, user }) => {
         bg='white'
         className='d-flex justify-content-between align-items-center px-3'
       >
-        <Navbar.Brand className='text-dark font-italic h2 font-weight-bold p-0 m-0'>
-          my<span className='text-primary'>Fight</span>Flix
-        </Navbar.Brand>
+        <Link to='/'>
+          <Navbar.Brand className='text-dark font-italic h2 font-weight-bold p-0 m-0'>
+            my<span className='text-primary'>Fight</span>Flix
+          </Navbar.Brand>
+        </Link>
         <div>{renderButtons(user)}</div>
       </Navbar>
     </React.Fragment>
