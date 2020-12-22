@@ -41366,9 +41366,11 @@ exports.fetchMovies = fetchMovies;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.logoutUser = exports.deleteAccount = exports.updateAccount = exports.fetchUser = exports.default = exports.accountUpdated = exports.accountDeleted = exports.userLoggedOut = exports.userRetrieved = void 0;
+exports.logoutUser = exports.deleteAccount = exports.updateAccount = exports.fetchUser = exports.loginUser = exports.default = exports.accountUpdated = exports.accountDeleted = exports.userLoggedOut = exports.userLoggedIn = exports.userRetrieved = void 0;
 
 var _toolkit = require("@reduxjs/toolkit");
+
+var _movies = require("./movies");
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -41381,57 +41383,68 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var slice = (0, _toolkit.createSlice)({
   name: 'user',
   initialState: {
-    user: null
+    user: null,
+    token: localStorage.getItem('token')
   },
   reducers: {
     userRetrieved: function userRetrieved(state, action) {
       state.user = action.payload;
     },
+    userLoggedIn: function userLoggedIn(state, action) {
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+    },
     userLoggedOut: function userLoggedOut(state) {
       state.user = null;
+      state.token = null;
     },
     accountDeleted: function accountDeleted(state) {
       state.user = null;
+      state.token = null;
     },
     accountUpdated: function accountUpdated(state) {
       state.user = null;
+      state.token = null;
     }
   }
 });
 var _slice$actions = slice.actions,
     userRetrieved = _slice$actions.userRetrieved,
+    userLoggedIn = _slice$actions.userLoggedIn,
     userLoggedOut = _slice$actions.userLoggedOut,
     accountDeleted = _slice$actions.accountDeleted,
     accountUpdated = _slice$actions.accountUpdated;
 exports.accountUpdated = accountUpdated;
 exports.accountDeleted = accountDeleted;
 exports.userLoggedOut = userLoggedOut;
+exports.userLoggedIn = userLoggedIn;
 exports.userRetrieved = userRetrieved;
-var _default = slice.reducer; // API call to retrieve user information
+var _default = slice.reducer; // API call to log in user
 
 exports.default = _default;
 
-var fetchUser = function fetchUser(token, username) {
+var loginUser = function loginUser(username, password) {
   return /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(dispatch, getState) {
-      var config, response;
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(dispatch) {
+      var response;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              config = {
-                headers: {
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              _context.next = 3;
-              return _axios.default.get("https://my-fight-flix.herokuapp.com/api/users/".concat(username), config);
+              _context.next = 2;
+              return _axios.default.post("https://my-fight-flix.herokuapp.com/api/login", {
+                Username: username,
+                Password: password
+              });
 
-            case 3:
+            case 2:
               response = _context.sent;
-              dispatch(userRetrieved(response.data[0]));
+              localStorage.setItem('token', response.data.token);
+              localStorage.setItem('user', response.data.user.Username);
+              dispatch((0, _movies.fetchMovies)(response.data.token));
+              dispatch(userLoggedIn(response.data));
 
-            case 5:
+            case 7:
             case "end":
               return _context.stop();
           }
@@ -41439,16 +41452,16 @@ var fetchUser = function fetchUser(token, username) {
       }, _callee);
     }));
 
-    return function (_x, _x2) {
+    return function (_x) {
       return _ref.apply(this, arguments);
     };
   }();
-}; // API call to update user's account and log them out
+}; // API call to retrieve user information
 
 
-exports.fetchUser = fetchUser;
+exports.loginUser = loginUser;
 
-var updateAccount = function updateAccount(token, username, newUsername, newPassword, newEmail, newBirthday) {
+var fetchUser = function fetchUser(token, username) {
   return /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(dispatch) {
       var config, response;
@@ -41462,21 +41475,13 @@ var updateAccount = function updateAccount(token, username, newUsername, newPass
                 }
               };
               _context2.next = 3;
-              return _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
-                Username: newUsername,
-                Password: newPassword,
-                Email: newEmail,
-                Birthday: newBirthday
-              }, config);
+              return _axios.default.get("https://my-fight-flix.herokuapp.com/api/users/".concat(username), config);
 
             case 3:
               response = _context2.sent;
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              dispatch(accountUpdated());
-              window.open('/', '_self');
+              dispatch(userRetrieved(response.data[0]));
 
-            case 8:
+            case 5:
             case "end":
               return _context2.stop();
           }
@@ -41484,16 +41489,16 @@ var updateAccount = function updateAccount(token, username, newUsername, newPass
       }, _callee2);
     }));
 
-    return function (_x3) {
+    return function (_x2) {
       return _ref2.apply(this, arguments);
     };
   }();
-}; // API call to delete user's account and log them out
+}; // API call to update user's account and log them out
 
 
-exports.updateAccount = updateAccount;
+exports.fetchUser = fetchUser;
 
-var deleteAccount = function deleteAccount(token, username) {
+var updateAccount = function updateAccount(token, username, newUsername, newPassword, newEmail, newBirthday) {
   return /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(dispatch) {
       var config, response;
@@ -41506,24 +41511,21 @@ var deleteAccount = function deleteAccount(token, username) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
+              _context3.next = 3;
+              return _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
+                Username: newUsername,
+                Password: newPassword,
+                Email: newEmail,
+                Birthday: newBirthday
+              }, config);
 
-              if (!window.confirm('Are you sure you wish to remove your account?')) {
-                _context3.next = 5;
-                break;
-              }
-
-              _context3.next = 4;
-              return _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username), config);
-
-            case 4:
+            case 3:
               response = _context3.sent;
+              dispatch(accountUpdated());
+              removeLocalStorage();
+              window.open('/', '_self');
 
-            case 5:
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              dispatch(accountDeleted());
-
-            case 8:
+            case 7:
             case "end":
               return _context3.stop();
           }
@@ -41531,8 +41533,54 @@ var deleteAccount = function deleteAccount(token, username) {
       }, _callee3);
     }));
 
-    return function (_x4) {
+    return function (_x3) {
       return _ref3.apply(this, arguments);
+    };
+  }();
+}; // API call to delete user's account and log them out
+
+
+exports.updateAccount = updateAccount;
+
+var deleteAccount = function deleteAccount(token, username) {
+  return /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(dispatch) {
+      var config, response;
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              config = {
+                headers: {
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+
+              if (!window.confirm('Are you sure you wish to remove your account?')) {
+                _context4.next = 5;
+                break;
+              }
+
+              _context4.next = 4;
+              return _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username), config);
+
+            case 4:
+              response = _context4.sent;
+
+            case 5:
+              dispatch(accountDeleted());
+              removeLocalStorage();
+
+            case 7:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
+    }));
+
+    return function (_x4) {
+      return _ref4.apply(this, arguments);
     };
   }();
 }; // Logging out user
@@ -41542,14 +41590,19 @@ exports.deleteAccount = deleteAccount;
 
 var logoutUser = function logoutUser() {
   return function (dispatch) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    removeLocalStorage();
     dispatch(userLoggedOut());
   };
-};
+}; // Helper function to clean up local storage
+
 
 exports.logoutUser = logoutUser;
-},{"@reduxjs/toolkit":"../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js","axios":"../node_modules/axios/index.js"}],"../node_modules/classnames/index.js":[function(require,module,exports) {
+
+var removeLocalStorage = function removeLocalStorage() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+};
+},{"@reduxjs/toolkit":"../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js","./movies":"store/movies.js","axios":"../node_modules/axios/index.js"}],"../node_modules/classnames/index.js":[function(require,module,exports) {
 var define;
 /*!
   Copyright (c) 2017 Jed Watson.
@@ -43384,78 +43437,7 @@ FormImpl.Label = _FormLabel.default;
 FormImpl.Text = _FormText.default;
 var _default = FormImpl;
 exports.default = _default;
-},{"@babel/runtime/helpers/esm/extends":"../node_modules/@babel/runtime/helpers/esm/extends.js","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js","classnames":"../node_modules/classnames/index.js","react":"../node_modules/react/index.js","./FormCheck":"../node_modules/react-bootstrap/esm/FormCheck.js","./FormFile":"../node_modules/react-bootstrap/esm/FormFile.js","./FormControl":"../node_modules/react-bootstrap/esm/FormControl.js","./FormGroup":"../node_modules/react-bootstrap/esm/FormGroup.js","./FormLabel":"../node_modules/react-bootstrap/esm/FormLabel.js","./FormText":"../node_modules/react-bootstrap/esm/FormText.js","./Switch":"../node_modules/react-bootstrap/esm/Switch.js","./ThemeProvider":"../node_modules/react-bootstrap/esm/ThemeProvider.js","./createWithBsPrefix":"../node_modules/react-bootstrap/esm/createWithBsPrefix.js"}],"components/login-view/login-form.jsx":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-var _propTypes = _interopRequireDefault(require("prop-types"));
-
-var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
-
-var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var LoginForm = function LoginForm(props) {
-  var formInputs = props.formInputs,
-      isClientValidated = props.isClientValidated,
-      onFormChange = props.onFormChange,
-      onLogin = props.onLogin;
-  var username = formInputs.username,
-      password = formInputs.password;
-  return _react.default.createElement(_Form.default, {
-    noValidate: true,
-    validated: isClientValidated,
-    onSubmit: onLogin,
-    className: "mb-2"
-  }, _react.default.createElement(_Form.default.Group, {
-    className: "mb-2",
-    controlId: "loginUsername"
-  }, _react.default.createElement(_Form.default.Control, {
-    autoFocus: true,
-    type: "text",
-    placeholder: "Username",
-    name: "username",
-    value: username,
-    onChange: onFormChange,
-    required: true
-  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Please enter your username")), _react.default.createElement(_Form.default.Group, {
-    controlId: "loginPassword",
-    className: "mb-2"
-  }, _react.default.createElement(_Form.default.Control, {
-    type: "password",
-    placeholder: "Password",
-    name: "password",
-    value: password,
-    onChange: onFormChange,
-    required: true,
-    minLength: "7"
-  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Password must be at least 7 characters")), _react.default.createElement(_Button.default, {
-    variant: "primary",
-    type: "submit",
-    className: "w-100 btn-lg mb-3"
-  }, "Login"));
-};
-
-LoginForm.propTypes = {
-  formInputs: _propTypes.default.object.isRequired,
-  isClientValidated: _propTypes.default.bool.isRequired,
-  onFormChange: _propTypes.default.func.isRequired,
-  onLogin: _propTypes.default.func.isRequired
-};
-var _default = LoginForm;
-exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js"}],"../node_modules/invariant/browser.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/esm/extends":"../node_modules/@babel/runtime/helpers/esm/extends.js","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js","classnames":"../node_modules/classnames/index.js","react":"../node_modules/react/index.js","./FormCheck":"../node_modules/react-bootstrap/esm/FormCheck.js","./FormFile":"../node_modules/react-bootstrap/esm/FormFile.js","./FormControl":"../node_modules/react-bootstrap/esm/FormControl.js","./FormGroup":"../node_modules/react-bootstrap/esm/FormGroup.js","./FormLabel":"../node_modules/react-bootstrap/esm/FormLabel.js","./FormText":"../node_modules/react-bootstrap/esm/FormText.js","./Switch":"../node_modules/react-bootstrap/esm/Switch.js","./ThemeProvider":"../node_modules/react-bootstrap/esm/ThemeProvider.js","./createWithBsPrefix":"../node_modules/react-bootstrap/esm/createWithBsPrefix.js"}],"../node_modules/invariant/browser.js":[function(require,module,exports) {
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -45445,7 +45427,17 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _loginForm = _interopRequireDefault(require("./login-form"));
+var _reactRouterDom = require("react-router-dom");
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _reactRedux = require("react-redux");
+
+var _user = require("../../store/user");
+
+var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
+
+var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
 var _CustomAlert = _interopRequireDefault(require("../common/CustomAlert"));
 
@@ -45454,10 +45446,6 @@ var _LoadingSpinner = _interopRequireDefault(require("../common/LoadingSpinner")
 var _Container = _interopRequireDefault(require("react-bootstrap/Container"));
 
 var _Col = _interopRequireDefault(require("react-bootstrap/Col"));
-
-var _reactRouterDom = require("react-router-dom");
-
-var _axios = _interopRequireDefault(require("axios"));
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -45482,7 +45470,7 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var LoginView = function LoginView(_ref) {
-  var handleLoggedIn = _ref.handleLoggedIn;
+  var loginUser = _ref.loginUser;
 
   var _useState = (0, _react.useState)({
     username: '',
@@ -45510,43 +45498,42 @@ var LoginView = function LoginView(_ref) {
       isLoading = _useState8[0],
       setIsLoading = _useState8[1];
 
-  var handleFormChange = function handleFormChange(e) {
+  var onChange = function onChange(e) {
     return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
   };
 
   var handleCloseAlert = function handleCloseAlert() {
     setIsServerInvalidated(false);
-  };
+  }; // const handleLogin = (e) => {
+  //   setIsLoading(true);
+  //   const form = e.currentTarget;
+  //   if (!form.checkValidity()) {
+  //     console.log('Invalid input, form not submitted');
+  //     e.preventDefault();
+  //     e.stopPropagation();
+  //     setIsLoading(false);
+  //   }
+  //   setIsClientValidated(true);
+  //   e.preventDefault();
+  //   if (form.checkValidity()) {
+  //     axios
+  //       .post('https://my-fight-flix.herokuapp.com/api/login', {
+  //         Username: username,
+  //         Password: password,
+  //       })
+  //       .then((res) => {
+  //         console.log('Account Logged In');
+  //         handleLoggedIn(res.data);
+  //         setIsLoading(false);
+  //       })
+  //       .catch((e) => {
+  //         console.log('Invalid Username or Password');
+  //         setIsServerInvalidated(true);
+  //         setIsLoading(false);
+  //       });
+  //   }
+  // };
 
-  var handleLogin = function handleLogin(e) {
-    setIsLoading(true);
-    var form = e.currentTarget;
-
-    if (!form.checkValidity()) {
-      console.log('Invalid input, form not submitted');
-      e.preventDefault();
-      e.stopPropagation();
-      setIsLoading(false);
-    }
-
-    setIsClientValidated(true);
-    e.preventDefault();
-
-    if (form.checkValidity()) {
-      _axios.default.post('https://my-fight-flix.herokuapp.com/api/login', {
-        Username: username,
-        Password: password
-      }).then(function (res) {
-        console.log('Account Logged In');
-        handleLoggedIn(res.data);
-        setIsLoading(false);
-      }).catch(function (e) {
-        console.log('Invalid Username or Password');
-        setIsServerInvalidated(true);
-        setIsLoading(false);
-      });
-    }
-  };
 
   return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
     className: "my-3"
@@ -45568,34 +45555,71 @@ var LoginView = function LoginView(_ref) {
     className: "text-primary"
   }, "Fight"), "Flix")), _react.default.createElement(_LoadingSpinner.default, {
     show: isLoading
-  }), _react.default.createElement(_CustomAlert.default, {
-    alertHeading: "Login Error",
-    alertBody: "Incorrect username or password. Please try again.",
-    isShowAlert: isServerInvalidated,
-    onCloseAlert: handleCloseAlert
   }), _react.default.createElement("h2", {
     className: "text-left h6 text-dark font-weight-bold mb-2"
-  }, "Login to Your Account"), _react.default.createElement(_loginForm.default, {
-    formInputs: formData,
-    isClientValidated: isClientValidated,
-    onFormChange: handleFormChange,
-    onLogin: handleLogin
-  }), _react.default.createElement("small", {
+  }, "Login to Your Account"), _react.default.createElement(_Form.default, {
+    noValidate: true,
+    validated: isClientValidated,
+    onSubmit: function onSubmit(e) {
+      e.preventDefault();
+      loginUser(username, password);
+    },
+    className: "mb-2"
+  }, _react.default.createElement(_Form.default.Group, {
+    className: "mb-2",
+    controlId: "loginUsername"
+  }, _react.default.createElement(_Form.default.Control, {
+    autoFocus: true,
+    type: "text",
+    placeholder: "Username",
+    name: "username",
+    value: username,
+    onChange: onChange,
+    required: true
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Please enter your username")), _react.default.createElement(_Form.default.Group, {
+    controlId: "loginPassword",
+    className: "mb-2"
+  }, _react.default.createElement(_Form.default.Control, {
+    type: "password",
+    placeholder: "Password",
+    name: "password",
+    value: password,
+    onChange: onChange,
+    required: true,
+    minLength: "7"
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Password must be at least 7 characters")), _react.default.createElement(_Button.default, {
+    variant: "primary",
+    type: "submit",
+    className: "w-100 btn-lg mb-3"
+  }, "Login")), _react.default.createElement("small", {
     className: "text-muted text-center d-block"
   }, "Not a member yet?", _react.default.createElement(_reactRouterDom.Link, {
     to: "/register"
   }, _react.default.createElement("span", {
     className: "register text-primary ml-2"
   }, "Sign up for free"))))));
-}; // PropTypes
-
+};
 
 LoginView.propTypes = {
-  handleLoggedIn: _propTypes.default.func.isRequired
+  loginUser: _propTypes.default.func.isRequired
 };
-var _default = LoginView;
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    loginUser: function loginUser(username, password) {
+      return dispatch((0, _user.loginUser)(username, password));
+    }
+  };
+};
+
+var _default = (0, _reactRedux.connect)(null, mapDispatchToProps)(LoginView);
+
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","./login-form":"components/login-view/login-form.jsx","../common/CustomAlert":"components/common/CustomAlert.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","axios":"../node_modules/axios/index.js"}],"components/registration-view/registration-form.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","axios":"../node_modules/axios/index.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","../common/CustomAlert":"components/common/CustomAlert.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"components/registration-view/registration-form.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -47024,24 +47048,9 @@ var MainView = /*#__PURE__*/function (_Component) {
   var _super = _createSuper(MainView);
 
   function MainView() {
-    var _this;
-
-    var _temp;
-
     _classCallCheck(this, MainView);
 
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _possibleConstructorReturn(_this, (_temp = _this = _super.call.apply(_super, [this].concat(args)), _this.handleLoggedIn = function (authData) {
-      localStorage.setItem('token', authData.token);
-      localStorage.setItem('user', authData.user.Username);
-
-      _this.props.fetchMovies(authData.token);
-
-      _this.props.fetchUser(authData.token, authData.user.Username);
-    }, _temp));
+    return _super.apply(this, arguments);
   }
 
   _createClass(MainView, [{
@@ -47054,10 +47063,7 @@ var MainView = /*#__PURE__*/function (_Component) {
         this.props.fetchMovies(accessToken);
         this.props.fetchUser(accessToken, username);
       }
-    }
-  }, {
-    key: "render",
-    // handleToggleFavorite = (movieId) => {
+    } // handleToggleFavorite = (movieId) => {
     //   const favoriteMovies = this.state.favoriteMovies;
     //   if (favoriteMovies.indexOf(movieId) === -1) {
     //     this.handleAddFavorite(movieId);
@@ -47114,9 +47120,10 @@ var MainView = /*#__PURE__*/function (_Component) {
     //   }
     //   this.setState({ favoriteMovies });
     // };
-    value: function render() {
-      var _this2 = this;
 
+  }, {
+    key: "render",
+    value: function render() {
       var user = this.props.user;
       return _react.default.createElement(_reactRouterDom.BrowserRouter, null, _react.default.createElement(_NavBar.default, null), _react.default.createElement(_reactRouterDom.Switch, null, _react.default.createElement(_reactRouterDom.Route, {
         path: "/directors/:directorName",
@@ -47141,15 +47148,7 @@ var MainView = /*#__PURE__*/function (_Component) {
         exact: true,
         path: "/",
         render: function render() {
-          if (!user) {
-            return _react.default.createElement(_loginView.default, {
-              handleLoggedIn: function handleLoggedIn(user) {
-                return _this2.handleLoggedIn(user);
-              }
-            });
-          }
-
-          return _react.default.createElement(_moviesList.default, null);
+          return !user ? _react.default.createElement(_loginView.default, null) : _react.default.createElement(_moviesList.default, null);
         }
       }), _react.default.createElement(_reactRouterDom.Route, {
         path: "/not-found",
@@ -47295,7 +47294,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44173" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40243" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

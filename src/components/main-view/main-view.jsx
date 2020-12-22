@@ -30,14 +30,6 @@ class MainView extends Component {
     }
   }
 
-  handleLoggedIn = (authData) => {
-    localStorage.setItem('token', authData.token);
-    localStorage.setItem('user', authData.user.Username);
-
-    this.props.fetchMovies(authData.token);
-    this.props.fetchUser(authData.token, authData.user.Username);
-  };
-
   // handleToggleFavorite = (movieId) => {
   //   const favoriteMovies = this.state.favoriteMovies;
 
@@ -132,14 +124,7 @@ class MainView extends Component {
             exact
             path='/'
             render={() => {
-              if (!user) {
-                return (
-                  <LoginView
-                    handleLoggedIn={(user) => this.handleLoggedIn(user)}
-                  />
-                );
-              }
-              return <MoviesList />;
+              return !user ? <LoginView /> : <MoviesList />;
             }}
           />
           <Route path='/not-found' component={NotFound} />
