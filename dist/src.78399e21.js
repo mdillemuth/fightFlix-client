@@ -41366,7 +41366,7 @@ exports.fetchMovies = fetchMovies;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.logoutUser = exports.fetchUser = exports.default = exports.userLoggedOut = exports.userRetrieved = void 0;
+exports.logoutUser = exports.deleteAccount = exports.updateAccount = exports.fetchUser = exports.default = exports.accountUpdated = exports.accountDeleted = exports.userLoggedOut = exports.userRetrieved = void 0;
 
 var _toolkit = require("@reduxjs/toolkit");
 
@@ -41389,12 +41389,22 @@ var slice = (0, _toolkit.createSlice)({
     },
     userLoggedOut: function userLoggedOut(state) {
       state.user = null;
+    },
+    accountDeleted: function accountDeleted(state) {
+      state.user = null;
+    },
+    accountUpdated: function accountUpdated(state) {
+      state.user = null;
     }
   }
 });
 var _slice$actions = slice.actions,
     userRetrieved = _slice$actions.userRetrieved,
-    userLoggedOut = _slice$actions.userLoggedOut;
+    userLoggedOut = _slice$actions.userLoggedOut,
+    accountDeleted = _slice$actions.accountDeleted,
+    accountUpdated = _slice$actions.accountUpdated;
+exports.accountUpdated = accountUpdated;
+exports.accountDeleted = accountDeleted;
 exports.userLoggedOut = userLoggedOut;
 exports.userRetrieved = userRetrieved;
 var _default = slice.reducer; // API call to retrieve user information
@@ -41403,7 +41413,7 @@ exports.default = _default;
 
 var fetchUser = function fetchUser(token, username) {
   return /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(dispatch) {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(dispatch, getState) {
       var config, response;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -41429,14 +41439,106 @@ var fetchUser = function fetchUser(token, username) {
       }, _callee);
     }));
 
-    return function (_x) {
+    return function (_x, _x2) {
       return _ref.apply(this, arguments);
+    };
+  }();
+}; // API call to update user's account and log them out
+
+
+exports.fetchUser = fetchUser;
+
+var updateAccount = function updateAccount(token, username, newUsername, newPassword, newEmail, newBirthday) {
+  return /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(dispatch) {
+      var config, response;
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              config = {
+                headers: {
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context2.next = 3;
+              return _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
+                Username: newUsername,
+                Password: newPassword,
+                Email: newEmail,
+                Birthday: newBirthday
+              }, config);
+
+            case 3:
+              response = _context2.sent;
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              dispatch(accountUpdated());
+              window.open('/', '_self');
+
+            case 8:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+
+    return function (_x3) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+}; // API call to delete user's account and log them out
+
+
+exports.updateAccount = updateAccount;
+
+var deleteAccount = function deleteAccount(token, username) {
+  return /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(dispatch) {
+      var config, response;
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              config = {
+                headers: {
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+
+              if (!window.confirm('Are you sure you wish to remove your account?')) {
+                _context3.next = 5;
+                break;
+              }
+
+              _context3.next = 4;
+              return _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username), config);
+
+            case 4:
+              response = _context3.sent;
+
+            case 5:
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              dispatch(accountDeleted());
+
+            case 8:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }));
+
+    return function (_x4) {
+      return _ref3.apply(this, arguments);
     };
   }();
 }; // Logging out user
 
 
-exports.fetchUser = fetchUser;
+exports.deleteAccount = deleteAccount;
 
 var logoutUser = function logoutUser() {
   return function (dispatch) {
@@ -45939,133 +46041,7 @@ var mapStateToProps = function mapStateToProps(state) {
 var _default = (0, _reactRedux.connect)(mapStateToProps)(GenreView);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js"}],"components/profile-view/profile-form.jsx":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-var _propTypes = _interopRequireDefault(require("prop-types"));
-
-var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
-
-var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
-
-var _reactRouterDom = require("react-router-dom");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var ProfileForm = function ProfileForm(props) {
-  var formInputs = props.formInputs,
-      isClientValidated = props.isClientValidated,
-      onFormChange = props.onFormChange,
-      onUpdateAccount = props.onUpdateAccount,
-      onRemoveAccount = props.onRemoveAccount;
-  var newUsername = formInputs.newUsername,
-      newEmail = formInputs.newEmail,
-      newPassword = formInputs.newPassword,
-      newPasswordConfirm = formInputs.newPasswordConfirm,
-      newBirthday = formInputs.newBirthday;
-  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Form.default, {
-    noValidate: true,
-    validated: isClientValidated,
-    className: "mb-2",
-    onSubmit: onUpdateAccount
-  }, _react.default.createElement(_Form.default.Group, {
-    className: "mb-2",
-    controlId: "registerUsername"
-  }, _react.default.createElement(_Form.default.Control, {
-    autoFocus: true,
-    type: "text",
-    placeholder: "New username",
-    name: "newUsername",
-    value: newUsername,
-    onChange: onFormChange,
-    required: true
-  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Please enter a username")), _react.default.createElement(_Form.default.Group, {
-    className: "mb-2",
-    controlId: "registerEmail"
-  }, _react.default.createElement(_Form.default.Control, {
-    type: "email",
-    placeholder: "New email",
-    name: "newEmail",
-    value: newEmail,
-    onChange: onFormChange,
-    required: true
-  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Please enter a valid email address")), _react.default.createElement(_Form.default.Group, {
-    className: "mb-2",
-    controlId: "registerPassword"
-  }, _react.default.createElement(_Form.default.Control, {
-    type: "password",
-    placeholder: "New password",
-    name: "newPassword",
-    value: newPassword,
-    onChange: onFormChange,
-    required: true,
-    minLength: "7"
-  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
-    className: "mb-2",
-    controlId: "registerConfirmPassword"
-  }, _react.default.createElement(_Form.default.Control, {
-    type: "password",
-    placeholder: "Confirm new password",
-    name: "newPasswordConfirm",
-    value: newPasswordConfirm,
-    onChange: onFormChange,
-    required: true,
-    minLength: "7"
-  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
-    controlId: "registerBirthday",
-    className: "mb-2 "
-  }, _react.default.createElement(_Form.default.Label, {
-    className: "mb-1 text-muted font-weight-bold"
-  }, "Birthday"), _react.default.createElement(_Form.default.Control, {
-    type: "date",
-    name: "newBirthday",
-    value: newBirthday,
-    onChange: onFormChange,
-    required: true
-  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Birthday is required")), _react.default.createElement(_Button.default, {
-    variant: "primary",
-    type: "submit",
-    className: "w-100 btn-lg"
-  }, "Submit")), _react.default.createElement("small", {
-    className: "text-muted text-center d-block"
-  }, "Or you can", ' ', _react.default.createElement(_reactRouterDom.Link, {
-    to: "/"
-  }, _react.default.createElement("span", {
-    style: {
-      cursor: 'pointer'
-    },
-    className: "text-primary",
-    onClick: onRemoveAccount
-  }, "remove your account"))));
-};
-
-ProfileForm.propTypes = {
-  formInputs: _propTypes.default.object.isRequired,
-  isClientValidated: _propTypes.default.bool.isRequired,
-  onFormChange: _propTypes.default.func.isRequired,
-  onUpdateAccount: _propTypes.default.func.isRequired,
-  onRemoveAccount: _propTypes.default.func.isRequired
-};
-var _default = ProfileForm;
-exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/profile-view/profile-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js"}],"components/profile-view/profile-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -46077,21 +46053,23 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _profileForm = _interopRequireDefault(require("./profile-form"));
+var _reactRouterDom = require("react-router-dom");
+
+var _reactRedux = require("react-redux");
+
+var _user = require("../../store/user");
+
+var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
+
+var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
 var _CustomAlert = _interopRequireDefault(require("../common/CustomAlert"));
 
 var _LoadingSpinner = _interopRequireDefault(require("../common/LoadingSpinner"));
 
-var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
-
 var _Container = _interopRequireDefault(require("react-bootstrap/Container"));
 
 var _Col = _interopRequireDefault(require("react-bootstrap/Col"));
-
-var _axios = _interopRequireDefault(require("axios"));
-
-var _reactRouterDom = require("react-router-dom");
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -46115,8 +46093,10 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var ProfileView = function ProfileView(props) {
-  var onLogout = props.onLogout;
+var ProfileView = function ProfileView(_ref) {
+  var user = _ref.user,
+      deleteAccount = _ref.deleteAccount,
+      updateAccount = _ref.updateAccount;
 
   var _useState = (0, _react.useState)({
     newUsername: '',
@@ -46150,79 +46130,61 @@ var ProfileView = function ProfileView(props) {
       isLoading = _useState8[0],
       setIsLoading = _useState8[1];
 
-  var handleFormChange = function handleFormChange(e) {
+  var onChange = function onChange(e) {
     return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
   };
 
   var handleCloseAlert = function handleCloseAlert() {
     setIsServerInvalidated(false);
-  };
+  }; // const handleUpdateAccount = (e) => {
+  //   const username = localStorage.getItem('user');
+  //   const token = localStorage.getItem('token');
+  //   const form = e.currentTarget;
+  //   setIsLoading(true);
+  //   if (newPassword !== newPasswordConfirm) {
+  //     return alert('Passwords do not match');
+  //   }
+  //   if (!form.checkValidity()) {
+  //     console.log('Invalid input, form not submitted');
+  //     e.preventDefault();
+  //     e.stopPropagation();
+  //     setIsLoading(false);
+  //   }
+  //   setIsClientValidated(true);
+  //   e.preventDefault();
+  //   const config = {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   };
+  //   if (form.checkValidity()) {
+  //     axios
+  //       .put(
+  //         `https://my-fight-flix.herokuapp.com/api/users/${username}`,
+  //         {
+  //           Username: newUsername,
+  //           Password: newPassword,
+  //           Email: newEmail,
+  //           Birthday: newBirthday,
+  //         },
+  //         config
+  //       )
+  //       .then((res) => {
+  //         console.log('Account Updated');
+  //         setIsLoading(false);
+  //         window.open('/', '_self');
+  //         onLogout();
+  //       })
+  //       .catch((e) => {
+  //         console.log('Update Error');
+  //         setIsServerInvalidated(true);
+  //         setIsLoading(false);
+  //       });
+  //   }
+  // };
 
-  var handleRemoveAccount = function handleRemoveAccount() {
-    var token = localStorage.getItem('token');
-    var username = localStorage.getItem('user');
 
-    if (window.confirm('Are you sure you wish to remove your account?')) {
-      _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
-        headers: {
-          Authorization: "Bearer ".concat(token)
-        }
-      }).then(function (res) {
-        console.log('account deleted');
-        onLogout();
-      }).catch(function (e) {
-        return console.log('error');
-      });
-    } else {
-      window.open('/profile', '_self');
-    }
-  };
-
-  var handleUpdateAccount = function handleUpdateAccount(e) {
-    var username = localStorage.getItem('user');
-    var token = localStorage.getItem('token');
-    var form = e.currentTarget;
-    setIsLoading(true);
-
-    if (newPassword !== newPasswordConfirm) {
-      return alert('Passwords do not match');
-    }
-
-    if (!form.checkValidity()) {
-      console.log('Invalid input, form not submitted');
-      e.preventDefault();
-      e.stopPropagation();
-      setIsLoading(false);
-    }
-
-    setIsClientValidated(true);
-    e.preventDefault();
-    var config = {
-      headers: {
-        Authorization: "Bearer ".concat(token)
-      }
-    };
-
-    if (form.checkValidity()) {
-      _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
-        Username: newUsername,
-        Password: newPassword,
-        Email: newEmail,
-        Birthday: newBirthday
-      }, config).then(function (res) {
-        console.log('Account Updated');
-        setIsLoading(false);
-        window.open('/', '_self');
-        onLogout();
-      }).catch(function (e) {
-        console.log('Update Error');
-        setIsServerInvalidated(true);
-        setIsLoading(false);
-      });
-    }
-  };
-
-  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
+  return !user ? _react.default.createElement("div", null, "loading") : _react.default.createElement(_Container.default, {
     className: "my-3"
   }, _react.default.createElement("div", {
     className: "w-100 d-flex flex-column align-items-center mb-3"
@@ -46251,21 +46213,124 @@ var ProfileView = function ProfileView(props) {
     alertBody: "Username is already taken or there is already an account with this email address",
     isShowAlert: isServerInvalidated,
     onCloseAlert: handleCloseAlert
-  }), _react.default.createElement(_profileForm.default, {
-    formInputs: formData,
-    isClientValidated: isClientValidated,
-    onFormChange: handleFormChange,
-    onUpdateAccount: handleUpdateAccount,
-    onRemoveAccount: handleRemoveAccount
-  }))));
+  }), _react.default.createElement(_Form.default, {
+    noValidate: true,
+    validated: isClientValidated,
+    className: "mb-2",
+    onSubmit: function onSubmit(e) {
+      e.preventDefault();
+      updateAccount(localStorage.getItem('token'), user.Username, newUsername, newPassword, newEmail, newBirthday);
+    }
+  }, _react.default.createElement(_Form.default.Group, {
+    className: "mb-2",
+    controlId: "registerUsername"
+  }, _react.default.createElement(_Form.default.Control, {
+    autoFocus: true,
+    type: "text",
+    placeholder: "New username",
+    name: "newUsername",
+    value: newUsername,
+    onChange: onChange,
+    required: true
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Please enter a username")), _react.default.createElement(_Form.default.Group, {
+    className: "mb-2",
+    controlId: "registerEmail"
+  }, _react.default.createElement(_Form.default.Control, {
+    type: "email",
+    placeholder: "New email",
+    name: "newEmail",
+    value: newEmail,
+    onChange: onChange,
+    required: true
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Please enter a valid email address")), _react.default.createElement(_Form.default.Group, {
+    className: "mb-2",
+    controlId: "registerPassword"
+  }, _react.default.createElement(_Form.default.Control, {
+    type: "password",
+    placeholder: "New password",
+    name: "newPassword",
+    value: newPassword,
+    onChange: onChange,
+    required: true,
+    minLength: "7"
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
+    className: "mb-2",
+    controlId: "registerConfirmPassword"
+  }, _react.default.createElement(_Form.default.Control, {
+    type: "password",
+    placeholder: "Confirm new password",
+    name: "newPasswordConfirm",
+    value: newPasswordConfirm,
+    onChange: onChange,
+    required: true,
+    minLength: "7"
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
+    controlId: "registerBirthday",
+    className: "mb-2 "
+  }, _react.default.createElement(_Form.default.Label, {
+    className: "mb-1 text-muted font-weight-bold"
+  }, "Birthday"), _react.default.createElement(_Form.default.Control, {
+    type: "date",
+    name: "newBirthday",
+    value: newBirthday,
+    onChange: onChange,
+    required: true
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Birthday is required")), _react.default.createElement(_Button.default, {
+    variant: "primary",
+    type: "submit",
+    className: "w-100 btn-lg"
+  }, "Submit")), _react.default.createElement("small", {
+    className: "text-muted text-center d-block"
+  }, "Or you can", ' ', _react.default.createElement(_reactRouterDom.Link, {
+    to: "/"
+  }, _react.default.createElement("span", {
+    style: {
+      cursor: 'pointer'
+    },
+    className: "text-primary",
+    onClick: function onClick() {
+      return deleteAccount(localStorage.getItem('token'), user.Username);
+    }
+  }, "remove your account")))));
 };
 
 ProfileView.propTypes = {
-  onLogout: _propTypes.default.func.isRequired
+  user: _propTypes.default.object,
+  deleteAccount: _propTypes.default.func,
+  updateAccount: _propTypes.default.func
 };
-var _default = ProfileView;
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    deleteAccount: function deleteAccount(token, username) {
+      return dispatch((0, _user.deleteAccount)(token, username));
+    },
+    updateAccount: function updateAccount(token, username, newUsername, newPassword, newEmail, newBirthday) {
+      return dispatch((0, _user.updateAccount)(token, username, newUsername, newPassword, newEmail, newBirthday));
+    }
+  };
+};
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    user: state.user.user
+  };
+};
+
+var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ProfileView);
+
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","./profile-form":"components/profile-view/profile-form.jsx","../common/CustomAlert":"components/common/CustomAlert.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","axios":"../node_modules/axios/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/favorites-view/favorites-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","../common/CustomAlert":"components/common/CustomAlert.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"components/favorites-view/favorites-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -47230,7 +47295,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36499" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44173" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
