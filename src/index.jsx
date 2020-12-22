@@ -1,13 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
 import MainView from './components/main-view/main-view';
 import './app.scss';
 import 'font-awesome/css/font-awesome.css';
 
+// Redux
+import { Provider } from 'react-redux';
+import configureStore from './store/configureStore';
+
+// Initialize redux store
+const store = configureStore();
+
 ReactDOM.render(
-  <BrowserRouter>
+  <Provider store={store}>
     <MainView />
-  </BrowserRouter>,
+  </Provider>,
   document.getElementById('root')
 );

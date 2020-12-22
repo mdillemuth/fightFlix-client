@@ -1,4 +1,12 @@
 import React, { Component } from 'react';
+import { Route, Switch, Redirect, BrowserRouter } from 'react-router-dom';
+import axios from 'axios';
+
+// Redux
+import { connect } from 'react-redux';
+import { fetchMovies } from '../../store/movies';
+
+// UI Components
 import MoviesView from '../movies-view/movies-view';
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
@@ -9,8 +17,6 @@ import ProfileView from '../profile-view/profile-view';
 import FavoritesView from '../favorites-view/favorites-view';
 import NavBar from '../common/NavBar';
 import NotFound from '../not-found/not-found';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import axios from 'axios';
 
 class MainView extends Component {
   constructor() {
@@ -31,6 +37,7 @@ class MainView extends Component {
       });
       this.getMovies(accessToken);
       this.getUser(accessToken);
+      this.props.fetchMovies(accessToken);
     }
   }
 
@@ -164,7 +171,7 @@ class MainView extends Component {
     const { movies, user, favoriteMovies } = this.state;
 
     return (
-      <div>
+      <BrowserRouter>
         <NavBar onLogout={this.handleLogout} user={user} />
         <Switch>
           <Route
@@ -235,9 +242,13 @@ class MainView extends Component {
           <Redirect from='/movies' to='/' />
           <Redirect to='/not-found' />
         </Switch>
-      </div>
+      </BrowserRouter>
     );
   }
 }
 
-export default MainView;
+const mapDispatchToProps = (dispatch) => ({
+  fetchMovies: (token) => dispatch(fetchMovies(token)),
+});
+
+export default connect(null, mapDispatchToProps)(MainView);
