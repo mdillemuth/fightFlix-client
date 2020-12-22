@@ -45869,12 +45869,20 @@ var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
 var _reactRouterDom = require("react-router-dom");
 
+var _reactRedux = require("react-redux");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var GenreView = function GenreView(_ref) {
-  var movie = _ref.movie,
-      other = _ref.other;
-  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("div", {
+  var movies = _ref.movies,
+      match = _ref.match;
+  var movie = movies.find(function (m) {
+    return m.Genre.Name === match.params.genreName;
+  });
+  var otherMovies = movies.filter(function (m) {
+    return m.Genre.Name === match.params.genreName;
+  });
+  return !movie ? _react.default.createElement("div", null, "Loading") : _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("div", {
     className: "container"
   }, _react.default.createElement("div", {
     className: "row bg-white rounded m-3 p-3"
@@ -45896,7 +45904,7 @@ var GenreView = function GenreView(_ref) {
     className: "text-primary"
   }, movie.Genre.Name)), _react.default.createElement("div", {
     className: "container d-flex flex-wrap justify-content-center"
-  }, other.map(function (o) {
+  }, otherMovies.map(function (o) {
     return _react.default.createElement(_movieCard.default, {
       key: o._id,
       movie: o
@@ -45905,12 +45913,20 @@ var GenreView = function GenreView(_ref) {
 };
 
 GenreView.propTypes = {
-  movie: _propTypes.default.object.isRequired,
-  other: _propTypes.default.array.isRequired
+  movies: _propTypes.default.array.isRequired,
+  match: _propTypes.default.object.isRequired
 };
-var _default = GenreView;
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    movies: state.movies.movies
+  };
+};
+
+var _default = (0, _reactRedux.connect)(mapStateToProps)(GenreView);
+
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/profile-view/profile-form.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js"}],"components/profile-view/profile-form.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -47108,21 +47124,11 @@ var MainView = /*#__PURE__*/function (_Component) {
         component: _directorView.default
       }), _react.default.createElement(_reactRouterDom.Route, {
         path: "/genres/:genreName",
-        render: function render(_ref) {
-          var match = _ref.match;
-          return _react.default.createElement(_genreView.default, {
-            movie: movies.find(function (m) {
-              return m.Genre.Name === match.params.genreName;
-            }),
-            other: movies.filter(function (m) {
-              return m.Genre.Name === match.params.genreName;
-            })
-          });
-        }
+        component: _genreView.default
       }), _react.default.createElement(_reactRouterDom.Route, {
         path: "/movies/:movieId",
-        render: function render(_ref2) {
-          var match = _ref2.match;
+        render: function render(_ref) {
+          var match = _ref.match;
           return _react.default.createElement(_movieView.default, {
             isFavorite: favoriteMovies.indexOf(match.params.movieId),
             movie: movies.find(function (m) {
@@ -47291,7 +47297,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36135" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33203" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
