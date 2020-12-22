@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Route, Switch, Redirect, BrowserRouter } from 'react-router-dom';
-import axios from 'axios';
 
 // Redux
 import { connect } from 'react-redux';
 import { fetchMovies } from '../../store/movies';
+import { fetchUser } from '../../store/user';
 
 // UI Components
 import MoviesList from '../movies-list/movies-list';
@@ -19,142 +20,97 @@ import NavBar from '../common/NavBar';
 import NotFound from '../not-found/not-found';
 
 class MainView extends Component {
-  constructor() {
-    super();
-    this.state = {
-      user: null,
-      userData: {},
-      favoriteMovies: [],
-    };
-  }
-
   componentDidMount() {
     let accessToken = localStorage.getItem('token');
-    if (accessToken !== null) {
-      this.setState({
-        user: localStorage.getItem('user'),
-      });
-      this.getUser(accessToken);
-      this.props.fetchMovies(accessToken);
-    }
-  }
-
-  getUser(token) {
     const username = localStorage.getItem('user');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
 
-    axios
-      .get(`https://my-fight-flix.herokuapp.com/api/users/${username}`, config)
-      .then((res) => {
-        res.data.map((item) => {
-          this.setState({
-            userData: item,
-          });
-        });
-        this.setState({
-          favoriteMovies: this.state.userData.FavoriteMovies,
-        });
-      })
-      .catch((e) => console.log('Error Retrieving User Data'));
+    if (accessToken !== null) {
+      this.props.fetchMovies(accessToken);
+      this.props.fetchUser(accessToken, username);
+    }
   }
 
   handleLoggedIn = (authData) => {
-    this.setState({
-      user: authData.user.Username,
-    });
-
     localStorage.setItem('token', authData.token);
     localStorage.setItem('user', authData.user.Username);
+
     this.props.fetchMovies(authData.token);
-    this.getUser(authData.token);
+    this.props.fetchUser(authData.token, authData.user.Username);
   };
 
-  handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+  // handleToggleFavorite = (movieId) => {
+  //   const favoriteMovies = this.state.favoriteMovies;
 
-    this.setState({
-      user: null,
-    });
-  };
+  //   if (favoriteMovies.indexOf(movieId) === -1) {
+  //     this.handleAddFavorite(movieId);
+  //   } else {
+  //     this.handleRemoveFavorite(movieId);
+  //   }
+  // };
 
-  handleToggleFavorite = (movieId) => {
-    const favoriteMovies = this.state.favoriteMovies;
+  // handleAddFavorite = (movieId) => {
+  //   const username = localStorage.getItem('user');
+  //   const token = localStorage.getItem('token');
 
-    if (favoriteMovies.indexOf(movieId) === -1) {
-      this.handleAddFavorite(movieId);
-    } else {
-      this.handleRemoveFavorite(movieId);
-    }
-  };
+  //   if (this.state.favoriteMovies.indexOf(movieId) > -1) {
+  //     return console.log('Movie already in favorites');
+  //   }
 
-  handleAddFavorite = (movieId) => {
-    const username = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
+  //   axios
+  //     .post(
+  //       `https://my-fight-flix.herokuapp.com/api/users/${username}/${movieId}`,
+  //       {},
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     )
+  //     .then((res) => {
+  //       console.log(`Movie ${movieId} added to favorites`);
+  //     })
+  //     .catch((e) => console.log('Error Adding Favorite'));
 
-    if (this.state.favoriteMovies.indexOf(movieId) > -1) {
-      return console.log('Movie already in favorites');
-    }
+  //   const favoriteMovies = [...this.state.favoriteMovies];
+  //   favoriteMovies.push(movieId);
+  //   this.setState({ favoriteMovies });
+  // };
 
-    axios
-      .post(
-        `https://my-fight-flix.herokuapp.com/api/users/${username}/${movieId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(`Movie ${movieId} added to favorites`);
-      })
-      .catch((e) => console.log('Error Adding Favorite'));
+  // handleRemoveFavorite = (movieId) => {
+  //   const token = localStorage.getItem('token');
+  //   const username = localStorage.getItem('user');
 
-    const favoriteMovies = [...this.state.favoriteMovies];
-    favoriteMovies.push(movieId);
-    this.setState({ favoriteMovies });
-  };
+  //   if (this.state.favoriteMovies.indexOf(movieId) === -1) {
+  //     return console.log('Movie not in favorites');
+  //   }
 
-  handleRemoveFavorite = (movieId) => {
-    const token = localStorage.getItem('token');
-    const username = localStorage.getItem('user');
+  //   axios
+  //     .delete(
+  //       `https://my-fight-flix.herokuapp.com/api/users/${username}/${movieId}`,
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     )
+  //     .then((res) => {
+  //       console.log('favorite removed');
+  //     })
+  //     .catch((e) => console.log('error'));
 
-    if (this.state.favoriteMovies.indexOf(movieId) === -1) {
-      return console.log('Movie not in favorites');
-    }
-
-    axios
-      .delete(
-        `https://my-fight-flix.herokuapp.com/api/users/${username}/${movieId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then((res) => {
-        console.log('favorite removed');
-      })
-      .catch((e) => console.log('error'));
-
-    const favoriteMovies = [...this.state.favoriteMovies];
-    const index = favoriteMovies.indexOf(movieId);
-    favoriteMovies[index] = { ...favoriteMovies[index] };
-    if (index > -1) {
-      favoriteMovies.splice(index, 1);
-    }
-    this.setState({ favoriteMovies });
-  };
+  //   const favoriteMovies = [...this.state.favoriteMovies];
+  //   const index = favoriteMovies.indexOf(movieId);
+  //   favoriteMovies[index] = { ...favoriteMovies[index] };
+  //   if (index > -1) {
+  //     favoriteMovies.splice(index, 1);
+  //   }
+  //   this.setState({ favoriteMovies });
+  // };
 
   render() {
-    const { movies, user, favoriteMovies } = this.state;
+    const { user } = this.props;
 
     return (
       <BrowserRouter>
-        <NavBar onLogout={this.handleLogout} user={user} />
+        <NavBar />
         <Switch>
           <Route path='/directors/:directorName' component={DirectorView} />
           <Route path='/genres/:genreName' component={GenreView} />
@@ -163,12 +119,11 @@ class MainView extends Component {
             path='/profile'
             render={() => (
               <div>
-                <ProfileView onLogout={this.handleLogout} />
-                <FavoritesView
+                <ProfileView />
+                {/* <FavoritesView
                   favoriteMovies={favoriteMovies}
-                  movies={movies}
                   onRemoveFavorite={this.handleRemoveFavorite}
-                />
+                /> */}
               </div>
             )}
           />
@@ -196,8 +151,17 @@ class MainView extends Component {
   }
 }
 
+MainView.propTypes = {
+  user: PropTypes.object,
+};
+
 const mapDispatchToProps = (dispatch) => ({
   fetchMovies: (token) => dispatch(fetchMovies(token)),
+  fetchUser: (token, username) => dispatch(fetchUser(token, username)),
 });
 
-export default connect(null, mapDispatchToProps)(MainView);
+const mapStateToProps = (state) => ({
+  user: state.user.user,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainView);

@@ -1,32 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { logoutUser } from '../../store/user';
+import { connect } from 'react-redux';
+
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 
-import { Link } from 'react-router-dom';
-
-const NavBar = ({ onLogout, user }) => {
-  const username = localStorage.getItem('user');
-
-  const renderButtons = (user) => {
-    if (user !== null) {
-      return (
-        <div>
-          <Link to='/profile'>
-            <Button className='mr-1'>{username}</Button>
-          </Link>
-          <Link to='/'>
-            <Button
-              onClick={onLogout}
-              className='ml-1'
-              variant='outline-primary'
-            >
-              Logout
-            </Button>
-          </Link>
-        </div>
-      );
-    }
+const NavBar = ({ user, logoutUser }) => {
+  const renderButtons = () => {
+    return user === null ? (
+      <div></div>
+    ) : (
+      <div>
+        <Link to='/profile'>
+          <Button className='mr-1'>{user.Username}</Button>
+        </Link>
+        <Link to='/'>
+          <Button
+            onClick={logoutUser}
+            className='ml-1'
+            variant='outline-primary'
+          >
+            Logout
+          </Button>
+        </Link>
+      </div>
+    );
   };
 
   return (
@@ -40,15 +40,22 @@ const NavBar = ({ onLogout, user }) => {
             my<span className='text-primary'>Fight</span>Flix
           </Navbar.Brand>
         </Link>
-        <div>{renderButtons(user)}</div>
+        <div>{renderButtons()}</div>
       </Navbar>
     </React.Fragment>
   );
 };
 
 NavBar.propTypes = {
-  onLogout: PropTypes.func.isRequired,
-  user: PropTypes.string,
+  user: PropTypes.object,
 };
 
-export default NavBar;
+const mapDispatchToProps = (dispatch) => ({
+  logoutUser: () => dispatch(logoutUser()),
+});
+
+const mapStateToProps = (state) => ({
+  user: state.user.user,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

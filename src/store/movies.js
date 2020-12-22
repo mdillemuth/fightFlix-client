@@ -7,15 +7,16 @@ const slice = createSlice({
     movies: [],
   },
   reducers: {
-    moviesAdded: (state, action) => {
+    moviesRetrieved: (state, action) => {
       state.movies = action.payload;
     },
   },
 });
 
-export const { moviesAdded } = slice.actions;
+export const { moviesRetrieved } = slice.actions;
 export default slice.reducer;
 
+// API call to retrieve movies
 export const fetchMovies = (token) => async (dispatch) => {
   const config = {
     headers: {
@@ -28,5 +29,5 @@ export const fetchMovies = (token) => async (dispatch) => {
     config
   );
 
-  dispatch(moviesAdded(response.data));
+  dispatch(moviesRetrieved(response.data));
 };
