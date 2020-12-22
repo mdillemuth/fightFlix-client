@@ -174,19 +174,7 @@ class MainView extends Component {
       <BrowserRouter>
         <NavBar onLogout={this.handleLogout} user={user} />
         <Switch>
-          <Route
-            path='/directors/:directorName'
-            render={({ match }) => (
-              <DirectorView
-                movie={movies.find(
-                  (m) => m.Director.Name === match.params.directorName
-                )}
-                other={movies.filter(
-                  (m) => m.Director.Name === match.params.directorName
-                )}
-              />
-            )}
-          />
+          <Route path='/directors/:directorName' component={DirectorView} />
           <Route
             path='/genres/:genreName'
             render={({ match }) => (
