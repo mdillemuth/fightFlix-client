@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { fetchMovies } from '../../store/movies';
 
 // UI Components
-import MoviesView from '../movies-view/movies-view';
+import MoviesList from '../movies-list/movies-list';
 import MovieView from '../movie-view/movie-view';
 import LoginView from '../login-view/login-view';
 import RegistrationView from '../registration-view/registration-view';
@@ -23,7 +23,6 @@ class MainView extends Component {
     super();
     this.state = {
       user: null,
-      movies: [],
       userData: {},
       favoriteMovies: [],
     };
@@ -35,7 +34,6 @@ class MainView extends Component {
       this.setState({
         user: localStorage.getItem('user'),
       });
-      this.getMovies(accessToken);
       this.getUser(accessToken);
       this.props.fetchMovies(accessToken);
     }
@@ -64,21 +62,6 @@ class MainView extends Component {
       .catch((e) => console.log('Error Retrieving User Data'));
   }
 
-  getMovies(token) {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    axios
-      .get('https://my-fight-flix.herokuapp.com/api/movies', config)
-      .then((res) => {
-        this.setState({ movies: res.data });
-      })
-      .catch((e) => console.log('error getting movies'));
-  }
-
   handleLoggedIn = (authData) => {
     this.setState({
       user: authData.user.Username,
@@ -86,8 +69,7 @@ class MainView extends Component {
 
     localStorage.setItem('token', authData.token);
     localStorage.setItem('user', authData.user.Username);
-
-    this.getMovies(authData.token);
+    this.props.fetchMovies(authData.token);
     this.getUser(authData.token);
   };
 
@@ -176,16 +158,7 @@ class MainView extends Component {
         <Switch>
           <Route path='/directors/:directorName' component={DirectorView} />
           <Route path='/genres/:genreName' component={GenreView} />
-          <Route
-            path='/movies/:movieId'
-            render={({ match }) => (
-              <MovieView
-                isFavorite={favoriteMovies.indexOf(match.params.movieId)}
-                movie={movies.find((m) => m._id === match.params.movieId)}
-                onToggleFavorite={this.handleToggleFavorite}
-              />
-            )}
-          />
+          <Route path='/movies/:movieId' component={MovieView} />
           <Route
             path='/profile'
             render={() => (
@@ -211,7 +184,7 @@ class MainView extends Component {
                   />
                 );
               }
-              return <MoviesView movies={movies} />;
+              return <MoviesList />;
             }}
           />
           <Route path='/not-found' component={NotFound} />
