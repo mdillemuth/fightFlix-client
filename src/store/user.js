@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchMovies } from './movies';
 import axios from 'axios';
+import { setAlert } from './alerts';
 
 const slice = createSlice({
   name: 'user',
@@ -174,7 +175,6 @@ export const addFavorite = (movieId) => async (dispatch) => {
     config
   );
 
-  console.log('favorite added');
   dispatch(favoriteAdded(response.data));
 };
 
@@ -194,6 +194,5 @@ export const removeFavorite = (movieId) => async (dispatch) => {
     config
   );
 
-  console.log('favorite removed');
   dispatch(favoriteRemoved(response.data));
 };

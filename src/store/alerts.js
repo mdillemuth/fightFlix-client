@@ -10,19 +10,19 @@ const slice = createSlice({
     alertAdded: (alerts, action) => {
       alerts.list.push(action.payload);
     },
+    alertRemoved: (alerts, action) => {
+      alerts.list = alerts.list.filter((a) => a.id !== action.payload);
+    },
   },
 });
 
-export const { alertAdded } = slice.actions;
+export const { alertAdded, alertRemoved } = slice.actions;
 export default slice.reducer;
 
-export const setAlert = (message, type) => (dispatch) => {
-  const alert = {
-    message,
-    type,
-    id: uuidv4(),
-  };
+export const setAlert = (message, type, timeout = 5000) => (dispatch) => {
+  const alert = { message, type, id: uuidv4() };
 
   dispatch(alertAdded(alert));
-  // setTimeout(() => dispatch(), 5000);
+
+  setTimeout(() => dispatch(alertRemoved(alert.id)), timeout);
 };

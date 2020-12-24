@@ -18,7 +18,7 @@ import GenreView from './../genre-view/genre-view';
 import ProfileView from '../profile-view/profile-view';
 import NavBar from '../common/NavBar';
 import NotFound from '../not-found/not-found';
-import CustomAlert from '../common/CustomAlert';
+import Alert from '../common/Alert';
 
 class MainView extends Component {
   // Calls API for movies & user when auth token is present
@@ -36,7 +36,7 @@ class MainView extends Component {
     return (
       <BrowserRouter>
         <NavBar />
-        <CustomAlert />
+        <Alert />
         <Switch>
           <Route path='/directors/:directorName' component={DirectorView} />
           <Route path='/genres/:genreName' component={GenreView} />
