@@ -7,10 +7,12 @@ const slice = createSlice({
   initialState: {
     user: null,
     token: localStorage.getItem('token'),
+    favorites: [],
   },
   reducers: {
     userRetrieved: (state, action) => {
       state.user = action.payload;
+      state.favorites = action.payload.FavoriteMovies;
     },
 
     userLoggedIn: (state, action) => {
@@ -32,6 +34,14 @@ const slice = createSlice({
       state.user = null;
       state.token = null;
     },
+
+    favoriteAdded: (state, action) => {
+      state.favorites = action.payload;
+    },
+
+    favoriteRemoved: (state, action) => {
+      state.favorites = action.payload;
+    },
   },
 });
 
@@ -41,6 +51,8 @@ export const {
   userLoggedOut,
   accountDeleted,
   accountUpdated,
+  favoriteAdded,
+  favoriteRemoved,
 } = slice.actions;
 export default slice.reducer;
 
@@ -57,12 +69,14 @@ export const loginUser = (username, password) => async (dispatch) => {
   localStorage.setItem('token', response.data.token);
   localStorage.setItem('user', response.data.user.Username);
   dispatch(fetchMovies(response.data.token));
-
   dispatch(userLoggedIn(response.data));
 };
 
 // API call to retrieve user information
-export const fetchUser = (token, username) => async (dispatch) => {
+export const fetchUser = () => async (dispatch) => {
+  const username = localStorage.getItem('user');
+  const token = localStorage.getItem('token');
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -79,13 +93,14 @@ export const fetchUser = (token, username) => async (dispatch) => {
 
 // API call to update user's account and log them out
 export const updateAccount = (
-  token,
-  username,
   newUsername,
   newPassword,
   newEmail,
   newBirthday
 ) => async (dispatch) => {
+  const username = localStorage.getItem('user');
+  const token = localStorage.getItem('token');
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -109,7 +124,10 @@ export const updateAccount = (
 };
 
 // API call to delete user's account and log them out
-export const deleteAccount = (token, username) => async (dispatch) => {
+export const deleteAccount = () => async (dispatch) => {
+  const username = localStorage.getItem('user');
+  const token = localStorage.getItem('token');
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -117,7 +135,7 @@ export const deleteAccount = (token, username) => async (dispatch) => {
   };
 
   if (window.confirm('Are you sure you wish to remove your account?')) {
-    const response = await axios.delete(
+    await axios.delete(
       `https://my-fight-flix.herokuapp.com/api/users/${username}`,
       config
     );
@@ -137,4 +155,45 @@ export const logoutUser = () => (dispatch) => {
 const removeLocalStorage = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
+};
+
+// API call to add favorite movie
+export const addFavorite = (movieId) => async (dispatch) => {
+  const username = localStorage.getItem('user');
+  const token = localStorage.getItem('token');
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.post(
+    `https://my-fight-flix.herokuapp.com/api/users/${username}/${movieId}`,
+    {},
+    config
+  );
+
+  console.log('favorite added');
+  dispatch(favoriteAdded(response.data));
+};
+
+// API call to remove favorite movie
+export const removeFavorite = (movieId) => async (dispatch) => {
+  const username = localStorage.getItem('user');
+  const token = localStorage.getItem('token');
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.delete(
+    `https://my-fight-flix.herokuapp.com/api/users/${username}/${movieId}`,
+    config
+  );
+
+  console.log('favorite removed');
+  dispatch(favoriteAdded(response.data));
 };

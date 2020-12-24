@@ -17,7 +17,9 @@ export const { moviesRetrieved } = slice.actions;
 export default slice.reducer;
 
 // API call to retrieve movies
-export const fetchMovies = (token) => async (dispatch) => {
+export const fetchMovies = () => async (dispatch) => {
+  const token = localStorage.getItem('token');
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,

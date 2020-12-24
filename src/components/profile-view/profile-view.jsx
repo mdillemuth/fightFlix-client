@@ -126,14 +126,7 @@ const ProfileView = ({ user, deleteAccount, updateAccount }) => {
           className='mb-2'
           onSubmit={(e) => {
             e.preventDefault();
-            updateAccount(
-              localStorage.getItem('token'),
-              user.Username,
-              newUsername,
-              newPassword,
-              newEmail,
-              newBirthday
-            );
+            updateAccount(newUsername, newPassword, newEmail, newBirthday);
           }}
         >
           <Form.Group className='mb-2' controlId='registerUsername'>
@@ -221,9 +214,7 @@ const ProfileView = ({ user, deleteAccount, updateAccount }) => {
             <span
               style={{ cursor: 'pointer' }}
               className='text-primary'
-              onClick={() =>
-                deleteAccount(localStorage.getItem('token'), user.Username)
-              }
+              onClick={deleteAccount}
             >
               remove your account
             </span>
@@ -241,25 +232,9 @@ ProfileView.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  deleteAccount: (token, username) => dispatch(deleteAccount(token, username)),
-  updateAccount: (
-    token,
-    username,
-    newUsername,
-    newPassword,
-    newEmail,
-    newBirthday
-  ) =>
-    dispatch(
-      updateAccount(
-        token,
-        username,
-        newUsername,
-        newPassword,
-        newEmail,
-        newBirthday
-      )
-    ),
+  deleteAccount: () => dispatch(deleteAccount()),
+  updateAccount: (newUsername, newPassword, newEmail, newBirthday) =>
+    dispatch(updateAccount(newUsername, newPassword, newEmail, newBirthday)),
 });
 
 const mapStateToProps = (state) => ({

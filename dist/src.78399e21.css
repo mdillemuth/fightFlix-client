@@ -18,7 +18,7 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
 }
-.movie-description {
+.description {
   font-size: 16px;
   opacity: 0.8;
 }
