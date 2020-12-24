@@ -4,20 +4,46 @@ import { Link } from 'react-router-dom';
 
 // Redux
 import { connect } from 'react-redux';
+import { addFavorite, removeFavorite } from '../../store/user';
 
 // Components & styling
 import Button from 'react-bootstrap/Button';
-import Favorite from '../common/Favorite';
+import Container from 'react-bootstrap/Container';
 import './movie-view.scss';
 
-const MovieView = ({ movies, match }) => {
-  const movie = movies.find((m) => m._id === match.params.movieId);
+class MovieView extends Component {
+  // Handles how the star is displayed (empty or filled)
+  renderClasses = () => {
+    const movie = this.props.movies.find(
+      (m) => m._id === this.props.match.params.movieId
+    );
 
-  return !movie ? (
-    <div>Loading</div>
-  ) : (
-    <React.Fragment>
-      <div className='container'>
+    let classes = 'text-warning fa fa-star';
+    return !this.props.favorites.includes(movie._id)
+      ? (classes += '-o')
+      : classes;
+  };
+
+  // Handler for clicking on the star
+  toggleFavorite = () => {
+    const movie = this.props.movies.find(
+      (m) => m._id === this.props.match.params.movieId
+    );
+
+    return !this.props.favorites.includes(movie._id)
+      ? this.props.addFavorite(movie._id)
+      : this.props.removeFavorite(movie._id);
+  };
+
+  render() {
+    const { movies, match } = this.props;
+
+    const movie = movies.find((m) => m._id === match.params.movieId);
+
+    return !movie ? (
+      <div>Loading</div>
+    ) : (
+      <Container>
         <div className='row bg-white rounded m-3 p-3'>
           <div className='col-lg-6 d-flex justify-content-center'>
             <img className='rounded' src={movie.ImagePath || ''} />
@@ -27,8 +53,11 @@ const MovieView = ({ movies, match }) => {
               <span className='h2 text-primary mr-2 font-weight-semi-bold'>
                 {movie.Title || ''}
               </span>
-
-              <Favorite movieId={movie._id} />
+              <i
+                style={{ cursor: 'pointer', fontSize: '24px' }}
+                onClick={this.toggleFavorite}
+                className={this.renderClasses()}
+              />
             </div>
             <div className='text-left w-100 mb-3'>
               <div>
@@ -54,10 +83,10 @@ const MovieView = ({ movies, match }) => {
             </Link>
           </div>
         </div>
-      </div>
-    </React.Fragment>
-  );
-};
+      </Container>
+    );
+  }
+}
 
 MovieView.propTypes = {
   movies: PropTypes.array.isRequired,
@@ -66,6 +95,12 @@ MovieView.propTypes = {
 
 const mapStateToProps = (state) => ({
   movies: state.movies.movies,
+  favorites: state.user.favorites,
 });
 
-export default connect(mapStateToProps)(MovieView);
+const mapDispatchToProps = (dispatch) => ({
+  addFavorite: (id) => dispatch(addFavorite(id)),
+  removeFavorite: (id) => dispatch(removeFavorite(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MovieView);

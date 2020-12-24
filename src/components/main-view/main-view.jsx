@@ -22,7 +22,6 @@ import NotFound from '../not-found/not-found';
 class MainView extends Component {
   componentDidMount() {
     const accessToken = localStorage.getItem('token');
-    const username = localStorage.getItem('user');
 
     // Calls API for movies & user when auth token is present
     if (accessToken !== null) {

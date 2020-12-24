@@ -36,11 +36,11 @@ const slice = createSlice({
     },
 
     favoriteAdded: (state, action) => {
-      state.favorites = action.payload;
+      state.favorites = action.payload.FavoriteMovies;
     },
 
     favoriteRemoved: (state, action) => {
-      state.favorites = action.payload;
+      state.favorites = action.payload.FavoriteMovies;
     },
   },
 });
@@ -195,5 +195,5 @@ export const removeFavorite = (movieId) => async (dispatch) => {
   );
 
   console.log('favorite removed');
-  dispatch(favoriteAdded(response.data));
+  dispatch(favoriteRemoved(response.data));
 };
