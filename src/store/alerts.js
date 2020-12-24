@@ -19,10 +19,10 @@ const slice = createSlice({
 export const { alertAdded, alertRemoved } = slice.actions;
 export default slice.reducer;
 
-export const setAlert = (message, type, timeout = 5000) => (dispatch) => {
+export const setAlert = (message, type) => (dispatch) => {
   const alert = { message, type, id: uuidv4() };
 
   dispatch(alertAdded(alert));
 
-  setTimeout(() => dispatch(alertRemoved(alert.id)), timeout);
+  setTimeout(() => dispatch(alertRemoved(alert.id)), 2000);
 };

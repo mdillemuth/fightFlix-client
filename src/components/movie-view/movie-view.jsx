@@ -34,7 +34,11 @@ class MovieView extends Component {
       this.props.setAlert(`${movie.Title} removed from favorites`, 'danger');
     } else {
       this.props.addFavorite(movie._id);
-      this.props.setAlert(`${movie.Title} added to favorites!`, 'success');
+      this.props.setAlert(
+        `${movie.Title} added to favorites!`,
+        'success',
+        5000
+      );
     }
   };
 

@@ -41311,11 +41311,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var slice = (0, _toolkit.createSlice)({
   name: 'movies',
   initialState: {
-    movies: []
+    list: []
   },
   reducers: {
-    moviesRetrieved: function moviesRetrieved(state, action) {
-      state.movies = action.payload;
+    moviesRetrieved: function moviesRetrieved(movies, action) {
+      movies.list = action.payload;
     }
   }
 });
@@ -42238,7 +42238,6 @@ var _default = slice.reducer;
 exports.default = _default;
 
 var setAlert = function setAlert(message, type) {
-  var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 5000;
   return function (dispatch) {
     var alert = {
       message: message,
@@ -42248,7 +42247,7 @@ var setAlert = function setAlert(message, type) {
     dispatch(alertAdded(alert));
     setTimeout(function () {
       return dispatch(alertRemoved(alert.id));
-    }, timeout);
+    }, 2000);
   };
 };
 
@@ -42259,7 +42258,7 @@ exports.setAlert = setAlert;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.removeFavorite = exports.addFavorite = exports.logoutUser = exports.deleteAccount = exports.updateAccount = exports.fetchUser = exports.loginUser = exports.default = exports.favoriteRemoved = exports.favoriteAdded = exports.accountUpdated = exports.accountDeleted = exports.userLoggedOut = exports.userLoggedIn = exports.userRetrieved = void 0;
+exports.removeFavorite = exports.addFavorite = exports.logoutUser = exports.registerAccount = exports.deleteAccount = exports.updateAccount = exports.fetchUser = exports.loginUser = exports.default = exports.favoriteRemoved = exports.favoriteAdded = exports.accountUpdated = exports.accountDeleted = exports.userLoggedOut = exports.userLoggedIn = exports.userRetrieved = void 0;
 
 var _toolkit = require("@reduxjs/toolkit");
 
@@ -42493,10 +42492,47 @@ var deleteAccount = function deleteAccount() {
       return _ref4.apply(this, arguments);
     };
   }();
-}; // Logging out user
+}; // API call to register a new user
 
 
 exports.deleteAccount = deleteAccount;
+
+var registerAccount = function registerAccount(username, password, email, birthday) {
+  return /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(dispatch) {
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.next = 2;
+              return _axios.default.post('https://my-fight-flix.herokuapp.com/api/users', {
+                Username: username,
+                Password: password,
+                Email: email,
+                Birthday: birthday
+              }).then(function () {
+                dispatch((0, _alerts.setAlert)("Registration Successful!", 'success'));
+                window.open('/', '_self');
+              }).catch(function () {
+                dispatch((0, _alerts.setAlert)('Email or Username unavailable', 'danger'));
+              });
+
+            case 2:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5);
+    }));
+
+    return function (_x5) {
+      return _ref5.apply(this, arguments);
+    };
+  }();
+}; // Logging out user
+
+
+exports.registerAccount = registerAccount;
 
 var logoutUser = function logoutUser() {
   return function (dispatch) {
@@ -42516,45 +42552,6 @@ var removeLocalStorage = function removeLocalStorage() {
 
 var addFavorite = function addFavorite(movieId) {
   return /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(dispatch) {
-      var username, token, config, response;
-      return regeneratorRuntime.wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              username = localStorage.getItem('user');
-              token = localStorage.getItem('token');
-              config = {
-                headers: {
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              _context5.next = 5;
-              return _axios.default.post("https://my-fight-flix.herokuapp.com/api/users/".concat(username, "/").concat(movieId), {}, config);
-
-            case 5:
-              response = _context5.sent;
-              dispatch(favoriteAdded(response.data));
-
-            case 7:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5);
-    }));
-
-    return function (_x5) {
-      return _ref5.apply(this, arguments);
-    };
-  }();
-}; // API call to remove favorite movie
-
-
-exports.addFavorite = addFavorite;
-
-var removeFavorite = function removeFavorite(movieId) {
-  return /*#__PURE__*/function () {
     var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(dispatch) {
       var username, token, config, response;
       return regeneratorRuntime.wrap(function _callee6$(_context6) {
@@ -42569,11 +42566,11 @@ var removeFavorite = function removeFavorite(movieId) {
                 }
               };
               _context6.next = 5;
-              return _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username, "/").concat(movieId), config);
+              return _axios.default.post("https://my-fight-flix.herokuapp.com/api/users/".concat(username, "/").concat(movieId), {}, config);
 
             case 5:
               response = _context6.sent;
-              dispatch(favoriteRemoved(response.data));
+              dispatch(favoriteAdded(response.data));
 
             case 7:
             case "end":
@@ -42585,6 +42582,45 @@ var removeFavorite = function removeFavorite(movieId) {
 
     return function (_x6) {
       return _ref6.apply(this, arguments);
+    };
+  }();
+}; // API call to remove favorite movie
+
+
+exports.addFavorite = addFavorite;
+
+var removeFavorite = function removeFavorite(movieId) {
+  return /*#__PURE__*/function () {
+    var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(dispatch) {
+      var username, token, config, response;
+      return regeneratorRuntime.wrap(function _callee7$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              username = localStorage.getItem('user');
+              token = localStorage.getItem('token');
+              config = {
+                headers: {
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context7.next = 5;
+              return _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username, "/").concat(movieId), config);
+
+            case 5:
+              response = _context7.sent;
+              dispatch(favoriteRemoved(response.data));
+
+            case 7:
+            case "end":
+              return _context7.stop();
+          }
+        }
+      }, _callee7);
+    }));
+
+    return function (_x7) {
+      return _ref7.apply(this, arguments);
     };
   }();
 };
@@ -44348,122 +44384,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 var _default = (0, _reactRedux.connect)(null, mapDispatchToProps)(LoginView);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"components/registration-view/registration-form.jsx":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-var _propTypes = _interopRequireDefault(require("prop-types"));
-
-var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
-
-var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
-
-var _reactRouterDom = require("react-router-dom");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var RegistrationForm = function RegistrationForm(props) {
-  var formInputs = props.formInputs,
-      isClientValidated = props.isClientValidated,
-      onFormChange = props.onFormChange,
-      onRegistration = props.onRegistration;
-  var username = formInputs.username,
-      email = formInputs.email,
-      password = formInputs.password,
-      passwordConfirm = formInputs.passwordConfirm,
-      birthday = formInputs.birthday;
-  return _react.default.createElement(_Form.default, {
-    noValidate: true,
-    validated: isClientValidated,
-    className: "mb-2",
-    onSubmit: onRegistration
-  }, _react.default.createElement(_Form.default.Group, {
-    className: "mb-2",
-    controlId: "registerUsername"
-  }, _react.default.createElement(_Form.default.Control, {
-    autoFocus: true,
-    type: "text",
-    placeholder: "Username",
-    name: "username",
-    value: username,
-    onChange: onFormChange,
-    required: true
-  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Please choose a username")), _react.default.createElement(_Form.default.Group, {
-    className: "mb-2",
-    controlId: "registerEmail"
-  }, _react.default.createElement(_Form.default.Control, {
-    type: "email",
-    placeholder: "Email",
-    name: "email",
-    value: email,
-    onChange: onFormChange,
-    required: true
-  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Please enter a valid email address")), _react.default.createElement(_Form.default.Group, {
-    className: "mb-2",
-    controlId: "registerPassword"
-  }, _react.default.createElement(_Form.default.Control, {
-    type: "password",
-    placeholder: "Password",
-    name: "password",
-    value: password,
-    onChange: onFormChange,
-    required: true,
-    minLength: "7"
-  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
-    className: "mb-2",
-    controlId: "registerConfirmPassword"
-  }, _react.default.createElement(_Form.default.Control, {
-    type: "password",
-    placeholder: "Confirm password",
-    name: "passwordConfirm",
-    value: passwordConfirm,
-    onChange: onFormChange,
-    required: true,
-    minLength: "7"
-  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
-    controlId: "registerBirthday",
-    className: "mb-2 "
-  }, _react.default.createElement(_Form.default.Label, {
-    className: "mb-1 text-muted font-weight-bold"
-  }, "Please enter your birthday"), _react.default.createElement(_Form.default.Control, {
-    type: "date",
-    name: "birthday",
-    placeholder: "Birthday",
-    value: birthday,
-    onChange: onFormChange,
-    required: true
-  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
-    type: "invalid"
-  }, "Birthday is required")), _react.default.createElement(_Button.default, {
-    variant: "primary",
-    type: "submit",
-    className: "w-100 btn-lg mb-3"
-  }, "Sign Up"));
-};
-
-RegistrationForm.propTypes = {
-  formInputs: _propTypes.default.object.isRequired,
-  isClientValidated: _propTypes.default.bool.isRequired,
-  onFormChange: _propTypes.default.func.isRequired,
-  onRegistration: _propTypes.default.func.isRequired
-};
-var _default = RegistrationForm;
-exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/registration-view/registration-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"components/registration-view/registration-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -44473,15 +44394,21 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _registrationForm = _interopRequireDefault(require("./registration-form"));
-
-var _Container = _interopRequireDefault(require("react-bootstrap/Container"));
-
-var _Col = _interopRequireDefault(require("react-bootstrap/Col"));
-
 var _reactRouterDom = require("react-router-dom");
 
 var _axios = _interopRequireDefault(require("axios"));
+
+var _reactRedux = require("react-redux");
+
+var _user = require("../../store/user");
+
+var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
+
+var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
+
+var _Col = _interopRequireDefault(require("react-bootstrap/Col"));
+
+var _Container = _interopRequireDefault(require("react-bootstrap/Container"));
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -44505,7 +44432,9 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var RegistrationView = function RegistrationView() {
+var RegistrationView = function RegistrationView(_ref) {
+  var registerAccount = _ref.registerAccount;
+
   var _useState = (0, _react.useState)({
     username: '',
     email: '',
@@ -44523,55 +44452,22 @@ var RegistrationView = function RegistrationView() {
       passwordConfirm = formData.passwordConfirm,
       birthday = formData.birthday;
 
-  var _useState3 = (0, _react.useState)(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      isClientValidated = _useState4[0],
-      setIsClientValidated = _useState4[1];
-
-  var _useState5 = (0, _react.useState)(false),
-      _useState6 = _slicedToArray(_useState5, 2),
-      isServerInvalidated = _useState6[0],
-      setIsServerInvalidated = _useState6[1];
-
-  var handleFormChange = function handleFormChange(e) {
+  var onChange = function onChange(e) {
     return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
-  };
+  }; // const handleRegistration = (e) => {
+  //   if (password !== passwordConfirm) {
+  //     return alert('Passwords do not match');
+  //   }
+  //   const form = e.currentTarget;
+  //   if (!form.checkValidity()) {
+  //     console.log('Invalid input, form not submitted');
+  //     e.preventDefault();
+  //     e.stopPropagation();
+  //   }
+  //   setIsClientValidated(true);
+  //   e.preventDefault();
+  // };
 
-  var handleCloseAlert = function handleCloseAlert() {
-    setIsServerInvalidated(false);
-  };
-
-  var handleRegistration = function handleRegistration(e) {
-    if (password !== passwordConfirm) {
-      return alert('Passwords do not match');
-    }
-
-    var form = e.currentTarget;
-
-    if (!form.checkValidity()) {
-      console.log('Invalid input, form not submitted');
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    setIsClientValidated(true);
-    e.preventDefault();
-
-    if (form.checkValidity()) {
-      _axios.default.post('https://my-fight-flix.herokuapp.com/api/users', {
-        Username: username,
-        Password: password,
-        Email: email,
-        Birthday: birthday
-      }).then(function (res) {
-        console.log('Account Registered');
-        window.open('/', '_self');
-      }).catch(function (e) {
-        console.log('Registration Error');
-        setIsServerInvalidated(true);
-      });
-    }
-  };
 
   return _react.default.createElement(_Container.default, {
     className: "my-3"
@@ -44597,12 +44493,84 @@ var RegistrationView = function RegistrationView() {
     className: "font-italic"
   }, "my", _react.default.createElement("span", {
     className: "text-primary"
-  }, "Fight"), "Flix"), ' ', "for free"), _react.default.createElement(_registrationForm.default, {
-    formInputs: formData,
-    isClientValidated: isClientValidated,
-    onFormChange: handleFormChange,
-    onRegistration: handleRegistration
-  }), _react.default.createElement("small", {
+  }, "Fight"), "Flix"), ' ', "for free"), _react.default.createElement(_Form.default, {
+    noValidate: true,
+    className: "mb-2",
+    onSubmit: function onSubmit(e) {
+      console.log('clicked');
+      e.preventDefault();
+      registerAccount(username, password, email, birthday);
+    }
+  }, _react.default.createElement(_Form.default.Group, {
+    className: "mb-2",
+    controlId: "registerUsername"
+  }, _react.default.createElement(_Form.default.Control, {
+    autoFocus: true,
+    type: "text",
+    placeholder: "Username",
+    name: "username",
+    value: username,
+    onChange: onChange,
+    required: true
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Please choose a username")), _react.default.createElement(_Form.default.Group, {
+    className: "mb-2",
+    controlId: "registerEmail"
+  }, _react.default.createElement(_Form.default.Control, {
+    type: "email",
+    placeholder: "Email",
+    name: "email",
+    value: email,
+    onChange: onChange,
+    required: true
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Please enter a valid email address")), _react.default.createElement(_Form.default.Group, {
+    className: "mb-2",
+    controlId: "registerPassword"
+  }, _react.default.createElement(_Form.default.Control, {
+    type: "password",
+    placeholder: "Password",
+    name: "password",
+    value: password,
+    onChange: onChange,
+    required: true,
+    minLength: "7"
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
+    className: "mb-2",
+    controlId: "registerConfirmPassword"
+  }, _react.default.createElement(_Form.default.Control, {
+    type: "password",
+    placeholder: "Confirm password",
+    name: "passwordConfirm",
+    value: passwordConfirm,
+    onChange: onChange,
+    required: true,
+    minLength: "7"
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Password must be at least 7 characters")), _react.default.createElement(_Form.default.Group, {
+    controlId: "registerBirthday",
+    className: "mb-2 "
+  }, _react.default.createElement(_Form.default.Label, {
+    className: "mb-1 text-muted font-weight-bold"
+  }, "Please enter your birthday"), _react.default.createElement(_Form.default.Control, {
+    type: "date",
+    name: "birthday",
+    placeholder: "Birthday",
+    value: birthday,
+    onChange: onChange,
+    required: true
+  }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
+    type: "invalid"
+  }, "Birthday is required")), _react.default.createElement(_Button.default, {
+    variant: "primary",
+    type: "submit",
+    className: "w-100 btn-lg mb-3"
+  }, "Sign Up")), _react.default.createElement("small", {
     className: "text-muted text-center d-block"
   }, "Already a member?", _react.default.createElement(_reactRouterDom.Link, {
     to: "/"
@@ -44614,9 +44582,18 @@ var RegistrationView = function RegistrationView() {
   }, "Login here")))));
 };
 
-var _default = RegistrationView;
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    registerAccount: function registerAccount(username, password, email, birthday) {
+      return dispatch((0, _user.registerAccount)(username, password, email, birthday));
+    }
+  };
+};
+
+var _default = (0, _reactRedux.connect)(null, mapDispatchToProps)(RegistrationView);
+
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./registration-form":"components/registration-view/registration-form.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","axios":"../node_modules/axios/index.js"}],"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","axios":"../node_modules/axios/index.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js"}],"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -44838,7 +44815,7 @@ MoviesList.propTypes = {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    movies: state.movies.movies
+    movies: state.movies.list
   };
 };
 
@@ -44939,7 +44916,7 @@ var MovieView = /*#__PURE__*/function (_Component) {
       } else {
         _this.props.addFavorite(movie._id);
 
-        _this.props.setAlert("".concat(movie.Title, " added to favorites!"), 'success');
+        _this.props.setAlert("".concat(movie.Title, " added to favorites!"), 'success', 5000);
       }
     }, _temp));
   } // Handles how the star is displayed (empty or filled)
@@ -45005,7 +44982,7 @@ MovieView.propTypes = {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    movies: state.movies.movies,
+    movies: state.movies.list,
     favorites: state.user.favorites
   };
 };
@@ -45102,7 +45079,7 @@ DirectorView.propTypes = {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    movies: state.movies.movies
+    movies: state.movies.list
   };
 };
 
@@ -45177,7 +45154,7 @@ GenreView.propTypes = {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    movies: state.movies.movies
+    movies: state.movies.list
   };
 };
 
@@ -45237,7 +45214,7 @@ var FavoritesView = function FavoritesView(_ref) {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    movies: state.movies.movies,
+    movies: state.movies.list,
     favorites: state.user.favorites
   };
 };
@@ -48212,7 +48189,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37381" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42247" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

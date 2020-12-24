@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import RegistrationForm from './registration-form';
-import Container from 'react-bootstrap/Container';
-import Col from 'react-bootstrap/Col';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+// Redux
+import { connect } from 'react-redux';
+import { registerAccount } from '../../store/user';
 
-const RegistrationView = () => {
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+
+const RegistrationView = ({ registerAccount }) => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -15,49 +20,25 @@ const RegistrationView = () => {
   });
 
   const { username, email, password, passwordConfirm, birthday } = formData;
-  const [isClientValidated, setIsClientValidated] = useState(false);
-  const [isServerInvalidated, setIsServerInvalidated] = useState(false);
 
-  const handleFormChange = (e) =>
+  const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleCloseAlert = () => {
-    setIsServerInvalidated(false);
-  };
+  // const handleRegistration = (e) => {
+  //   if (password !== passwordConfirm) {
+  //     return alert('Passwords do not match');
+  //   }
 
-  const handleRegistration = (e) => {
-    if (password !== passwordConfirm) {
-      return alert('Passwords do not match');
-    }
+  //   const form = e.currentTarget;
+  //   if (!form.checkValidity()) {
+  //     console.log('Invalid input, form not submitted');
+  //     e.preventDefault();
+  //     e.stopPropagation();
+  //   }
+  //   setIsClientValidated(true);
 
-    const form = e.currentTarget;
-    if (!form.checkValidity()) {
-      console.log('Invalid input, form not submitted');
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    setIsClientValidated(true);
-
-    e.preventDefault();
-
-    if (form.checkValidity()) {
-      axios
-        .post('https://my-fight-flix.herokuapp.com/api/users', {
-          Username: username,
-          Password: password,
-          Email: email,
-          Birthday: birthday,
-        })
-        .then((res) => {
-          console.log('Account Registered');
-          window.open('/', '_self');
-        })
-        .catch((e) => {
-          console.log('Registration Error');
-          setIsServerInvalidated(true);
-        });
-    }
-  };
+  //   e.preventDefault();
+  // };
 
   return (
     <Container className='my-3'>
@@ -79,12 +60,95 @@ const RegistrationView = () => {
           </span>{' '}
           for free
         </h2>
-        <RegistrationForm
-          formInputs={formData}
-          isClientValidated={isClientValidated}
-          onFormChange={handleFormChange}
-          onRegistration={handleRegistration}
-        />
+        <Form
+          noValidate
+          className='mb-2'
+          onSubmit={(e) => {
+            console.log('clicked');
+            e.preventDefault();
+            registerAccount(username, password, email, birthday);
+          }}
+        >
+          <Form.Group className='mb-2' controlId='registerUsername'>
+            <Form.Control
+              autoFocus
+              type='text'
+              placeholder='Username'
+              name='username'
+              value={username}
+              onChange={onChange}
+              required
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Please choose a username
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className='mb-2' controlId='registerEmail'>
+            <Form.Control
+              type='email'
+              placeholder='Email'
+              name='email'
+              value={email}
+              onChange={onChange}
+              required
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Please enter a valid email address
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className='mb-2' controlId='registerPassword'>
+            <Form.Control
+              type='password'
+              placeholder='Password'
+              name='password'
+              value={password}
+              onChange={onChange}
+              required
+              minLength='7'
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Password must be at least 7 characters
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className='mb-2' controlId='registerConfirmPassword'>
+            <Form.Control
+              type='password'
+              placeholder='Confirm password'
+              name='passwordConfirm'
+              value={passwordConfirm}
+              onChange={onChange}
+              required
+              minLength='7'
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Password must be at least 7 characters
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId='registerBirthday' className='mb-2 '>
+            <Form.Label className='mb-1 text-muted font-weight-bold'>
+              Please enter your birthday
+            </Form.Label>
+            <Form.Control
+              type='date'
+              name='birthday'
+              placeholder='Birthday'
+              value={birthday}
+              onChange={onChange}
+              required
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Birthday is required
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Button variant='primary' type='submit' className='w-100 btn-lg mb-3'>
+            Sign Up
+          </Button>
+        </Form>
         <small className='text-muted text-center d-block'>
           Already a member?
           <Link to='/'>
@@ -98,4 +162,9 @@ const RegistrationView = () => {
   );
 };
 
-export default RegistrationView;
+const mapDispatchToProps = (dispatch) => ({
+  registerAccount: (username, password, email, birthday) =>
+    dispatch(registerAccount(username, password, email, birthday)),
+});
+
+export default connect(null, mapDispatchToProps)(RegistrationView);

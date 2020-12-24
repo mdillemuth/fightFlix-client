@@ -146,6 +146,26 @@ export const deleteAccount = () => async (dispatch) => {
   removeLocalStorage();
 };
 
+// API call to register a new user
+export const registerAccount = (username, password, email, birthday) => async (
+  dispatch
+) => {
+  await axios
+    .post('https://my-fight-flix.herokuapp.com/api/users', {
+      Username: username,
+      Password: password,
+      Email: email,
+      Birthday: birthday,
+    })
+    .then(() => {
+      dispatch(setAlert(`Registration Successful!`, 'success'));
+      window.open('/', '_self');
+    })
+    .catch(() => {
+      dispatch(setAlert('Email or Username unavailable', 'danger'));
+    });
+};
+
 // Logging out user
 export const logoutUser = () => (dispatch) => {
   removeLocalStorage();
