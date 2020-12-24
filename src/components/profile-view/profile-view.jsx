@@ -2,16 +2,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-
 //Redux
 import { connect } from 'react-redux';
 import { deleteAccount, updateAccount } from '../../store/user';
-
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import CustomAlert from '../common/CustomAlert';
+// Components
+import FavoritesView from '../favorites-view/favorites-view';
 import LoadingSpinner from '../common/LoadingSpinner';
+import CustomAlert from '../common/CustomAlert';
 import Container from 'react-bootstrap/Container';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 
 const ProfileView = ({ user, deleteAccount, updateAccount }) => {
@@ -40,59 +40,6 @@ const ProfileView = ({ user, deleteAccount, updateAccount }) => {
   const handleCloseAlert = () => {
     setIsServerInvalidated(false);
   };
-
-  // const handleUpdateAccount = (e) => {
-  //   const username = localStorage.getItem('user');
-  //   const token = localStorage.getItem('token');
-  //   const form = e.currentTarget;
-
-  //   setIsLoading(true);
-
-  //   if (newPassword !== newPasswordConfirm) {
-  //     return alert('Passwords do not match');
-  //   }
-
-  //   if (!form.checkValidity()) {
-  //     console.log('Invalid input, form not submitted');
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //     setIsLoading(false);
-  //   }
-  //   setIsClientValidated(true);
-
-  //   e.preventDefault();
-
-  //   const config = {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   };
-
-  //   if (form.checkValidity()) {
-  //     axios
-  //       .put(
-  //         `https://my-fight-flix.herokuapp.com/api/users/${username}`,
-  //         {
-  //           Username: newUsername,
-  //           Password: newPassword,
-  //           Email: newEmail,
-  //           Birthday: newBirthday,
-  //         },
-  //         config
-  //       )
-  //       .then((res) => {
-  //         console.log('Account Updated');
-  //         setIsLoading(false);
-  //         window.open('/', '_self');
-  //         onLogout();
-  //       })
-  //       .catch((e) => {
-  //         console.log('Update Error');
-  //         setIsServerInvalidated(true);
-  //         setIsLoading(false);
-  //       });
-  //   }
-  // };
 
   return !user ? (
     <div>loading</div>
@@ -221,6 +168,7 @@ const ProfileView = ({ user, deleteAccount, updateAccount }) => {
           </Link>
         </small>
       </Col>
+      <FavoritesView />
     </Container>
   );
 };
@@ -242,3 +190,56 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileView);
+
+// const handleUpdateAccount = (e) => {
+//   const username = localStorage.getItem('user');
+//   const token = localStorage.getItem('token');
+//   const form = e.currentTarget;
+
+//   setIsLoading(true);
+
+//   if (newPassword !== newPasswordConfirm) {
+//     return alert('Passwords do not match');
+//   }
+
+//   if (!form.checkValidity()) {
+//     console.log('Invalid input, form not submitted');
+//     e.preventDefault();
+//     e.stopPropagation();
+//     setIsLoading(false);
+//   }
+//   setIsClientValidated(true);
+
+//   e.preventDefault();
+
+//   const config = {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
+
+//   if (form.checkValidity()) {
+//     axios
+//       .put(
+//         `https://my-fight-flix.herokuapp.com/api/users/${username}`,
+//         {
+//           Username: newUsername,
+//           Password: newPassword,
+//           Email: newEmail,
+//           Birthday: newBirthday,
+//         },
+//         config
+//       )
+//       .then((res) => {
+//         console.log('Account Updated');
+//         setIsLoading(false);
+//         window.open('/', '_self');
+//         onLogout();
+//       })
+//       .catch((e) => {
+//         console.log('Update Error');
+//         setIsServerInvalidated(true);
+//         setIsLoading(false);
+//       });
+//   }
+// };

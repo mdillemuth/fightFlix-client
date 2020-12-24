@@ -45,7 +45,6 @@ class MainView extends Component {
           <Route
             path='/'
             render={() => {
-              // Shows login page unless there is a logged in user
               return !user ? <LoginView /> : <MoviesList />;
             }}
           />
@@ -61,7 +60,6 @@ MainView.propTypes = {
   user: PropTypes.object,
 };
 
-// API calls for retrieving user & movies
 const mapDispatchToProps = (dispatch) => ({
   fetchMovies: () => dispatch(fetchMovies()),
   fetchUser: () => dispatch(fetchUser()),
@@ -72,11 +70,3 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainView);
-
-//   if (this.state.favoriteMovies.indexOf(movieId) > -1) {
-//     return console.log('Movie already in favorites');
-//   }
-
-//   if (this.state.favoriteMovies.indexOf(movieId) === -1) {
-//     return console.log('Movie not in favorites');
-//   }

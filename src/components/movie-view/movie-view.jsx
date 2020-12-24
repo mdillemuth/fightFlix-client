@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-
 // Redux
 import { connect } from 'react-redux';
 import { addFavorite, removeFavorite } from '../../store/user';
-
 // Components & styling
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';

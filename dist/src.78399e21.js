@@ -46202,7 +46202,76 @@ var mapStateToProps = function mapStateToProps(state) {
 var _default = (0, _reactRedux.connect)(mapStateToProps)(GenreView);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js"}],"components/profile-view/profile-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js"}],"components/favorites-view/favorites-view.jsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _reactRedux = require("react-redux");
+
+var _user = require("../../store/user");
+
+var _movieCard = _interopRequireDefault(require("../movie-card/movie-card"));
+
+var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Redux
+// Components
+var FavoritesView = function FavoritesView(_ref) {
+  var movies = _ref.movies,
+      favorites = _ref.favorites,
+      removeFavorite = _ref.removeFavorite;
+  return _react.default.createElement("div", null, _react.default.createElement("h3", {
+    className: "text-dark text-center font-weight-bold h5 mt-4"
+  }, "My ", _react.default.createElement("span", {
+    className: "text-primary"
+  }, "Favorite"), " Movies"), _react.default.createElement("div", {
+    className: "container d-flex flex-wrap justify-content-center mb-5"
+  }, favorites.map(function (movieId) {
+    return _react.default.createElement("div", {
+      key: movieId,
+      className: "d-flex flex-column align-items-center"
+    }, _react.default.createElement(_movieCard.default, {
+      movie: movies.find(function (movie) {
+        return movie._id === movieId;
+      })
+    }), _react.default.createElement(_Button.default, {
+      size: "sm",
+      variant: "warning",
+      className: "w-75",
+      onClick: function onClick() {
+        return removeFavorite(movieId);
+      }
+    }, "Remove Favorite"));
+  })));
+};
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    movies: state.movies.movies,
+    favorites: state.user.favorites
+  };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    removeFavorite: function removeFavorite(id) {
+      return dispatch((0, _user.removeFavorite)(id));
+    }
+  };
+};
+
+var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(FavoritesView);
+
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js"}],"components/profile-view/profile-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -46220,15 +46289,17 @@ var _reactRedux = require("react-redux");
 
 var _user = require("../../store/user");
 
-var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
-
-var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
-
-var _CustomAlert = _interopRequireDefault(require("../common/CustomAlert"));
+var _favoritesView = _interopRequireDefault(require("../favorites-view/favorites-view"));
 
 var _LoadingSpinner = _interopRequireDefault(require("../common/LoadingSpinner"));
 
+var _CustomAlert = _interopRequireDefault(require("../common/CustomAlert"));
+
 var _Container = _interopRequireDefault(require("react-bootstrap/Container"));
+
+var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
+
+var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
 
 var _Col = _interopRequireDefault(require("react-bootstrap/Col"));
 
@@ -46297,53 +46368,7 @@ var ProfileView = function ProfileView(_ref) {
 
   var handleCloseAlert = function handleCloseAlert() {
     setIsServerInvalidated(false);
-  }; // const handleUpdateAccount = (e) => {
-  //   const username = localStorage.getItem('user');
-  //   const token = localStorage.getItem('token');
-  //   const form = e.currentTarget;
-  //   setIsLoading(true);
-  //   if (newPassword !== newPasswordConfirm) {
-  //     return alert('Passwords do not match');
-  //   }
-  //   if (!form.checkValidity()) {
-  //     console.log('Invalid input, form not submitted');
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //     setIsLoading(false);
-  //   }
-  //   setIsClientValidated(true);
-  //   e.preventDefault();
-  //   const config = {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   };
-  //   if (form.checkValidity()) {
-  //     axios
-  //       .put(
-  //         `https://my-fight-flix.herokuapp.com/api/users/${username}`,
-  //         {
-  //           Username: newUsername,
-  //           Password: newPassword,
-  //           Email: newEmail,
-  //           Birthday: newBirthday,
-  //         },
-  //         config
-  //       )
-  //       .then((res) => {
-  //         console.log('Account Updated');
-  //         setIsLoading(false);
-  //         window.open('/', '_self');
-  //         onLogout();
-  //       })
-  //       .catch((e) => {
-  //         console.log('Update Error');
-  //         setIsServerInvalidated(true);
-  //         setIsLoading(false);
-  //       });
-  //   }
-  // };
-
+  };
 
   return !user ? _react.default.createElement("div", null, "loading") : _react.default.createElement(_Container.default, {
     className: "my-3"
@@ -46460,7 +46485,7 @@ var ProfileView = function ProfileView(_ref) {
     },
     className: "text-primary",
     onClick: deleteAccount
-  }, "remove your account")))));
+  }, "remove your account")))), _react.default.createElement(_favoritesView.default, null));
 };
 
 ProfileView.propTypes = {
@@ -46486,10 +46511,56 @@ var mapStateToProps = function mapStateToProps(state) {
   };
 };
 
-var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ProfileView);
+var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ProfileView); // const handleUpdateAccount = (e) => {
+//   const username = localStorage.getItem('user');
+//   const token = localStorage.getItem('token');
+//   const form = e.currentTarget;
+//   setIsLoading(true);
+//   if (newPassword !== newPasswordConfirm) {
+//     return alert('Passwords do not match');
+//   }
+//   if (!form.checkValidity()) {
+//     console.log('Invalid input, form not submitted');
+//     e.preventDefault();
+//     e.stopPropagation();
+//     setIsLoading(false);
+//   }
+//   setIsClientValidated(true);
+//   e.preventDefault();
+//   const config = {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
+//   if (form.checkValidity()) {
+//     axios
+//       .put(
+//         `https://my-fight-flix.herokuapp.com/api/users/${username}`,
+//         {
+//           Username: newUsername,
+//           Password: newPassword,
+//           Email: newEmail,
+//           Birthday: newBirthday,
+//         },
+//         config
+//       )
+//       .then((res) => {
+//         console.log('Account Updated');
+//         setIsLoading(false);
+//         window.open('/', '_self');
+//         onLogout();
+//       })
+//       .catch((e) => {
+//         console.log('Update Error');
+//         setIsServerInvalidated(true);
+//         setIsLoading(false);
+//       });
+//   }
+// };
+
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","../common/CustomAlert":"components/common/CustomAlert.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"../node_modules/react-bootstrap/esm/NavbarBrand.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","../favorites-view/favorites-view":"components/favorites-view/favorites-view.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","../common/CustomAlert":"components/common/CustomAlert.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"../node_modules/react-bootstrap/esm/NavbarBrand.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -47128,7 +47199,6 @@ var MainView = /*#__PURE__*/function (_Component) {
       }), _react.default.createElement(_reactRouterDom.Route, {
         path: "/",
         render: function render() {
-          // Shows login page unless there is a logged in user
           return !user ? _react.default.createElement(_loginView.default, null) : _react.default.createElement(_moviesList.default, null);
         }
       }), _react.default.createElement(_reactRouterDom.Route, {
@@ -47145,7 +47215,7 @@ var MainView = /*#__PURE__*/function (_Component) {
 
 MainView.propTypes = {
   user: _propTypes.default.object
-}; // API calls for retrieving user & movies
+};
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
@@ -47164,13 +47234,7 @@ var mapStateToProps = function mapStateToProps(state) {
   };
 };
 
-var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MainView); //   if (this.state.favoriteMovies.indexOf(movieId) > -1) {
-//     return console.log('Movie already in favorites');
-//   }
-//   if (this.state.favoriteMovies.indexOf(movieId) === -1) {
-//     return console.log('Movie not in favorites');
-//   }
-
+var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MainView);
 
 exports.default = _default;
 },{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/movies":"store/movies.js","../../store/user":"store/user.js","../login-view/login-view":"components/login-view/login-view.jsx","../registration-view/registration-view":"components/registration-view/registration-view.jsx","../movies-list/movies-list":"components/movies-list/movies-list.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../director-view/director-view":"components/director-view/director-view.jsx","./../genre-view/genre-view":"components/genre-view/genre-view.jsx","../profile-view/profile-view":"components/profile-view/profile-view.jsx","../common/NavBar":"components/common/NavBar.jsx","../not-found/not-found":"components/not-found/not-found.jsx"}],"app.scss":[function(require,module,exports) {
@@ -47280,7 +47344,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45829" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39915" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
