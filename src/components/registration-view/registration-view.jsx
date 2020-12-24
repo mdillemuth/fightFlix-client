@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import RegistrationForm from './registration-form';
-import CustomAlert from './../common/CustomAlert';
-import LoadingSpinner from '../common/LoadingSpinner';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import { Link } from 'react-router-dom';
@@ -19,7 +17,6 @@ const RegistrationView = () => {
   const { username, email, password, passwordConfirm, birthday } = formData;
   const [isClientValidated, setIsClientValidated] = useState(false);
   const [isServerInvalidated, setIsServerInvalidated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleFormChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,8 +26,6 @@ const RegistrationView = () => {
   };
 
   const handleRegistration = (e) => {
-    setIsLoading(true);
-
     if (password !== passwordConfirm) {
       return alert('Passwords do not match');
     }
@@ -40,7 +35,6 @@ const RegistrationView = () => {
       console.log('Invalid input, form not submitted');
       e.preventDefault();
       e.stopPropagation();
-      setIsLoading(false);
     }
     setIsClientValidated(true);
 
@@ -56,13 +50,11 @@ const RegistrationView = () => {
         })
         .then((res) => {
           console.log('Account Registered');
-          setIsLoading(false);
           window.open('/', '_self');
         })
         .catch((e) => {
           console.log('Registration Error');
           setIsServerInvalidated(true);
-          setIsLoading(false);
         });
     }
   };
@@ -87,13 +79,6 @@ const RegistrationView = () => {
           </span>{' '}
           for free
         </h2>
-        <LoadingSpinner show={isLoading} />
-        <CustomAlert
-          alertHeading='Registration Error'
-          alertBody='Username is already taken or there is already an account with this email address'
-          isShowAlert={isServerInvalidated}
-          onCloseAlert={handleCloseAlert}
-        />
         <RegistrationForm
           formInputs={formData}
           isClientValidated={isClientValidated}

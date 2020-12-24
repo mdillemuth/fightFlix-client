@@ -1,29 +1,25 @@
-import React, { useState } from 'react';
-import Alert from 'react-bootstrap/Alert';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import Alert from 'react-bootstrap/Alert';
 
-const CustomAlert = (props) => {
-  const { alertHeading, alertBody, isShowAlert, onCloseAlert } = props;
-
-  if (isShowAlert) {
-    return (
-      <Alert variant='danger' onClose={onCloseAlert} dismissible>
-        <Alert.Heading className='h6 font-weight-bold'>
-          {alertHeading}
-        </Alert.Heading>
-        <p>{alertBody}</p>
+const CustomAlert = ({ alerts }) => {
+  return (
+    alerts.length > 0 &&
+    alerts.map((alert) => (
+      <Alert variant={alert.type}>
+        <Alert.Heading>{alert.message}</Alert.Heading>
       </Alert>
-    );
-  } else {
-    return null;
-  }
+    ))
+  );
 };
 
-CustomAlert.propTypes = {
-  alertHeading: PropTypes.string.isRequired,
-  alertBody: PropTypes.string.isRequired,
-  isShowAlert: PropTypes.bool.isRequired,
-  onCloseAlert: PropTypes.func.isRequired,
+Alert.propTypes = {
+  alerts: PropTypes.array,
 };
 
-export default CustomAlert;
+const mapStateToProps = (state) => ({
+  alerts: state.alerts.list,
+});
+
+export default connect(mapStateToProps)(CustomAlert);

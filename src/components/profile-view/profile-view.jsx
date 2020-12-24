@@ -8,7 +8,6 @@ import { deleteAccount, updateAccount } from '../../store/user';
 // Components
 import FavoritesView from '../favorites-view/favorites-view';
 import LoadingSpinner from '../common/LoadingSpinner';
-import CustomAlert from '../common/CustomAlert';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -61,12 +60,6 @@ const ProfileView = ({ user, deleteAccount, updateAccount }) => {
           </h2>
         </div>
         <LoadingSpinner show={isLoading} />
-        <CustomAlert
-          alertHeading='Update Error'
-          alertBody='Username is already taken or there is already an account with this email address'
-          isShowAlert={isServerInvalidated}
-          onCloseAlert={handleCloseAlert}
-        />
         <Form
           noValidate
           validated={isClientValidated}

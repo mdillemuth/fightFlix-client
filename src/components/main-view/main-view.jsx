@@ -18,12 +18,12 @@ import GenreView from './../genre-view/genre-view';
 import ProfileView from '../profile-view/profile-view';
 import NavBar from '../common/NavBar';
 import NotFound from '../not-found/not-found';
+import CustomAlert from '../common/CustomAlert';
 
 class MainView extends Component {
+  // Calls API for movies & user when auth token is present
   componentDidMount() {
     const accessToken = localStorage.getItem('token');
-
-    // Calls API for movies & user when auth token is present
     if (accessToken !== null) {
       this.props.fetchMovies();
       this.props.fetchUser();
@@ -36,6 +36,7 @@ class MainView extends Component {
     return (
       <BrowserRouter>
         <NavBar />
+        <CustomAlert />
         <Switch>
           <Route path='/directors/:directorName' component={DirectorView} />
           <Route path='/genres/:genreName' component={GenreView} />

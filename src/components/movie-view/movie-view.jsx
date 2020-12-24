@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 // Redux
 import { connect } from 'react-redux';
 import { addFavorite, removeFavorite } from '../../store/user';
+import { setAlert } from '../../store/alerts';
 // Components & styling
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -28,9 +29,13 @@ class MovieView extends Component {
       (m) => m._id === this.props.match.params.movieId
     );
 
-    return !this.props.favorites.includes(movie._id)
-      ? this.props.addFavorite(movie._id)
-      : this.props.removeFavorite(movie._id);
+    if (this.props.favorites.includes(movie._id)) {
+      this.props.removeFavorite(movie._id);
+      this.props.setAlert(`${movie.Title} removed from favorites`, 'danger');
+    } else {
+      this.props.addFavorite(movie._id);
+      this.props.setAlert(`${movie.Title} added to favorites!`, 'success');
+    }
   };
 
   render() {
@@ -99,6 +104,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   addFavorite: (id) => dispatch(addFavorite(id)),
   removeFavorite: (id) => dispatch(removeFavorite(id)),
+  setAlert: (msg, type) => dispatch(setAlert(msg, type)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MovieView);

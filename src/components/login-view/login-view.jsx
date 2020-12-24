@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 // Redux
 import { connect } from 'react-redux';
 import { loginUser } from '../../store/user';
@@ -9,7 +8,6 @@ import { loginUser } from '../../store/user';
 // Components
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import CustomAlert from '../common/CustomAlert';
 import LoadingSpinner from '../common/LoadingSpinner';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
@@ -79,12 +77,6 @@ const LoginView = ({ loginUser }) => {
             </span>
           </h1>
           <LoadingSpinner show={isLoading} />
-          {/* <CustomAlert
-            alertHeading='Login Error'
-            alertBody='Incorrect username or password. Please try again.'
-            isShowAlert={isServerInvalidated}
-            onCloseAlert={handleCloseAlert}
-          /> */}
           <h2 className='text-left h6 text-dark font-weight-bold mb-2'>
             Login to Your Account
           </h2>
