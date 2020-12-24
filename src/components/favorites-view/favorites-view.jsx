@@ -32,7 +32,7 @@ const FavoritesView = ({ movies, favorites, removeFavorite }) => {
 };
 
 const mapStateToProps = (state) => ({
-  movies: state.movies.movies,
+  movies: state.movies.list,
   favorites: state.user.favorites,
 });
 

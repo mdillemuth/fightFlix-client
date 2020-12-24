@@ -53,7 +53,7 @@ GenreView.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  movies: state.movies.movies,
+  movies: state.movies.list,
 });
 
 export default connect(mapStateToProps)(GenreView);

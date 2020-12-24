@@ -4,11 +4,11 @@ import axios from 'axios';
 const slice = createSlice({
   name: 'movies',
   initialState: {
-    movies: [],
+    list: [],
   },
   reducers: {
-    moviesRetrieved: (state, action) => {
-      state.movies = action.payload;
+    moviesRetrieved: (movies, action) => {
+      movies.list = action.payload;
     },
   },
 });
