@@ -41296,7 +41296,7 @@ module.exports = require('./lib/axios');
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.fetchMovies = exports.default = exports.moviesRetrieved = void 0;
+exports.setMoviesFilter = exports.fetchMovies = exports.default = exports.moviesFiltered = exports.moviesRetrieved = void 0;
 
 var _toolkit = require("@reduxjs/toolkit");
 
@@ -41311,17 +41311,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var slice = (0, _toolkit.createSlice)({
   name: 'movies',
   initialState: {
-    list: []
+    list: [],
+    moviesFilter: ''
   },
   reducers: {
     moviesRetrieved: function moviesRetrieved(movies, action) {
       movies.list = action.payload;
+    },
+    moviesFiltered: function moviesFiltered(movies, action) {
+      movies.moviesFilter = action.payload;
     }
   }
 });
-var moviesRetrieved = slice.actions.moviesRetrieved;
+var _slice$actions = slice.actions,
+    moviesRetrieved = _slice$actions.moviesRetrieved,
+    moviesFiltered = _slice$actions.moviesFiltered;
+exports.moviesFiltered = moviesFiltered;
 exports.moviesRetrieved = moviesRetrieved;
-var _default = slice.reducer; // API call to retrieve movies
+var _default = slice.reducer; // API call to retrieve all movies
 
 exports.default = _default;
 
@@ -41361,6 +41368,14 @@ var fetchMovies = function fetchMovies() {
 };
 
 exports.fetchMovies = fetchMovies;
+
+var setMoviesFilter = function setMoviesFilter(input) {
+  return function (dispatch) {
+    dispatch(moviesFiltered(input));
+  };
+};
+
+exports.setMoviesFilter = setMoviesFilter;
 },{"@reduxjs/toolkit":"../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js","axios":"../node_modules/axios/index.js"}],"../node_modules/uuid/dist/esm-browser/rng.js":[function(require,module,exports) {
 "use strict";
 
@@ -44639,7 +44654,53 @@ MovieCard.propTypes = {
 };
 var _default = MovieCard;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./movie-card.scss":"components/movie-card/movie-card.scss","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/movies-list/movies-list.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./movie-card.scss":"components/movie-card/movie-card.scss","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/filter-input/filter-input.jsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
+var _reactRedux = require("react-redux");
+
+var _movies = require("../../store/movies");
+
+var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Redux
+function FilterInput(_ref) {
+  var setMoviesFilter = _ref.setMoviesFilter;
+  return _react.default.createElement(_Form.default.Control, {
+    onChange: function onChange(e) {
+      return setMoviesFilter(e.target.value);
+    },
+    placeholder: "Filter Movies"
+  });
+}
+
+FilterInput.propTypes = {
+  setMoviesFilter: _propTypes.default.func.isRequired
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    setMoviesFilter: function setMoviesFilter(input) {
+      return dispatch((0, _movies.setMoviesFilter)(input));
+    }
+  };
+};
+
+var _default = (0, _reactRedux.connect)(null, mapDispatchToProps)(FilterInput);
+
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/movies":"store/movies.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js"}],"components/movies-list/movies-list.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -44655,17 +44716,30 @@ var _reactRedux = require("react-redux");
 
 var _movieCard = _interopRequireDefault(require("../movie-card/movie-card"));
 
+var _filterInput = _interopRequireDefault(require("../filter-input/filter-input"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var MoviesList = function MoviesList(_ref) {
-  var movies = _ref.movies;
+  var movies = _ref.movies,
+      moviesFilter = _ref.moviesFilter;
+  var filteredMovies = movies;
+
+  if (moviesFilter !== '') {
+    filteredMovies = movies.filter(function (m) {
+      return m.Title.includes(moviesFilter);
+    });
+  }
+
   return !movies ? _react.default.createElement("div", null, "Loading Movies") : _react.default.createElement("div", null, _react.default.createElement("h2", {
     className: "my-1 h3 text-dark text-center"
-  }, "Choose from ", _react.default.createElement("span", {
+  }, "Choose from", ' ', _react.default.createElement("span", {
     className: "text-primary"
-  }, movies.length), ' ', "exciting movies"), _react.default.createElement("div", {
+  }, filteredMovies.length), " exciting movies"), _react.default.createElement(_filterInput.default, {
+    moviesFilter: moviesFilter
+  }), _react.default.createElement("div", {
     className: "container d-flex flex-wrap justify-content-center"
-  }, movies.map(function (m) {
+  }, filteredMovies.map(function (m) {
     return _react.default.createElement(_movieCard.default, {
       key: m._id,
       movie: m
@@ -44679,14 +44753,15 @@ MoviesList.propTypes = {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    movies: state.movies.list
+    movies: state.movies.list,
+    moviesFilter: state.movies.moviesFilter
   };
 };
 
 var _default = (0, _reactRedux.connect)(mapStateToProps)(MoviesList);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-redux":"../node_modules/react-redux/es/index.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx"}],"components/movie-view/movie-view.scss":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-redux":"../node_modules/react-redux/es/index.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../filter-input/filter-input":"components/filter-input/filter-input.jsx"}],"components/movie-view/movie-view.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -48010,7 +48085,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43827" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44575" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
