@@ -6,6 +6,8 @@ const slice = createSlice({
   initialState: {
     list: [],
     moviesFilter: '',
+    genreFilter: '',
+    directorFilter: '',
   },
   reducers: {
     moviesRetrieved: (movies, action) => {
@@ -14,10 +16,21 @@ const slice = createSlice({
     moviesFiltered: (movies, action) => {
       movies.moviesFilter = action.payload;
     },
+    moviesGenreFiltered: (movies, action) => {
+      movies.genreFilter = action.payload;
+    },
+    moviesDirectorFiltered: (movies, action) => {
+      movies.directorFilter = action.payload;
+    },
   },
 });
 
-export const { moviesRetrieved, moviesFiltered } = slice.actions;
+export const {
+  moviesRetrieved,
+  moviesFiltered,
+  moviesGenreFiltered,
+  moviesDirectorFiltered,
+} = slice.actions;
 export default slice.reducer;
 
 // API call to retrieve all movies
@@ -40,4 +53,12 @@ export const fetchMovies = () => async (dispatch) => {
 
 export const setMoviesFilter = (input) => (dispatch) => {
   dispatch(moviesFiltered(input));
+};
+
+export const setGenreFilter = (genre) => (dispatch) => {
+  dispatch(moviesGenreFiltered(genre));
+};
+
+export const setDirectorFilter = (director) => (dispatch) => {
+  dispatch(moviesDirectorFiltered(director));
 };
