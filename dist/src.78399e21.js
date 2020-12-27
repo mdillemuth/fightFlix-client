@@ -42247,7 +42247,7 @@ var setAlert = function setAlert(message, type) {
     dispatch(alertAdded(alert));
     setTimeout(function () {
       return dispatch(alertRemoved(alert.id));
-    }, 2000);
+    }, 2500);
   };
 };
 
@@ -42264,9 +42264,9 @@ var _toolkit = require("@reduxjs/toolkit");
 
 var _movies = require("./movies");
 
-var _axios = _interopRequireDefault(require("axios"));
-
 var _alerts = require("./alerts");
+
+var _axios = _interopRequireDefault(require("axios"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -42330,25 +42330,46 @@ var _default = slice.reducer; // API call to log in user
 exports.default = _default;
 
 var loginUser = function loginUser(username, password) {
+  return function (dispatch) {
+    _axios.default.post("https://my-fight-flix.herokuapp.com/api/login", {
+      Username: username,
+      Password: password
+    }).then(function (response) {
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', response.data.user.Username);
+      dispatch((0, _movies.fetchMovies)(response.data.token));
+      dispatch(userLoggedIn(response.data));
+      dispatch((0, _alerts.setAlert)('Login Successful', 'success'));
+    }).catch(function (e) {
+      dispatch((0, _alerts.setAlert)('Invalid username or password', 'danger'));
+    });
+  };
+}; // API call to retrieve user information
+
+
+exports.loginUser = loginUser;
+
+var fetchUser = function fetchUser() {
   return /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(dispatch) {
-      var response;
+      var username, token, config, response;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.next = 2;
-              return _axios.default.post("https://my-fight-flix.herokuapp.com/api/login", {
-                Username: username,
-                Password: password
-              });
+              username = localStorage.getItem('user');
+              token = localStorage.getItem('token');
+              config = {
+                headers: {
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context.next = 5;
+              return _axios.default.get("https://my-fight-flix.herokuapp.com/api/users/".concat(username), config);
 
-            case 2:
+            case 5:
               response = _context.sent;
-              localStorage.setItem('token', response.data.token);
-              localStorage.setItem('user', response.data.user.Username);
-              dispatch((0, _movies.fetchMovies)(response.data.token));
-              dispatch(userLoggedIn(response.data));
+              dispatch(userRetrieved(response.data[0]));
 
             case 7:
             case "end":
@@ -42362,173 +42383,79 @@ var loginUser = function loginUser(username, password) {
       return _ref.apply(this, arguments);
     };
   }();
-}; // API call to retrieve user information
-
-
-exports.loginUser = loginUser;
-
-var fetchUser = function fetchUser() {
-  return /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(dispatch) {
-      var username, token, config, response;
-      return regeneratorRuntime.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              username = localStorage.getItem('user');
-              token = localStorage.getItem('token');
-              config = {
-                headers: {
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              _context2.next = 5;
-              return _axios.default.get("https://my-fight-flix.herokuapp.com/api/users/".concat(username), config);
-
-            case 5:
-              response = _context2.sent;
-              dispatch(userRetrieved(response.data[0]));
-
-            case 7:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2);
-    }));
-
-    return function (_x2) {
-      return _ref2.apply(this, arguments);
-    };
-  }();
 }; // API call to update user's account and log them out
 
 
 exports.fetchUser = fetchUser;
 
 var updateAccount = function updateAccount(newUsername, newPassword, newEmail, newBirthday) {
-  return /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(dispatch) {
-      var username, token, config, response;
-      return regeneratorRuntime.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              username = localStorage.getItem('user');
-              token = localStorage.getItem('token');
-              config = {
-                headers: {
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              _context3.next = 5;
-              return _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
-                Username: newUsername,
-                Password: newPassword,
-                Email: newEmail,
-                Birthday: newBirthday
-              }, config);
-
-            case 5:
-              response = _context3.sent;
-              dispatch(accountUpdated());
-              removeLocalStorage();
-              window.open('/', '_self');
-
-            case 9:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3);
-    }));
-
-    return function (_x3) {
-      return _ref3.apply(this, arguments);
+  return function (dispatch) {
+    var username = localStorage.getItem('user');
+    var token = localStorage.getItem('token');
+    var config = {
+      headers: {
+        Authorization: "Bearer ".concat(token)
+      }
     };
-  }();
+
+    _axios.default.put("https://my-fight-flix.herokuapp.com/api/users/".concat(username), {
+      Username: newUsername,
+      Password: newPassword,
+      Email: newEmail,
+      Birthday: newBirthday
+    }, config).then(function () {
+      dispatch(accountUpdated());
+      dispatch((0, _alerts.setAlert)('Account Update Successful: Please login again'));
+      removeLocalStorage();
+      window.open('/', '_self');
+    }).catch(function () {
+      dispatch((0, _alerts.setAlert)('Update Failed: Username or email unavailable'));
+    });
+  };
 }; // API call to delete user's account and log them out
 
 
 exports.updateAccount = updateAccount;
 
 var deleteAccount = function deleteAccount() {
-  return /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(dispatch) {
-      var username, token, config;
-      return regeneratorRuntime.wrap(function _callee4$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              username = localStorage.getItem('user');
-              token = localStorage.getItem('token');
-              config = {
-                headers: {
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-
-              if (!window.confirm('Are you sure you wish to remove your account?')) {
-                _context4.next = 6;
-                break;
-              }
-
-              _context4.next = 6;
-              return _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username), config);
-
-            case 6:
-              dispatch(accountDeleted());
-              removeLocalStorage();
-
-            case 8:
-            case "end":
-              return _context4.stop();
-          }
-        }
-      }, _callee4);
-    }));
-
-    return function (_x4) {
-      return _ref4.apply(this, arguments);
+  return function (dispatch) {
+    var username = localStorage.getItem('user');
+    var token = localStorage.getItem('token');
+    var config = {
+      headers: {
+        Authorization: "Bearer ".concat(token)
+      }
     };
-  }();
+
+    if (window.confirm('Are you sure you wish to remove your account?')) {
+      _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username), config).then(function () {
+        dispatch(accountDeleted());
+        dispatch((0, _alerts.setAlert)('Account Deleted Successfully', 'success'));
+        removeLocalStorage();
+      }).catch(function (e) {
+        dispatch((0, _alerts.setAlert)('Account Deletion Failed', 'danger'));
+      });
+    }
+  };
 }; // API call to register a new user
 
 
 exports.deleteAccount = deleteAccount;
 
 var registerAccount = function registerAccount(username, password, email, birthday) {
-  return /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(dispatch) {
-      return regeneratorRuntime.wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              _context5.next = 2;
-              return _axios.default.post('https://my-fight-flix.herokuapp.com/api/users', {
-                Username: username,
-                Password: password,
-                Email: email,
-                Birthday: birthday
-              }).then(function () {
-                dispatch((0, _alerts.setAlert)("Registration Successful!", 'success'));
-                window.open('/', '_self');
-              }).catch(function () {
-                dispatch((0, _alerts.setAlert)('Email or Username unavailable', 'danger'));
-              });
-
-            case 2:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5);
-    }));
-
-    return function (_x5) {
-      return _ref5.apply(this, arguments);
-    };
-  }();
+  return function (dispatch) {
+    _axios.default.post('https://my-fight-flix.herokuapp.com/api/users', {
+      Username: username,
+      Password: password,
+      Email: email,
+      Birthday: birthday
+    }).then(function () {
+      window.open('/', '_self');
+      dispatch((0, _alerts.setAlert)("Registration Successful!", 'success'));
+    }).catch(function () {
+      dispatch((0, _alerts.setAlert)('Registration Failed: Email or Username unavailable', 'danger'));
+    });
+  };
 }; // Logging out user
 
 
@@ -42552,11 +42479,11 @@ var removeLocalStorage = function removeLocalStorage() {
 
 var addFavorite = function addFavorite(movieId) {
   return /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(dispatch) {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(dispatch) {
       var username, token, config, response;
-      return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
               username = localStorage.getItem('user');
               token = localStorage.getItem('token');
@@ -42565,23 +42492,23 @@ var addFavorite = function addFavorite(movieId) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context6.next = 5;
+              _context2.next = 5;
               return _axios.default.post("https://my-fight-flix.herokuapp.com/api/users/".concat(username, "/").concat(movieId), {}, config);
 
             case 5:
-              response = _context6.sent;
+              response = _context2.sent;
               dispatch(favoriteAdded(response.data));
 
             case 7:
             case "end":
-              return _context6.stop();
+              return _context2.stop();
           }
         }
-      }, _callee6);
+      }, _callee2);
     }));
 
-    return function (_x6) {
-      return _ref6.apply(this, arguments);
+    return function (_x2) {
+      return _ref2.apply(this, arguments);
     };
   }();
 }; // API call to remove favorite movie
@@ -42591,11 +42518,11 @@ exports.addFavorite = addFavorite;
 
 var removeFavorite = function removeFavorite(movieId) {
   return /*#__PURE__*/function () {
-    var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(dispatch) {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(dispatch) {
       var username, token, config, response;
-      return regeneratorRuntime.wrap(function _callee7$(_context7) {
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context7.prev = _context7.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
               username = localStorage.getItem('user');
               token = localStorage.getItem('token');
@@ -42604,29 +42531,29 @@ var removeFavorite = function removeFavorite(movieId) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context7.next = 5;
+              _context3.next = 5;
               return _axios.default.delete("https://my-fight-flix.herokuapp.com/api/users/".concat(username, "/").concat(movieId), config);
 
             case 5:
-              response = _context7.sent;
+              response = _context3.sent;
               dispatch(favoriteRemoved(response.data));
 
             case 7:
             case "end":
-              return _context7.stop();
+              return _context3.stop();
           }
         }
-      }, _callee7);
+      }, _callee3);
     }));
 
-    return function (_x7) {
-      return _ref7.apply(this, arguments);
+    return function (_x3) {
+      return _ref3.apply(this, arguments);
     };
   }();
 };
 
 exports.removeFavorite = removeFavorite;
-},{"@reduxjs/toolkit":"../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js","./movies":"store/movies.js","axios":"../node_modules/axios/index.js","./alerts":"store/alerts.js"}],"../node_modules/classnames/index.js":[function(require,module,exports) {
+},{"@reduxjs/toolkit":"../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js","./movies":"store/movies.js","./alerts":"store/alerts.js","axios":"../node_modules/axios/index.js"}],"../node_modules/classnames/index.js":[function(require,module,exports) {
 var define;
 /*!
   Copyright (c) 2017 Jed Watson.
@@ -44104,43 +44031,7 @@ Button.displayName = 'Button';
 Button.defaultProps = defaultProps;
 var _default = Button;
 exports.default = _default;
-},{"@babel/runtime/helpers/esm/extends":"../node_modules/@babel/runtime/helpers/esm/extends.js","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js","classnames":"../node_modules/classnames/index.js","react":"../node_modules/react/index.js","./ThemeProvider":"../node_modules/react-bootstrap/esm/ThemeProvider.js","./SafeAnchor":"../node_modules/react-bootstrap/esm/SafeAnchor.js"}],"assets/img/spinner.gif":[function(require,module,exports) {
-module.exports = "/spinner.81165255.gif";
-},{}],"components/common/LoadingSpinner.jsx":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-var _spinner = _interopRequireDefault(require("./../../assets/img/spinner.gif"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var LoadingSpinner = function LoadingSpinner(props) {
-  var show = props.show;
-
-  if (show) {
-    return _react.default.createElement("div", null, _react.default.createElement("img", {
-      src: _spinner.default,
-      style: {
-        width: '75px',
-        margin: 'auto',
-        display: 'block'
-      },
-      alt: "Loading..."
-    }));
-  } else {
-    return null;
-  }
-};
-
-var _default = LoadingSpinner;
-exports.default = _default;
-},{"react":"../node_modules/react/index.js","./../../assets/img/spinner.gif":"assets/img/spinner.gif"}],"../node_modules/react-bootstrap/esm/Container.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/esm/extends":"../node_modules/@babel/runtime/helpers/esm/extends.js","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js","classnames":"../node_modules/classnames/index.js","react":"../node_modules/react/index.js","./ThemeProvider":"../node_modules/react-bootstrap/esm/ThemeProvider.js","./SafeAnchor":"../node_modules/react-bootstrap/esm/SafeAnchor.js"}],"../node_modules/react-bootstrap/esm/Container.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -44206,8 +44097,6 @@ var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
 
 var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
-var _LoadingSpinner = _interopRequireDefault(require("../common/LoadingSpinner"));
-
 var _Container = _interopRequireDefault(require("react-bootstrap/Container"));
 
 var _Col = _interopRequireDefault(require("react-bootstrap/Col"));
@@ -44237,6 +44126,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var LoginView = function LoginView(_ref) {
   var loginUser = _ref.loginUser;
 
+  // Component state for form inputs
   var _useState = (0, _react.useState)({
     username: '',
     password: ''
@@ -44246,59 +44136,25 @@ var LoginView = function LoginView(_ref) {
       setFormData = _useState2[1];
 
   var username = formData.username,
-      password = formData.password;
-
-  var _useState3 = (0, _react.useState)(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      isClientValidated = _useState4[0],
-      setIsClientValidated = _useState4[1];
-
-  var _useState5 = (0, _react.useState)(false),
-      _useState6 = _slicedToArray(_useState5, 2),
-      isServerInvalidated = _useState6[0],
-      setIsServerInvalidated = _useState6[1];
-
-  var _useState7 = (0, _react.useState)(false),
-      _useState8 = _slicedToArray(_useState7, 2),
-      isLoading = _useState8[0],
-      setIsLoading = _useState8[1];
+      password = formData.password; // Handler for adding form input values to component state
 
   var onChange = function onChange(e) {
     return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
+  }; // Form submission handler with validation
+
+
+  var _useState3 = (0, _react.useState)(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      validated = _useState4[0],
+      setValidated = _useState4[1];
+
+  var handleSubmit = function handleSubmit(e) {
+    var form = e.currentTarget;
+    e.preventDefault(); // Login request to API with valid form
+
+    if (form.checkValidity()) loginUser(username, password);
+    setValidated(true);
   };
-
-  var handleCloseAlert = function handleCloseAlert() {
-    setIsServerInvalidated(false);
-  }; // const handleLogin = (e) => {
-  //   setIsLoading(true);
-  //   const form = e.currentTarget;
-  //   if (!form.checkValidity()) {
-  //     console.log('Invalid input, form not submitted');
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //     setIsLoading(false);
-  //   }
-  //   setIsClientValidated(true);
-  //   e.preventDefault();
-  //   if (form.checkValidity()) {
-  //     axios
-  //       .post('https://my-fight-flix.herokuapp.com/api/login', {
-  //         Username: username,
-  //         Password: password,
-  //       })
-  //       .then((res) => {
-  //         console.log('Account Logged In');
-  //         handleLoggedIn(res.data);
-  //         setIsLoading(false);
-  //       })
-  //       .catch((e) => {
-  //         console.log('Invalid Username or Password');
-  //         setIsServerInvalidated(true);
-  //         setIsLoading(false);
-  //       });
-  //   }
-  // };
-
 
   return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Container.default, {
     className: "my-3"
@@ -44318,16 +44174,13 @@ var LoginView = function LoginView(_ref) {
     className: "font-italic"
   }, "my", _react.default.createElement("span", {
     className: "text-primary"
-  }, "Fight"), "Flix")), _react.default.createElement(_LoadingSpinner.default, {
-    show: isLoading
-  }), _react.default.createElement("h2", {
+  }, "Fight"), "Flix")), _react.default.createElement("h2", {
     className: "text-left h6 text-dark font-weight-bold mb-2"
   }, "Login to Your Account"), _react.default.createElement(_Form.default, {
     noValidate: true,
-    validated: isClientValidated,
+    validated: validated,
     onSubmit: function onSubmit(e) {
-      e.preventDefault();
-      loginUser(username, password);
+      return handleSubmit(e);
     },
     className: "mb-2"
   }, _react.default.createElement(_Form.default.Group, {
@@ -44352,11 +44205,10 @@ var LoginView = function LoginView(_ref) {
     name: "password",
     value: password,
     onChange: onChange,
-    required: true,
-    minLength: "7"
+    required: true
   }), _react.default.createElement(_Form.default.Control.Feedback, null, "Looks good!"), _react.default.createElement(_Form.default.Control.Feedback, {
     type: "invalid"
-  }, "Password must be at least 7 characters")), _react.default.createElement(_Button.default, {
+  }, "Please enter your password")), _react.default.createElement(_Button.default, {
     variant: "primary",
     type: "submit",
     className: "w-100 btn-lg mb-3"
@@ -44384,7 +44236,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 var _default = (0, _reactRedux.connect)(null, mapDispatchToProps)(LoginView);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"components/registration-view/registration-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"components/registration-view/registration-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -44396,11 +44248,11 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _reactRouterDom = require("react-router-dom");
 
-var _axios = _interopRequireDefault(require("axios"));
-
 var _reactRedux = require("react-redux");
 
 var _user = require("../../store/user");
+
+var _alerts = require("../../store/alerts");
 
 var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
 
@@ -44433,8 +44285,10 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var RegistrationView = function RegistrationView(_ref) {
-  var registerAccount = _ref.registerAccount;
+  var registerAccount = _ref.registerAccount,
+      setAlert = _ref.setAlert;
 
+  // Component state for form inputs
   var _useState = (0, _react.useState)({
     username: '',
     email: '',
@@ -44450,23 +44304,31 @@ var RegistrationView = function RegistrationView(_ref) {
       email = formData.email,
       password = formData.password,
       passwordConfirm = formData.passwordConfirm,
-      birthday = formData.birthday;
+      birthday = formData.birthday; // Handler for adding form input values to component state
 
   var onChange = function onChange(e) {
     return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
-  }; // const handleRegistration = (e) => {
-  //   if (password !== passwordConfirm) {
-  //     return alert('Passwords do not match');
-  //   }
-  //   const form = e.currentTarget;
-  //   if (!form.checkValidity()) {
-  //     console.log('Invalid input, form not submitted');
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //   }
-  //   setIsClientValidated(true);
-  //   e.preventDefault();
-  // };
+  }; // Form submission handler with validation
+
+
+  var _useState3 = (0, _react.useState)(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      validated = _useState4[0],
+      setValidated = _useState4[1];
+
+  var handleSubmit = function handleSubmit(e) {
+    var form = e.currentTarget;
+    e.preventDefault(); // Check passwords match
+
+    if (password !== passwordConfirm) {
+      setAlert('Passwords do not match', 'danger');
+      return;
+    } // Registration request to API with valid form
+
+
+    if (form.checkValidity()) registerAccount(username, password, email, birthday);
+    setValidated(true);
+  }; // };
 
 
   return _react.default.createElement(_Container.default, {
@@ -44495,11 +44357,10 @@ var RegistrationView = function RegistrationView(_ref) {
     className: "text-primary"
   }, "Fight"), "Flix"), ' ', "for free"), _react.default.createElement(_Form.default, {
     noValidate: true,
+    validated: validated,
     className: "mb-2",
     onSubmit: function onSubmit(e) {
-      console.log('clicked');
-      e.preventDefault();
-      registerAccount(username, password, email, birthday);
+      return handleSubmit(e);
     }
   }, _react.default.createElement(_Form.default.Group, {
     className: "mb-2",
@@ -44586,6 +44447,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     registerAccount: function registerAccount(username, password, email, birthday) {
       return dispatch((0, _user.registerAccount)(username, password, email, birthday));
+    },
+    setAlert: function setAlert(msg, type) {
+      return dispatch((0, _alerts.setAlert)(msg, type));
     }
   };
 };
@@ -44593,7 +44457,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 var _default = (0, _reactRedux.connect)(null, mapDispatchToProps)(RegistrationView);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","axios":"../node_modules/axios/index.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js"}],"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","../../store/alerts":"store/alerts.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js"}],"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -45248,9 +45112,9 @@ var _reactRedux = require("react-redux");
 
 var _user = require("../../store/user");
 
-var _favoritesView = _interopRequireDefault(require("../favorites-view/favorites-view"));
+var _alerts = require("../../store/alerts");
 
-var _LoadingSpinner = _interopRequireDefault(require("../common/LoadingSpinner"));
+var _favoritesView = _interopRequireDefault(require("../favorites-view/favorites-view"));
 
 var _Container = _interopRequireDefault(require("react-bootstrap/Container"));
 
@@ -45285,8 +45149,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var ProfileView = function ProfileView(_ref) {
   var user = _ref.user,
       deleteAccount = _ref.deleteAccount,
-      updateAccount = _ref.updateAccount;
+      updateAccount = _ref.updateAccount,
+      setAlert = _ref.setAlert;
 
+  // Component state for form inputs
   var _useState = (0, _react.useState)({
     newUsername: '',
     newEmail: '',
@@ -45302,29 +45168,30 @@ var ProfileView = function ProfileView(_ref) {
       newEmail = formData.newEmail,
       newPassword = formData.newPassword,
       newPasswordConfirm = formData.newPasswordConfirm,
-      newBirthday = formData.newBirthday;
-
-  var _useState3 = (0, _react.useState)(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      isClientValidated = _useState4[0],
-      setIsClientValidated = _useState4[1];
-
-  var _useState5 = (0, _react.useState)(false),
-      _useState6 = _slicedToArray(_useState5, 2),
-      isServerInvalidated = _useState6[0],
-      setIsServerInvalidated = _useState6[1];
-
-  var _useState7 = (0, _react.useState)(false),
-      _useState8 = _slicedToArray(_useState7, 2),
-      isLoading = _useState8[0],
-      setIsLoading = _useState8[1];
+      newBirthday = formData.newBirthday; // Handler for adding form input values to component state
 
   var onChange = function onChange(e) {
     return setFormData(_extends({}, formData, _defineProperty({}, e.target.name, e.target.value)));
-  };
+  }; // Form submission handler with validation
 
-  var handleCloseAlert = function handleCloseAlert() {
-    setIsServerInvalidated(false);
+
+  var _useState3 = (0, _react.useState)(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      validated = _useState4[0],
+      setValidated = _useState4[1];
+
+  var handleSubmit = function handleSubmit(e) {
+    var form = e.currentTarget;
+    e.preventDefault(); // Check passwords match
+
+    if (newPassword !== newPasswordConfirm) {
+      setAlert('Passwords do not match', 'danger');
+      return;
+    } // Update request to API with valid form
+
+
+    if (form.checkValidity()) updateAccount(newUsername, newPassword, newEmail, newBirthday);
+    setValidated(true);
   };
 
   return !user ? _react.default.createElement("div", null, "loading") : _react.default.createElement(_Container.default, {
@@ -45349,15 +45216,12 @@ var ProfileView = function ProfileView(_ref) {
     className: "mb-2"
   }, _react.default.createElement("h2", {
     className: "text-left h5 text-dark font-weight-bold mb-1"
-  }, "Update Your Information")), _react.default.createElement(_LoadingSpinner.default, {
-    show: isLoading
-  }), _react.default.createElement(_Form.default, {
+  }, "Update Your Information")), _react.default.createElement(_Form.default, {
     noValidate: true,
-    validated: isClientValidated,
+    validated: validated,
     className: "mb-2",
     onSubmit: function onSubmit(e) {
-      e.preventDefault();
-      updateAccount(newUsername, newPassword, newEmail, newBirthday);
+      return handleSubmit(e);
     }
   }, _react.default.createElement(_Form.default.Group, {
     className: "mb-2",
@@ -45453,6 +45317,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     updateAccount: function updateAccount(newUsername, newPassword, newEmail, newBirthday) {
       return dispatch((0, _user.updateAccount)(newUsername, newPassword, newEmail, newBirthday));
+    },
+    setAlert: function setAlert(msg, type) {
+      return dispatch((0, _alerts.setAlert)(msg, type));
     }
   };
 };
@@ -45463,56 +45330,10 @@ var mapStateToProps = function mapStateToProps(state) {
   };
 };
 
-var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ProfileView); // const handleUpdateAccount = (e) => {
-//   const username = localStorage.getItem('user');
-//   const token = localStorage.getItem('token');
-//   const form = e.currentTarget;
-//   setIsLoading(true);
-//   if (newPassword !== newPasswordConfirm) {
-//     return alert('Passwords do not match');
-//   }
-//   if (!form.checkValidity()) {
-//     console.log('Invalid input, form not submitted');
-//     e.preventDefault();
-//     e.stopPropagation();
-//     setIsLoading(false);
-//   }
-//   setIsClientValidated(true);
-//   e.preventDefault();
-//   const config = {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   };
-//   if (form.checkValidity()) {
-//     axios
-//       .put(
-//         `https://my-fight-flix.herokuapp.com/api/users/${username}`,
-//         {
-//           Username: newUsername,
-//           Password: newPassword,
-//           Email: newEmail,
-//           Birthday: newBirthday,
-//         },
-//         config
-//       )
-//       .then((res) => {
-//         console.log('Account Updated');
-//         setIsLoading(false);
-//         window.open('/', '_self');
-//         onLogout();
-//       })
-//       .catch((e) => {
-//         console.log('Update Error');
-//         setIsServerInvalidated(true);
-//         setIsLoading(false);
-//       });
-//   }
-// };
-
+var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ProfileView);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","../favorites-view/favorites-view":"components/favorites-view/favorites-view.jsx","../common/LoadingSpinner":"components/common/LoadingSpinner.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"../node_modules/invariant/browser.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","../../store/alerts":"store/alerts.js","../favorites-view/favorites-view":"components/favorites-view/favorites-view.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"../node_modules/invariant/browser.js":[function(require,module,exports) {
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -48189,7 +48010,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42247" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43827" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

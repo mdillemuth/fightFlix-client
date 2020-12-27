@@ -8,59 +8,33 @@ import { loginUser } from '../../store/user';
 // Components
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import LoadingSpinner from '../common/LoadingSpinner';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 
 const LoginView = ({ loginUser }) => {
+  // Component state for form inputs
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
   const { username, password } = formData;
-  const [isClientValidated, setIsClientValidated] = useState(false);
-  const [isServerInvalidated, setIsServerInvalidated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
+  // Handler for adding form input values to component state
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleCloseAlert = () => {
-    setIsServerInvalidated(false);
+  // Form submission handler with validation
+  const [validated, setValidated] = useState(false);
+
+  const handleSubmit = (e) => {
+    const form = e.currentTarget;
+    e.preventDefault();
+
+    // Login request to API with valid form
+    if (form.checkValidity()) loginUser(username, password);
+
+    setValidated(true);
   };
-
-  // const handleLogin = (e) => {
-  //   setIsLoading(true);
-
-  //   const form = e.currentTarget;
-  //   if (!form.checkValidity()) {
-  //     console.log('Invalid input, form not submitted');
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //     setIsLoading(false);
-  //   }
-  //   setIsClientValidated(true);
-
-  //   e.preventDefault();
-
-  //   if (form.checkValidity()) {
-  //     axios
-  //       .post('https://my-fight-flix.herokuapp.com/api/login', {
-  //         Username: username,
-  //         Password: password,
-  //       })
-  //       .then((res) => {
-  //         console.log('Account Logged In');
-  //         handleLoggedIn(res.data);
-  //         setIsLoading(false);
-  //       })
-  //       .catch((e) => {
-  //         console.log('Invalid Username or Password');
-  //         setIsServerInvalidated(true);
-  //         setIsLoading(false);
-  //       });
-  //   }
-  // };
 
   return (
     <React.Fragment>
@@ -76,17 +50,13 @@ const LoginView = ({ loginUser }) => {
               my<span className='text-primary'>Fight</span>Flix
             </span>
           </h1>
-          <LoadingSpinner show={isLoading} />
           <h2 className='text-left h6 text-dark font-weight-bold mb-2'>
             Login to Your Account
           </h2>
           <Form
             noValidate
-            validated={isClientValidated}
-            onSubmit={(e) => {
-              e.preventDefault();
-              loginUser(username, password);
-            }}
+            validated={validated}
+            onSubmit={(e) => handleSubmit(e)}
             className='mb-2'
           >
             <Form.Group className='mb-2' controlId='loginUsername'>
@@ -112,11 +82,10 @@ const LoginView = ({ loginUser }) => {
                 value={password}
                 onChange={onChange}
                 required
-                minLength='7'
               />
               <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
               <Form.Control.Feedback type='invalid'>
-                Password must be at least 7 characters
+                Please enter your password
               </Form.Control.Feedback>
             </Form.Group>
             <Button

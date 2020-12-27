@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 // Redux
 import { connect } from 'react-redux';
 import { registerAccount } from '../../store/user';
+import { setAlert } from '../../store/alerts';
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 
-const RegistrationView = ({ registerAccount }) => {
+const RegistrationView = ({ registerAccount, setAlert }) => {
+  // Component state for form inputs
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -18,26 +19,31 @@ const RegistrationView = ({ registerAccount }) => {
     passwordConfirm: '',
     birthday: '',
   });
-
   const { username, email, password, passwordConfirm, birthday } = formData;
 
+  // Handler for adding form input values to component state
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // const handleRegistration = (e) => {
-  //   if (password !== passwordConfirm) {
-  //     return alert('Passwords do not match');
-  //   }
+  // Form submission handler with validation
+  const [validated, setValidated] = useState(false);
 
-  //   const form = e.currentTarget;
-  //   if (!form.checkValidity()) {
-  //     console.log('Invalid input, form not submitted');
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //   }
-  //   setIsClientValidated(true);
+  const handleSubmit = (e) => {
+    const form = e.currentTarget;
+    e.preventDefault();
 
-  //   e.preventDefault();
+    // Check passwords match
+    if (password !== passwordConfirm) {
+      setAlert('Passwords do not match', 'danger');
+      return;
+    }
+
+    // Registration request to API with valid form
+    if (form.checkValidity())
+      registerAccount(username, password, email, birthday);
+
+    setValidated(true);
+  };
   // };
 
   return (
@@ -62,12 +68,9 @@ const RegistrationView = ({ registerAccount }) => {
         </h2>
         <Form
           noValidate
+          validated={validated}
           className='mb-2'
-          onSubmit={(e) => {
-            console.log('clicked');
-            e.preventDefault();
-            registerAccount(username, password, email, birthday);
-          }}
+          onSubmit={(e) => handleSubmit(e)}
         >
           <Form.Group className='mb-2' controlId='registerUsername'>
             <Form.Control
@@ -165,6 +168,7 @@ const RegistrationView = ({ registerAccount }) => {
 const mapDispatchToProps = (dispatch) => ({
   registerAccount: (username, password, email, birthday) =>
     dispatch(registerAccount(username, password, email, birthday)),
+  setAlert: (msg, type) => dispatch(setAlert(msg, type)),
 });
 
 export default connect(null, mapDispatchToProps)(RegistrationView);

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchMovies } from './movies';
-import axios from 'axios';
 import { setAlert } from './alerts';
+import axios from 'axios';
 
 const slice = createSlice({
   name: 'user',
@@ -58,19 +58,22 @@ export const {
 export default slice.reducer;
 
 // API call to log in user
-export const loginUser = (username, password) => async (dispatch) => {
-  const response = await axios.post(
-    `https://my-fight-flix.herokuapp.com/api/login`,
-    {
+export const loginUser = (username, password) => (dispatch) => {
+  axios
+    .post(`https://my-fight-flix.herokuapp.com/api/login`, {
       Username: username,
       Password: password,
-    }
-  );
-
-  localStorage.setItem('token', response.data.token);
-  localStorage.setItem('user', response.data.user.Username);
-  dispatch(fetchMovies(response.data.token));
-  dispatch(userLoggedIn(response.data));
+    })
+    .then((response) => {
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', response.data.user.Username);
+      dispatch(fetchMovies(response.data.token));
+      dispatch(userLoggedIn(response.data));
+      dispatch(setAlert('Login Successful', 'success'));
+    })
+    .catch((e) => {
+      dispatch(setAlert('Invalid username or password', 'danger'));
+    });
 };
 
 // API call to retrieve user information
@@ -98,7 +101,7 @@ export const updateAccount = (
   newPassword,
   newEmail,
   newBirthday
-) => async (dispatch) => {
+) => (dispatch) => {
   const username = localStorage.getItem('user');
   const token = localStorage.getItem('token');
 
@@ -108,24 +111,30 @@ export const updateAccount = (
     },
   };
 
-  const response = await axios.put(
-    `https://my-fight-flix.herokuapp.com/api/users/${username}`,
-    {
-      Username: newUsername,
-      Password: newPassword,
-      Email: newEmail,
-      Birthday: newBirthday,
-    },
-    config
-  );
-
-  dispatch(accountUpdated());
-  removeLocalStorage();
-  window.open('/', '_self');
+  axios
+    .put(
+      `https://my-fight-flix.herokuapp.com/api/users/${username}`,
+      {
+        Username: newUsername,
+        Password: newPassword,
+        Email: newEmail,
+        Birthday: newBirthday,
+      },
+      config
+    )
+    .then(() => {
+      dispatch(accountUpdated());
+      dispatch(setAlert('Account Update Successful: Please login again'));
+      removeLocalStorage();
+      window.open('/', '_self');
+    })
+    .catch(() => {
+      dispatch(setAlert('Update Failed: Username or email unavailable'));
+    });
 };
 
 // API call to delete user's account and log them out
-export const deleteAccount = () => async (dispatch) => {
+export const deleteAccount = () => (dispatch) => {
   const username = localStorage.getItem('user');
   const token = localStorage.getItem('token');
 
@@ -136,21 +145,27 @@ export const deleteAccount = () => async (dispatch) => {
   };
 
   if (window.confirm('Are you sure you wish to remove your account?')) {
-    await axios.delete(
-      `https://my-fight-flix.herokuapp.com/api/users/${username}`,
-      config
-    );
+    axios
+      .delete(
+        `https://my-fight-flix.herokuapp.com/api/users/${username}`,
+        config
+      )
+      .then(() => {
+        dispatch(accountDeleted());
+        dispatch(setAlert('Account Deleted Successfully', 'success'));
+        removeLocalStorage();
+      })
+      .catch((e) => {
+        dispatch(setAlert('Account Deletion Failed', 'danger'));
+      });
   }
-
-  dispatch(accountDeleted());
-  removeLocalStorage();
 };
 
 // API call to register a new user
-export const registerAccount = (username, password, email, birthday) => async (
+export const registerAccount = (username, password, email, birthday) => (
   dispatch
 ) => {
-  await axios
+  axios
     .post('https://my-fight-flix.herokuapp.com/api/users', {
       Username: username,
       Password: password,
@@ -158,11 +173,13 @@ export const registerAccount = (username, password, email, birthday) => async (
       Birthday: birthday,
     })
     .then(() => {
-      dispatch(setAlert(`Registration Successful!`, 'success'));
       window.open('/', '_self');
+      dispatch(setAlert(`Registration Successful!`, 'success'));
     })
     .catch(() => {
-      dispatch(setAlert('Email or Username unavailable', 'danger'));
+      dispatch(
+        setAlert('Registration Failed: Email or Username unavailable', 'danger')
+      );
     });
 };
 

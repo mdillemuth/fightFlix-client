@@ -5,15 +5,16 @@ import { Link } from 'react-router-dom';
 //Redux
 import { connect } from 'react-redux';
 import { deleteAccount, updateAccount } from '../../store/user';
+import { setAlert } from '../../store/alerts';
 // Components
 import FavoritesView from '../favorites-view/favorites-view';
-import LoadingSpinner from '../common/LoadingSpinner';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 
-const ProfileView = ({ user, deleteAccount, updateAccount }) => {
+const ProfileView = ({ user, deleteAccount, updateAccount, setAlert }) => {
+  // Component state for form inputs
   const [formData, setFormData] = useState({
     newUsername: '',
     newEmail: '',
@@ -29,15 +30,28 @@ const ProfileView = ({ user, deleteAccount, updateAccount }) => {
     newBirthday,
   } = formData;
 
-  const [isClientValidated, setIsClientValidated] = useState(false);
-  const [isServerInvalidated, setIsServerInvalidated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
+  // Handler for adding form input values to component state
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleCloseAlert = () => {
-    setIsServerInvalidated(false);
+  // Form submission handler with validation
+  const [validated, setValidated] = useState(false);
+
+  const handleSubmit = (e) => {
+    const form = e.currentTarget;
+    e.preventDefault();
+
+    // Check passwords match
+    if (newPassword !== newPasswordConfirm) {
+      setAlert('Passwords do not match', 'danger');
+      return;
+    }
+
+    // Update request to API with valid form
+    if (form.checkValidity())
+      updateAccount(newUsername, newPassword, newEmail, newBirthday);
+
+    setValidated(true);
   };
 
   return !user ? (
@@ -59,15 +73,11 @@ const ProfileView = ({ user, deleteAccount, updateAccount }) => {
             Update Your Information
           </h2>
         </div>
-        <LoadingSpinner show={isLoading} />
         <Form
           noValidate
-          validated={isClientValidated}
+          validated={validated}
           className='mb-2'
-          onSubmit={(e) => {
-            e.preventDefault();
-            updateAccount(newUsername, newPassword, newEmail, newBirthday);
-          }}
+          onSubmit={(e) => handleSubmit(e)}
         >
           <Form.Group className='mb-2' controlId='registerUsername'>
             <Form.Control
@@ -176,6 +186,7 @@ const mapDispatchToProps = (dispatch) => ({
   deleteAccount: () => dispatch(deleteAccount()),
   updateAccount: (newUsername, newPassword, newEmail, newBirthday) =>
     dispatch(updateAccount(newUsername, newPassword, newEmail, newBirthday)),
+  setAlert: (msg, type) => dispatch(setAlert(msg, type)),
 });
 
 const mapStateToProps = (state) => ({
@@ -183,56 +194,3 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileView);
-
-// const handleUpdateAccount = (e) => {
-//   const username = localStorage.getItem('user');
-//   const token = localStorage.getItem('token');
-//   const form = e.currentTarget;
-
-//   setIsLoading(true);
-
-//   if (newPassword !== newPasswordConfirm) {
-//     return alert('Passwords do not match');
-//   }
-
-//   if (!form.checkValidity()) {
-//     console.log('Invalid input, form not submitted');
-//     e.preventDefault();
-//     e.stopPropagation();
-//     setIsLoading(false);
-//   }
-//   setIsClientValidated(true);
-
-//   e.preventDefault();
-
-//   const config = {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   };
-
-//   if (form.checkValidity()) {
-//     axios
-//       .put(
-//         `https://my-fight-flix.herokuapp.com/api/users/${username}`,
-//         {
-//           Username: newUsername,
-//           Password: newPassword,
-//           Email: newEmail,
-//           Birthday: newBirthday,
-//         },
-//         config
-//       )
-//       .then((res) => {
-//         console.log('Account Updated');
-//         setIsLoading(false);
-//         window.open('/', '_self');
-//         onLogout();
-//       })
-//       .catch((e) => {
-//         console.log('Update Error');
-//         setIsServerInvalidated(true);
-//         setIsLoading(false);
-//       });
-//   }
-// };
