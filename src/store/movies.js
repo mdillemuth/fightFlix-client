@@ -8,6 +8,7 @@ const slice = createSlice({
     moviesFilter: '',
     genreFilter: '',
     directorFilter: '',
+    moviesSort: '',
   },
   reducers: {
     moviesRetrieved: (movies, action) => {
@@ -22,6 +23,12 @@ const slice = createSlice({
     moviesDirectorFiltered: (movies, action) => {
       movies.directorFilter = action.payload;
     },
+    moviesSortedAscending: (movies) => {
+      movies.moviesSort = 'asc';
+    },
+    moviesSortedDescending: (movies) => {
+      movies.moviesSort = 'desc';
+    },
   },
 });
 
@@ -30,6 +37,8 @@ export const {
   moviesFiltered,
   moviesGenreFiltered,
   moviesDirectorFiltered,
+  moviesSortedAscending,
+  moviesSortedDescending,
 } = slice.actions;
 export default slice.reducer;
 
@@ -61,4 +70,10 @@ export const setGenreFilter = (genre) => (dispatch) => {
 
 export const setDirectorFilter = (director) => (dispatch) => {
   dispatch(moviesDirectorFiltered(director));
+};
+
+export const setMoviesSort = (direction) => (dispatch) => {
+  return direction === 'asc'
+    ? dispatch(moviesSortedAscending())
+    : dispatch(moviesSortedDescending());
 };

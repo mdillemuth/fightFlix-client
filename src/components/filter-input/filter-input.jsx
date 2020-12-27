@@ -6,11 +6,13 @@ import {
   setMoviesFilter,
   setGenreFilter,
   setDirectorFilter,
+  setMoviesSort,
 } from '../../store/movies';
 // Components
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Container from 'react-bootstrap/Container';
@@ -20,6 +22,7 @@ function FilterInput({
   setMoviesFilter,
   setGenreFilter,
   setDirectorFilter,
+  setMoviesSort,
 }) {
   // Create dropdown menu for genres
   const renderGenreDropdown = (movies) => {
@@ -64,12 +67,16 @@ function FilterInput({
             placeholder='Search by title'
           />
         </Col>
-        <Col sm={12} className='justify-content-center d-flex'>
+        <Col
+          sm={12}
+          className='justify-content-center align-items-center d-flex'
+        >
           <div>
             <DropdownButton
               id='genre-filter'
-              title='Genres'
+              title='Filter Genres'
               className='mr-2 filter-dropdown'
+              size='sm'
             >
               <Dropdown.Item onClick={() => setGenreFilter('')}>
                 All Genres
@@ -80,8 +87,9 @@ function FilterInput({
           <div>
             <DropdownButton
               id='director-filter'
-              title='Directors'
-              className='ml-2 filter-dropdown'
+              title='Filter Directors'
+              className='mx-2 filter-dropdown'
+              size='sm'
             >
               <Dropdown.Item onClick={() => setDirectorFilter('')}>
                 All Directors
@@ -89,6 +97,22 @@ function FilterInput({
               {renderDirectorDropdown(movies)}
             </DropdownButton>
           </div>
+          <Button
+            className='ml-2'
+            size='sm'
+            variant='outline-primary'
+            onClick={() => setMoviesSort('asc')}
+          >
+            Sort A - Z
+          </Button>
+          <Button
+            className='ml-2'
+            size='sm'
+            variant='outline-primary'
+            onClick={() => setMoviesSort('desc')}
+          >
+            Sort Z - A
+          </Button>
         </Col>
       </Row>
     </Container>
@@ -99,6 +123,7 @@ FilterInput.propTypes = {
   setMoviesFilter: PropTypes.func.isRequired,
   setGenreFilter: PropTypes.func.isRequired,
   setDirectorFilter: PropTypes.func.isRequired,
+  setMoviesSort: PropTypes.func.isRequired,
   movies: PropTypes.array.isRequired,
 };
 
@@ -110,6 +135,7 @@ const mapDispatchToProps = (dispatch) => ({
   setMoviesFilter: (input) => dispatch(setMoviesFilter(input)),
   setGenreFilter: (genre) => dispatch(setGenreFilter(genre)),
   setDirectorFilter: (director) => dispatch(setDirectorFilter(director)),
+  setMoviesSort: (direction) => dispatch(setMoviesSort(direction)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FilterInput);
