@@ -29,7 +29,12 @@ const MoviesList = ({
 
   // Filters movies by title (from user input)
   if (moviesFilter !== '') {
-    filteredMovies = movies.filter((m) => m.Title.includes(moviesFilter));
+    //
+    moviesFilter = moviesFilter.toLowerCase().trim();
+
+    filteredMovies = movies.filter((m) =>
+      m.Title.toLowerCase().includes(moviesFilter)
+    );
   }
 
   // Sort movies alphabetically by title

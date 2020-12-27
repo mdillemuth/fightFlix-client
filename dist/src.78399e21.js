@@ -41394,7 +41394,7 @@ exports.fetchMovies = fetchMovies;
 
 var setMoviesFilter = function setMoviesFilter(input) {
   return function (dispatch) {
-    dispatch(moviesFiltered(input));
+    dispatch(moviesFiltered(input.toLowerCase()));
   };
 };
 
@@ -69648,8 +69648,10 @@ var MoviesList = function MoviesList(_ref) {
 
 
   if (moviesFilter !== '') {
+    //
+    moviesFilter = moviesFilter.toLowerCase().trim();
     filteredMovies = movies.filter(function (m) {
-      return m.Title.includes(moviesFilter);
+      return m.Title.toLowerCase().includes(moviesFilter);
     });
   } // Sort movies alphabetically by title
 
@@ -72271,7 +72273,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35161" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34179" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

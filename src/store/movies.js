@@ -61,7 +61,7 @@ export const fetchMovies = () => async (dispatch) => {
 };
 
 export const setMoviesFilter = (input) => (dispatch) => {
-  dispatch(moviesFiltered(input));
+  dispatch(moviesFiltered(input.toLowerCase()));
 };
 
 export const setGenreFilter = (genre) => (dispatch) => {
