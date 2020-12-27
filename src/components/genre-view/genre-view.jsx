@@ -1,9 +1,11 @@
 import React from 'react';
-import MovieCard from './../movie-card/movie-card';
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
+// Redux
 import { connect } from 'react-redux';
+// Components
+import Button from 'react-bootstrap/Button';
+import MovieCard from './../movie-card/movie-card';
 
 const GenreView = ({ movies, match }) => {
   const movie = movies.find((m) => m.Genre.Name === match.params.genreName);

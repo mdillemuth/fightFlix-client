@@ -7,6 +7,7 @@ import FilterInput from '../filter-input/filter-input';
 const MoviesList = ({ movies, moviesFilter }) => {
   let filteredMovies = movies;
 
+  // Applies filtering on user input
   if (moviesFilter !== '') {
     filteredMovies = movies.filter((m) => m.Title.includes(moviesFilter));
   }
@@ -32,6 +33,7 @@ const MoviesList = ({ movies, moviesFilter }) => {
 
 MoviesList.propTypes = {
   movies: PropTypes.array.isRequired,
+  moviesFilter: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({

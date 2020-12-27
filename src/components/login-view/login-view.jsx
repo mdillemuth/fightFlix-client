@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { loginUser } from '../../store/user';
 
 // Components
+import Loading from '../common/Loading';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -50,6 +51,7 @@ const LoginView = ({ loginUser }) => {
               my<span className='text-primary'>Fight</span>Flix
             </span>
           </h1>
+          <Loading />
           <h2 className='text-left h6 text-dark font-weight-bold mb-2'>
             Login to Your Account
           </h2>
@@ -115,6 +117,7 @@ LoginView.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  userLoginRequested: () => dispatch(userLoginRequested()),
   loginUser: (username, password) => dispatch(loginUser(username, password)),
 });
 

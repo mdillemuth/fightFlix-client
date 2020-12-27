@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 // Redux
 import { connect } from 'react-redux';
 import { removeFavorite } from '../../store/user';
@@ -29,6 +30,12 @@ const FavoritesView = ({ movies, favorites, removeFavorite }) => {
       </div>
     </div>
   );
+};
+
+FavoritesView.propTypes = {
+  movies: PropTypes.array.isRequired,
+  favorites: PropTypes.array.isRequired,
+  removeFavorite: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

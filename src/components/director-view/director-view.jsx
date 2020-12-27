@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
-import MovieCard from './../movie-card/movie-card';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-
 // Redux
 import { connect } from 'react-redux';
+// Components
+import Button from 'react-bootstrap/Button';
+import MovieCard from './../movie-card/movie-card';
 
 const DirectorView = ({ movies, match }) => {
   const movie = movies.find(

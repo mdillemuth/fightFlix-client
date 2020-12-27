@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 // Redux
 import { connect } from 'react-redux';
 import { registerAccount } from '../../store/user';
 import { setAlert } from '../../store/alerts';
-
+// Components
+import Loading from '../common/Loading';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -66,6 +68,7 @@ const RegistrationView = ({ registerAccount, setAlert }) => {
           </span>{' '}
           for free
         </h2>
+        <Loading />
         <Form
           noValidate
           validated={validated}
@@ -163,6 +166,11 @@ const RegistrationView = ({ registerAccount, setAlert }) => {
       </Col>
     </Container>
   );
+};
+
+RegistrationView.propTypes = {
+  registerAccount: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

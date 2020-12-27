@@ -42262,7 +42262,7 @@ var setAlert = function setAlert(message, type) {
     dispatch(alertAdded(alert));
     setTimeout(function () {
       return dispatch(alertRemoved(alert.id));
-    }, 2500);
+    }, 2000);
   };
 };
 
@@ -42273,7 +42273,7 @@ exports.setAlert = setAlert;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.removeFavorite = exports.addFavorite = exports.logoutUser = exports.registerAccount = exports.deleteAccount = exports.updateAccount = exports.fetchUser = exports.loginUser = exports.default = exports.favoriteRemoved = exports.favoriteAdded = exports.accountUpdated = exports.accountDeleted = exports.userLoggedOut = exports.userLoggedIn = exports.userRetrieved = void 0;
+exports.removeFavorite = exports.addFavorite = exports.logoutUser = exports.registerAccount = exports.deleteAccount = exports.updateAccount = exports.fetchUser = exports.loginUser = exports.default = exports.favoriteRemoved = exports.favoriteAdded = exports.accountUpdated = exports.accountDeleted = exports.userRetrieved = exports.userLoggedOut = exports.userLoggedIn = exports.requestResolved = exports.requestSent = void 0;
 
 var _toolkit = require("@reduxjs/toolkit");
 
@@ -42294,12 +42294,19 @@ var slice = (0, _toolkit.createSlice)({
   initialState: {
     user: null,
     token: localStorage.getItem('token'),
-    favorites: []
+    favorites: [],
+    loading: false
   },
   reducers: {
     userRetrieved: function userRetrieved(state, action) {
       state.user = action.payload;
       state.favorites = action.payload.FavoriteMovies;
+    },
+    requestSent: function requestSent(state) {
+      state.loading = true;
+    },
+    requestResolved: function requestResolved(state) {
+      state.loading = false;
     },
     userLoggedIn: function userLoggedIn(state, action) {
       state.user = action.payload.user;
@@ -42326,9 +42333,11 @@ var slice = (0, _toolkit.createSlice)({
   }
 });
 var _slice$actions = slice.actions,
-    userRetrieved = _slice$actions.userRetrieved,
+    requestSent = _slice$actions.requestSent,
+    requestResolved = _slice$actions.requestResolved,
     userLoggedIn = _slice$actions.userLoggedIn,
     userLoggedOut = _slice$actions.userLoggedOut,
+    userRetrieved = _slice$actions.userRetrieved,
     accountDeleted = _slice$actions.accountDeleted,
     accountUpdated = _slice$actions.accountUpdated,
     favoriteAdded = _slice$actions.favoriteAdded,
@@ -42337,15 +42346,19 @@ exports.favoriteRemoved = favoriteRemoved;
 exports.favoriteAdded = favoriteAdded;
 exports.accountUpdated = accountUpdated;
 exports.accountDeleted = accountDeleted;
+exports.userRetrieved = userRetrieved;
 exports.userLoggedOut = userLoggedOut;
 exports.userLoggedIn = userLoggedIn;
-exports.userRetrieved = userRetrieved;
+exports.requestResolved = requestResolved;
+exports.requestSent = requestSent;
 var _default = slice.reducer; // API call to log in user
 
 exports.default = _default;
 
 var loginUser = function loginUser(username, password) {
   return function (dispatch) {
+    dispatch(requestSent());
+
     _axios.default.post("https://my-fight-flix.herokuapp.com/api/login", {
       Username: username,
       Password: password
@@ -42355,8 +42368,10 @@ var loginUser = function loginUser(username, password) {
       dispatch((0, _movies.fetchMovies)(response.data.token));
       dispatch(userLoggedIn(response.data));
       dispatch((0, _alerts.setAlert)('Login Successful', 'success'));
+      dispatch(requestResolved());
     }).catch(function (e) {
       dispatch((0, _alerts.setAlert)('Invalid username or password', 'danger'));
+      dispatch(requestResolved());
     });
   };
 }; // API call to retrieve user information
@@ -42405,6 +42420,7 @@ exports.fetchUser = fetchUser;
 
 var updateAccount = function updateAccount(newUsername, newPassword, newEmail, newBirthday) {
   return function (dispatch) {
+    dispatch(requestSent());
     var username = localStorage.getItem('user');
     var token = localStorage.getItem('token');
     var config = {
@@ -42420,11 +42436,13 @@ var updateAccount = function updateAccount(newUsername, newPassword, newEmail, n
       Birthday: newBirthday
     }, config).then(function () {
       dispatch(accountUpdated());
-      dispatch((0, _alerts.setAlert)('Account Update Successful: Please login again'));
-      removeLocalStorage();
+      dispatch(requestResolved());
       window.open('/', '_self');
+      dispatch((0, _alerts.setAlert)('Account Update Successful: Please login again', 'success'));
+      removeLocalStorage();
     }).catch(function () {
-      dispatch((0, _alerts.setAlert)('Update Failed: Username or email unavailable'));
+      dispatch((0, _alerts.setAlert)('Update Failed: Username or email unavailable', 'danger'));
+      dispatch(requestResolved());
     });
   };
 }; // API call to delete user's account and log them out
@@ -42459,6 +42477,8 @@ exports.deleteAccount = deleteAccount;
 
 var registerAccount = function registerAccount(username, password, email, birthday) {
   return function (dispatch) {
+    dispatch(requestSent());
+
     _axios.default.post('https://my-fight-flix.herokuapp.com/api/users', {
       Username: username,
       Password: password,
@@ -42467,8 +42487,10 @@ var registerAccount = function registerAccount(username, password, email, birthd
     }).then(function () {
       window.open('/', '_self');
       dispatch((0, _alerts.setAlert)("Registration Successful!", 'success'));
+      dispatch(requestResolved());
     }).catch(function () {
       dispatch((0, _alerts.setAlert)('Registration Failed: Email or Username unavailable', 'danger'));
+      dispatch(requestResolved());
     });
   };
 }; // Logging out user
@@ -42568,7 +42590,60 @@ var removeFavorite = function removeFavorite(movieId) {
 };
 
 exports.removeFavorite = removeFavorite;
-},{"@reduxjs/toolkit":"../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js","./movies":"store/movies.js","./alerts":"store/alerts.js","axios":"../node_modules/axios/index.js"}],"../node_modules/classnames/index.js":[function(require,module,exports) {
+},{"@reduxjs/toolkit":"../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js","./movies":"store/movies.js","./alerts":"store/alerts.js","axios":"../node_modules/axios/index.js"}],"assets/img/spinner.gif":[function(require,module,exports) {
+module.exports = "/spinner.81165255.gif";
+},{}],"components/common/Loading.jsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
+var _reactRedux = require("react-redux");
+
+var _spinner = _interopRequireDefault(require("./../../assets/img/spinner.gif"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Redux
+// Components
+var Loading = function Loading(_ref) {
+  var loading = _ref.loading;
+
+  if (loading) {
+    return _react.default.createElement("div", null, _react.default.createElement("img", {
+      src: _spinner.default,
+      style: {
+        width: '75px',
+        margin: 'auto',
+        display: 'block'
+      },
+      alt: "Loading..."
+    }));
+  } else {
+    return null;
+  }
+};
+
+Loading.propTypes = {
+  loading: _propTypes.default.bool.isRequired
+};
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    loading: state.user.loading
+  };
+};
+
+var _default = (0, _reactRedux.connect)(mapStateToProps)(Loading);
+
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-redux":"../node_modules/react-redux/es/index.js","./../../assets/img/spinner.gif":"assets/img/spinner.gif"}],"../node_modules/classnames/index.js":[function(require,module,exports) {
 var define;
 /*!
   Copyright (c) 2017 Jed Watson.
@@ -44108,6 +44183,8 @@ var _reactRedux = require("react-redux");
 
 var _user = require("../../store/user");
 
+var _Loading = _interopRequireDefault(require("../common/Loading"));
+
 var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
 
 var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
@@ -44189,7 +44266,7 @@ var LoginView = function LoginView(_ref) {
     className: "font-italic"
   }, "my", _react.default.createElement("span", {
     className: "text-primary"
-  }, "Fight"), "Flix")), _react.default.createElement("h2", {
+  }, "Fight"), "Flix")), _react.default.createElement(_Loading.default, null), _react.default.createElement("h2", {
     className: "text-left h6 text-dark font-weight-bold mb-2"
   }, "Login to Your Account"), _react.default.createElement(_Form.default, {
     noValidate: true,
@@ -44242,6 +44319,19 @@ LoginView.propTypes = {
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
+    userLoginRequested: function (_userLoginRequested) {
+      function userLoginRequested() {
+        return _userLoginRequested.apply(this, arguments);
+      }
+
+      userLoginRequested.toString = function () {
+        return _userLoginRequested.toString();
+      };
+
+      return userLoginRequested;
+    }(function () {
+      return dispatch(userLoginRequested());
+    }),
     loginUser: function loginUser(username, password) {
       return dispatch((0, _user.loginUser)(username, password));
     }
@@ -44251,7 +44341,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 var _default = (0, _reactRedux.connect)(null, mapDispatchToProps)(LoginView);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"components/registration-view/registration-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","../common/Loading":"components/common/Loading.jsx","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"components/registration-view/registration-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -44261,6 +44351,8 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
 var _reactRouterDom = require("react-router-dom");
 
 var _reactRedux = require("react-redux");
@@ -44268,6 +44360,8 @@ var _reactRedux = require("react-redux");
 var _user = require("../../store/user");
 
 var _alerts = require("../../store/alerts");
+
+var _Loading = _interopRequireDefault(require("../common/Loading"));
 
 var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
 
@@ -44370,7 +44464,7 @@ var RegistrationView = function RegistrationView(_ref) {
     className: "font-italic"
   }, "my", _react.default.createElement("span", {
     className: "text-primary"
-  }, "Fight"), "Flix"), ' ', "for free"), _react.default.createElement(_Form.default, {
+  }, "Fight"), "Flix"), ' ', "for free"), _react.default.createElement(_Loading.default, null), _react.default.createElement(_Form.default, {
     noValidate: true,
     validated: validated,
     className: "mb-2",
@@ -44458,6 +44552,11 @@ var RegistrationView = function RegistrationView(_ref) {
   }, "Login here")))));
 };
 
+RegistrationView.propTypes = {
+  registerAccount: _propTypes.default.func.isRequired,
+  setAlert: _propTypes.default.func.isRequired
+};
+
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     registerAccount: function registerAccount(username, password, email, birthday) {
@@ -44472,7 +44571,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 var _default = (0, _reactRedux.connect)(null, mapDispatchToProps)(RegistrationView);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","../../store/alerts":"store/alerts.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js"}],"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","../../store/alerts":"store/alerts.js","../common/Loading":"components/common/Loading.jsx","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js"}],"../../../.nvm/versions/node/v14.15.0/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -44556,11 +44655,11 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
+var _reactRouterDom = require("react-router-dom");
+
 var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
 require("./movie-card.scss");
-
-var _reactRouterDom = require("react-router-dom");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -44654,7 +44753,7 @@ MovieCard.propTypes = {
 };
 var _default = MovieCard;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./movie-card.scss":"components/movie-card/movie-card.scss","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"components/filter-input/filter-input.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./movie-card.scss":"components/movie-card/movie-card.scss"}],"components/filter-input/filter-input.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -44723,7 +44822,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var MoviesList = function MoviesList(_ref) {
   var movies = _ref.movies,
       moviesFilter = _ref.moviesFilter;
-  var filteredMovies = movies;
+  var filteredMovies = movies; // Applies filtering on user input
 
   if (moviesFilter !== '') {
     filteredMovies = movies.filter(function (m) {
@@ -44748,7 +44847,8 @@ var MoviesList = function MoviesList(_ref) {
 };
 
 MoviesList.propTypes = {
-  movies: _propTypes.default.array.isRequired
+  movies: _propTypes.default.array.isRequired,
+  moviesFilter: _propTypes.default.string
 };
 
 var mapStateToProps = function mapStateToProps(state) {
@@ -44951,11 +45051,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireWildcard(require("react"));
-
-var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
-
-var _movieCard = _interopRequireDefault(require("./../movie-card/movie-card"));
+var _react = _interopRequireDefault(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
@@ -44963,13 +45059,14 @@ var _reactRouterDom = require("react-router-dom");
 
 var _reactRedux = require("react-redux");
 
+var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
+
+var _movieCard = _interopRequireDefault(require("./../movie-card/movie-card"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
 // Redux
+// Components
 var DirectorView = function DirectorView(_ref) {
   var movies = _ref.movies,
       match = _ref.match;
@@ -45025,7 +45122,7 @@ var mapStateToProps = function mapStateToProps(state) {
 var _default = (0, _reactRedux.connect)(mapStateToProps)(DirectorView);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js"}],"components/genre-view/genre-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx"}],"components/genre-view/genre-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -45035,18 +45132,20 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-var _movieCard = _interopRequireDefault(require("./../movie-card/movie-card"));
-
 var _propTypes = _interopRequireDefault(require("prop-types"));
-
-var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
 var _reactRouterDom = require("react-router-dom");
 
 var _reactRedux = require("react-redux");
 
+var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
+
+var _movieCard = _interopRequireDefault(require("./../movie-card/movie-card"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// Redux
+// Components
 var GenreView = function GenreView(_ref) {
   var movies = _ref.movies,
       match = _ref.match;
@@ -45100,7 +45199,7 @@ var mapStateToProps = function mapStateToProps(state) {
 var _default = (0, _reactRedux.connect)(mapStateToProps)(GenreView);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js"}],"components/favorites-view/favorites-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./../movie-card/movie-card":"components/movie-card/movie-card.jsx"}],"components/favorites-view/favorites-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -45109,6 +45208,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
+
+var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _reactRedux = require("react-redux");
 
@@ -45151,6 +45252,12 @@ var FavoritesView = function FavoritesView(_ref) {
   })));
 };
 
+FavoritesView.propTypes = {
+  movies: _propTypes.default.array.isRequired,
+  favorites: _propTypes.default.array.isRequired,
+  removeFavorite: _propTypes.default.func.isRequired
+};
+
 var mapStateToProps = function mapStateToProps(state) {
   return {
     movies: state.movies.list,
@@ -45169,7 +45276,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(FavoritesView);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js"}],"components/profile-view/profile-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","../movie-card/movie-card":"components/movie-card/movie-card.jsx","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js"}],"components/profile-view/profile-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -45198,6 +45305,8 @@ var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
 
 var _Col = _interopRequireDefault(require("react-bootstrap/Col"));
+
+var _Loading = _interopRequireDefault(require("../common/Loading"));
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -45291,7 +45400,7 @@ var ProfileView = function ProfileView(_ref) {
     className: "mb-2"
   }, _react.default.createElement("h2", {
     className: "text-left h5 text-dark font-weight-bold mb-1"
-  }, "Update Your Information")), _react.default.createElement(_Form.default, {
+  }, "Update Your Information")), _react.default.createElement(_Loading.default, null), _react.default.createElement(_Form.default, {
     noValidate: true,
     validated: validated,
     className: "mb-2",
@@ -45381,8 +45490,9 @@ var ProfileView = function ProfileView(_ref) {
 
 ProfileView.propTypes = {
   user: _propTypes.default.object,
-  deleteAccount: _propTypes.default.func,
-  updateAccount: _propTypes.default.func
+  deleteAccount: _propTypes.default.func.isRequired,
+  updateAccount: _propTypes.default.func.isRequired,
+  setAlert: _propTypes.default.func.isRequired
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
@@ -45408,7 +45518,7 @@ var mapStateToProps = function mapStateToProps(state) {
 var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ProfileView);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","../../store/alerts":"store/alerts.js","../favorites-view/favorites-view":"components/favorites-view/favorites-view.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"../node_modules/invariant/browser.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","../../store/alerts":"store/alerts.js","../favorites-view/favorites-view":"components/favorites-view/favorites-view.jsx","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","../common/Loading":"components/common/Loading.jsx"}],"../node_modules/invariant/browser.js":[function(require,module,exports) {
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -47481,10 +47591,13 @@ var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// Redux
+// Components
 var NavBar = function NavBar(_ref) {
   var user = _ref.user,
       logoutUser = _ref.logoutUser;
 
+  // Only renders profile/logout link when user is logged in
   var renderButtons = function renderButtons() {
     return user === null ? _react.default.createElement("div", null) : _react.default.createElement("div", null, _react.default.createElement(_reactRouterDom.Link, {
       to: "/profile"
@@ -47499,7 +47612,7 @@ var NavBar = function NavBar(_ref) {
     }, "Logout")));
   };
 
-  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Navbar.default, {
+  return _react.default.createElement(_Navbar.default, {
     bg: "white",
     className: "d-flex justify-content-between align-items-center px-3"
   }, _react.default.createElement(_reactRouterDom.Link, {
@@ -47508,11 +47621,12 @@ var NavBar = function NavBar(_ref) {
     className: "text-dark font-italic h2 font-weight-bold p-0 m-0"
   }, "my", _react.default.createElement("span", {
     className: "text-primary"
-  }, "Fight"), "Flix")), _react.default.createElement("div", null, renderButtons())));
+  }, "Fight"), "Flix")), _react.default.createElement("div", null, renderButtons()));
 };
 
 NavBar.propTypes = {
-  user: _propTypes.default.object
+  user: _propTypes.default.object,
+  logoutUser: _propTypes.default.func.isRequired
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
@@ -47799,12 +47913,16 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
 var _reactRedux = require("react-redux");
 
 var _Alert = _interopRequireDefault(require("react-bootstrap/Alert"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// Redux
+// Components
 var Alert = function Alert(_ref) {
   var alerts = _ref.alerts;
   return alerts.length > 0 && alerts.map(function (alert) {
@@ -47816,6 +47934,10 @@ var Alert = function Alert(_ref) {
   });
 };
 
+Alert.propTypes = {
+  alerts: _propTypes.default.array
+};
+
 var mapStateToProps = function mapStateToProps(state) {
   return {
     alerts: state.alerts.list
@@ -47825,7 +47947,7 @@ var mapStateToProps = function mapStateToProps(state) {
 var _default = (0, _reactRedux.connect)(mapStateToProps)(Alert);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-redux":"../node_modules/react-redux/es/index.js","react-bootstrap/Alert":"../node_modules/react-bootstrap/esm/Alert.js"}],"components/main-view/main-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-redux":"../node_modules/react-redux/es/index.js","react-bootstrap/Alert":"../node_modules/react-bootstrap/esm/Alert.js"}],"components/main-view/main-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -48085,7 +48207,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44575" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34133" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

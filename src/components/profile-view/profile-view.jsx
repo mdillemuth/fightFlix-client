@@ -12,6 +12,7 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
+import Loading from '../common/Loading';
 
 const ProfileView = ({ user, deleteAccount, updateAccount, setAlert }) => {
   // Component state for form inputs
@@ -73,6 +74,7 @@ const ProfileView = ({ user, deleteAccount, updateAccount, setAlert }) => {
             Update Your Information
           </h2>
         </div>
+        <Loading />
         <Form
           noValidate
           validated={validated}
@@ -178,8 +180,9 @@ const ProfileView = ({ user, deleteAccount, updateAccount, setAlert }) => {
 
 ProfileView.propTypes = {
   user: PropTypes.object,
-  deleteAccount: PropTypes.func,
-  updateAccount: PropTypes.func,
+  deleteAccount: PropTypes.func.isRequired,
+  updateAccount: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

@@ -9,11 +9,20 @@ const slice = createSlice({
     user: null,
     token: localStorage.getItem('token'),
     favorites: [],
+    loading: false,
   },
   reducers: {
     userRetrieved: (state, action) => {
       state.user = action.payload;
       state.favorites = action.payload.FavoriteMovies;
+    },
+
+    requestSent: (state) => {
+      state.loading = true;
+    },
+
+    requestResolved: (state) => {
+      state.loading = false;
     },
 
     userLoggedIn: (state, action) => {
@@ -47,9 +56,11 @@ const slice = createSlice({
 });
 
 export const {
-  userRetrieved,
+  requestSent,
+  requestResolved,
   userLoggedIn,
   userLoggedOut,
+  userRetrieved,
   accountDeleted,
   accountUpdated,
   favoriteAdded,
@@ -59,6 +70,8 @@ export default slice.reducer;
 
 // API call to log in user
 export const loginUser = (username, password) => (dispatch) => {
+  dispatch(requestSent());
+
   axios
     .post(`https://my-fight-flix.herokuapp.com/api/login`, {
       Username: username,
@@ -70,9 +83,11 @@ export const loginUser = (username, password) => (dispatch) => {
       dispatch(fetchMovies(response.data.token));
       dispatch(userLoggedIn(response.data));
       dispatch(setAlert('Login Successful', 'success'));
+      dispatch(requestResolved());
     })
     .catch((e) => {
       dispatch(setAlert('Invalid username or password', 'danger'));
+      dispatch(requestResolved());
     });
 };
 
@@ -102,6 +117,7 @@ export const updateAccount = (
   newEmail,
   newBirthday
 ) => (dispatch) => {
+  dispatch(requestSent());
   const username = localStorage.getItem('user');
   const token = localStorage.getItem('token');
 
@@ -124,12 +140,19 @@ export const updateAccount = (
     )
     .then(() => {
       dispatch(accountUpdated());
-      dispatch(setAlert('Account Update Successful: Please login again'));
-      removeLocalStorage();
+      dispatch(requestResolved());
       window.open('/', '_self');
+      dispatch(
+        setAlert('Account Update Successful: Please login again', 'success')
+      );
+
+      removeLocalStorage();
     })
     .catch(() => {
-      dispatch(setAlert('Update Failed: Username or email unavailable'));
+      dispatch(
+        setAlert('Update Failed: Username or email unavailable', 'danger')
+      );
+      dispatch(requestResolved());
     });
 };
 
@@ -165,6 +188,8 @@ export const deleteAccount = () => (dispatch) => {
 export const registerAccount = (username, password, email, birthday) => (
   dispatch
 ) => {
+  dispatch(requestSent());
+
   axios
     .post('https://my-fight-flix.herokuapp.com/api/users', {
       Username: username,
@@ -175,11 +200,13 @@ export const registerAccount = (username, password, email, birthday) => (
     .then(() => {
       window.open('/', '_self');
       dispatch(setAlert(`Registration Successful!`, 'success'));
+      dispatch(requestResolved());
     })
     .catch(() => {
       dispatch(
         setAlert('Registration Failed: Email or Username unavailable', 'danger')
       );
+      dispatch(requestResolved());
     });
 };
 

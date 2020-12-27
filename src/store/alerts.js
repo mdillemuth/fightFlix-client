@@ -24,5 +24,5 @@ export const setAlert = (message, type) => (dispatch) => {
 
   dispatch(alertAdded(alert));
 
-  setTimeout(() => dispatch(alertRemoved(alert.id)), 2500);
+  setTimeout(() => dispatch(alertRemoved(alert.id)), 2000);
 };

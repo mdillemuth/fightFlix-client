@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+// Redux
+import { Link } from 'react-router-dom';
+// Components & Styling
 import Button from 'react-bootstrap/Button';
 import './movie-card.scss';
-import { Link } from 'react-router-dom';
 
 class MovieCard extends Component {
   render() {
