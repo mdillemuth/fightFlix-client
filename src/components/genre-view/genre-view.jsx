@@ -1,11 +1,21 @@
 import React from 'react';
-import MovieCard from './../movie-card/movie-card';
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
+// Redux
+import { connect } from 'react-redux';
+// Components
+import Button from 'react-bootstrap/Button';
+import MovieCard from './../movie-card/movie-card';
 
-const GenreView = ({ movie, other }) => {
-  return (
+const GenreView = ({ movies, match }) => {
+  const movie = movies.find((m) => m.Genre.Name === match.params.genreName);
+  const otherMovies = movies.filter(
+    (m) => m.Genre.Name === match.params.genreName
+  );
+
+  return !movie ? (
+    <div>Loading</div>
+  ) : (
     <React.Fragment>
       <div className='container'>
         <div className='row bg-white rounded m-3 p-3'>
@@ -30,7 +40,7 @@ const GenreView = ({ movie, other }) => {
           <span className='text-primary'>{movie.Genre.Name}</span>
         </h2>
         <div className='container d-flex flex-wrap justify-content-center'>
-          {other.map((o) => (
+          {otherMovies.map((o) => (
             <MovieCard key={o._id} movie={o} />
           ))}
         </div>
@@ -40,8 +50,12 @@ const GenreView = ({ movie, other }) => {
 };
 
 GenreView.propTypes = {
-  movie: PropTypes.object.isRequired,
-  other: PropTypes.array.isRequired,
+  movies: PropTypes.array.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
-export default GenreView;
+const mapStateToProps = (state) => ({
+  movies: state.movies.list,
+});
+
+export default connect(mapStateToProps)(GenreView);

@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
-import RegistrationForm from './registration-form';
-import CustomAlert from './../common/CustomAlert';
-import LoadingSpinner from '../common/LoadingSpinner';
-import Container from 'react-bootstrap/Container';
-import Col from 'react-bootstrap/Col';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+// Redux
+import { connect } from 'react-redux';
+import { registerAccount } from '../../store/user';
+import { setAlert } from '../../store/alerts';
+// Components
+import Loading from '../common/Loading';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
 
-const RegistrationView = () => {
+const RegistrationView = ({ registerAccount, setAlert }) => {
+  // Component state for form inputs
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -15,57 +21,32 @@ const RegistrationView = () => {
     passwordConfirm: '',
     birthday: '',
   });
-
   const { username, email, password, passwordConfirm, birthday } = formData;
-  const [isClientValidated, setIsClientValidated] = useState(false);
-  const [isServerInvalidated, setIsServerInvalidated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleFormChange = (e) =>
+  // Handler for adding form input values to component state
+  const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleCloseAlert = () => {
-    setIsServerInvalidated(false);
-  };
+  // Form submission handler with validation
+  const [validated, setValidated] = useState(false);
 
-  const handleRegistration = (e) => {
-    setIsLoading(true);
-
-    if (password !== passwordConfirm) {
-      return alert('Passwords do not match');
-    }
-
+  const handleSubmit = (e) => {
     const form = e.currentTarget;
-    if (!form.checkValidity()) {
-      console.log('Invalid input, form not submitted');
-      e.preventDefault();
-      e.stopPropagation();
-      setIsLoading(false);
-    }
-    setIsClientValidated(true);
-
     e.preventDefault();
 
-    if (form.checkValidity()) {
-      axios
-        .post('https://my-fight-flix.herokuapp.com/api/users', {
-          Username: username,
-          Password: password,
-          Email: email,
-          Birthday: birthday,
-        })
-        .then((res) => {
-          console.log('Account Registered');
-          setIsLoading(false);
-          window.open('/', '_self');
-        })
-        .catch((e) => {
-          console.log('Registration Error');
-          setIsServerInvalidated(true);
-          setIsLoading(false);
-        });
+    // Check passwords match
+    if (password !== passwordConfirm) {
+      setAlert('Passwords do not match', 'danger');
+      return;
     }
+
+    // Registration request to API with valid form
+    if (form.checkValidity())
+      registerAccount(username, password, email, birthday);
+
+    setValidated(true);
   };
+  // };
 
   return (
     <Container className='my-3'>
@@ -87,19 +68,93 @@ const RegistrationView = () => {
           </span>{' '}
           for free
         </h2>
-        <LoadingSpinner show={isLoading} />
-        <CustomAlert
-          alertHeading='Registration Error'
-          alertBody='Username is already taken or there is already an account with this email address'
-          isShowAlert={isServerInvalidated}
-          onCloseAlert={handleCloseAlert}
-        />
-        <RegistrationForm
-          formInputs={formData}
-          isClientValidated={isClientValidated}
-          onFormChange={handleFormChange}
-          onRegistration={handleRegistration}
-        />
+        <Loading />
+        <Form
+          noValidate
+          validated={validated}
+          className='mb-2'
+          onSubmit={(e) => handleSubmit(e)}
+        >
+          <Form.Group className='mb-2' controlId='registerUsername'>
+            <Form.Control
+              autoFocus
+              type='text'
+              placeholder='Username'
+              name='username'
+              value={username}
+              onChange={onChange}
+              required
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Please choose a username
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className='mb-2' controlId='registerEmail'>
+            <Form.Control
+              type='email'
+              placeholder='Email'
+              name='email'
+              value={email}
+              onChange={onChange}
+              required
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Please enter a valid email address
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className='mb-2' controlId='registerPassword'>
+            <Form.Control
+              type='password'
+              placeholder='Password'
+              name='password'
+              value={password}
+              onChange={onChange}
+              required
+              minLength='7'
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Password must be at least 7 characters
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className='mb-2' controlId='registerConfirmPassword'>
+            <Form.Control
+              type='password'
+              placeholder='Confirm password'
+              name='passwordConfirm'
+              value={passwordConfirm}
+              onChange={onChange}
+              required
+              minLength='7'
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Password must be at least 7 characters
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId='registerBirthday' className='mb-2 '>
+            <Form.Label className='mb-1 text-muted font-weight-bold'>
+              Please enter your birthday
+            </Form.Label>
+            <Form.Control
+              type='date'
+              name='birthday'
+              placeholder='Birthday'
+              value={birthday}
+              onChange={onChange}
+              required
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>
+              Birthday is required
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Button variant='primary' type='submit' className='w-100 btn-lg mb-3'>
+            Sign Up
+          </Button>
+        </Form>
         <small className='text-muted text-center d-block'>
           Already a member?
           <Link to='/'>
@@ -113,4 +168,15 @@ const RegistrationView = () => {
   );
 };
 
-export default RegistrationView;
+RegistrationView.propTypes = {
+  registerAccount: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  registerAccount: (username, password, email, birthday) =>
+    dispatch(registerAccount(username, password, email, birthday)),
+  setAlert: (msg, type) => dispatch(setAlert(msg, type)),
+});
+
+export default connect(null, mapDispatchToProps)(RegistrationView);
