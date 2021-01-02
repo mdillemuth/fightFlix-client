@@ -1,7 +1,7 @@
 # fightFlix-client
 This is the client-side of a MERN stack web application built using React. fightFlix is an application that provides users with access to information about different movies, directors, and genres. Users are able to sign up, update personal information, and create a list of their favorite movies. 
 
----
+![App Showcase Gif](/my-fight-flix-showcase-final.gif)
 
 ## Quick Start 🚀
 
