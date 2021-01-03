@@ -82,7 +82,6 @@ export const loginUser = (username, password) => (dispatch) => {
       localStorage.setItem('user', response.data.user.Username);
       dispatch(fetchMovies(response.data.token));
       dispatch(userLoggedIn(response.data));
-      dispatch(setAlert('Login Successful', 'success'));
       dispatch(requestResolved());
     })
     .catch((e) => {

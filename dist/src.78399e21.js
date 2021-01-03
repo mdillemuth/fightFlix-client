@@ -42309,7 +42309,7 @@ var setAlert = function setAlert(message, type) {
     dispatch(alertAdded(alert));
     setTimeout(function () {
       return dispatch(alertRemoved(alert.id));
-    }, 2000);
+    }, 10000);
   };
 };
 
@@ -42414,7 +42414,6 @@ var loginUser = function loginUser(username, password) {
       localStorage.setItem('user', response.data.user.Username);
       dispatch((0, _movies.fetchMovies)(response.data.token));
       dispatch(userLoggedIn(response.data));
-      dispatch((0, _alerts.setAlert)('Login Successful', 'success'));
       dispatch(requestResolved());
     }).catch(function (e) {
       dispatch((0, _alerts.setAlert)('Invalid username or password', 'danger'));
@@ -69726,8 +69725,6 @@ var _reactRedux = require("react-redux");
 
 var _user = require("../../store/user");
 
-var _alerts = require("../../store/alerts");
-
 var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
 var _Container = _interopRequireDefault(require("react-bootstrap/Container"));
@@ -69792,12 +69789,8 @@ var MovieView = /*#__PURE__*/function (_Component) {
 
       if (_this.props.favorites.includes(movie._id)) {
         _this.props.removeFavorite(movie._id);
-
-        _this.props.setAlert("".concat(movie.Title, " removed from favorites"), 'danger');
       } else {
         _this.props.addFavorite(movie._id);
-
-        _this.props.setAlert("".concat(movie.Title, " added to favorites!"), 'success', 5000);
       }
     }, _temp));
   } // Handles how the star is displayed (empty or filled)
@@ -69875,9 +69868,6 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     removeFavorite: function removeFavorite(id) {
       return dispatch((0, _user.removeFavorite)(id));
-    },
-    setAlert: function setAlert(msg, type) {
-      return dispatch((0, _alerts.setAlert)(msg, type));
     }
   };
 };
@@ -69885,7 +69875,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MovieView);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","../../store/alerts":"store/alerts.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","./movie-view.scss":"components/movie-view/movie-view.scss"}],"components/director-view/director-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/user":"store/user.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","./movie-view.scss":"components/movie-view/movie-view.scss"}],"components/director-view/director-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -72273,7 +72263,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41683" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37995" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
