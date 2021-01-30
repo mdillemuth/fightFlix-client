@@ -19,6 +19,8 @@ parcel [path to index.html]
 parcel src/index.html
 ```
 
+**Note:** If you do not have parcel installed globally, your terminal will tell you that the command 'parcel' is not found. If this is the case, simply follow the instructions on [how to install parcel.js](https://parceljs.org/getting_started.html)
+
 ### Run application in browser
 Parcel will run a local server on port: 1234
 
