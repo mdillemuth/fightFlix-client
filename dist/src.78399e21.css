@@ -26,25 +26,6 @@
 .label {
   font-weight: bold;
 }
-/* simple - enter transition 300ms, exit 150ms */
-.fade-enter {
-  opacity: 0;
-  z-index: 1;
-}
-.fade-enter-active {
-  opacity: 1;
-  transition: opacity 300ms ease-out;
-}
-
-.fade-exit {
-  opacity: 1;
-}
-
-.fade-exit-active {
-  opacity: 0;
-  transition: opacity 300ms ease-out;
-}
-
 @charset "UTF-8";
 @font-face {
   font-family: "Open Sans";
@@ -9946,6 +9927,17 @@ h3 {
     color: inherit;
     border-color: #dee2e6;
   }
+}
+body {
+  position: relative;
+  min-height: 100vh;
+  padding-bottom: 100px;
+}
+
+.footer {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
 }
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome

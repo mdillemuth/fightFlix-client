@@ -19,10 +19,7 @@ import ProfileView from '../profile-view/profile-view';
 import NavBar from '../common/NavBar';
 import NotFound from '../not-found/not-found';
 import Alert from '../common/Alert';
-
-// Transition Animations
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import './main-view.css';
+import Footer from '../common/Footer';
 
 class MainView extends Component {
   // Calls API for movies & user when auth token is present
@@ -41,36 +38,22 @@ class MainView extends Component {
       <BrowserRouter>
         <NavBar />
         <Alert />
-
-        <Route
-          render={({ location }) => {
-            const { key } = location;
-            return (
-              <TransitionGroup>
-                <CSSTransition key={key} timeout={300} classNames='fade'>
-                  <Switch location={location}>
-                    <Route
-                      path='/directors/:directorName'
-                      component={DirectorView}
-                    />
-                    <Route path='/genres/:genreName' component={GenreView} />
-                    <Route path='/movies/:movieId' component={MovieView} />
-                    <Route path='/profile' component={ProfileView} />
-                    <Route path='/register' component={RegistrationView} />
-                    <Route
-                      path='/'
-                      render={() => {
-                        return !user ? <LoginView /> : <MoviesList />;
-                      }}
-                    />
-                    <Route path='/not-found' component={NotFound} />
-                    <Redirect to='/not-found' />
-                  </Switch>
-                </CSSTransition>
-              </TransitionGroup>
-            );
-          }}
-        ></Route>
+        <Switch location={location}>
+          <Route path='/directors/:directorName' component={DirectorView} />
+          <Route path='/genres/:genreName' component={GenreView} />
+          <Route path='/movies/:movieId' component={MovieView} />
+          <Route path='/profile' component={ProfileView} />
+          <Route path='/register' component={RegistrationView} />
+          <Route
+            path='/'
+            render={() => {
+              return !user ? <LoginView /> : <MoviesList />;
+            }}
+          />
+          <Route path='/not-found' component={NotFound} />
+          <Redirect to='/not-found' />
+        </Switch>
+        <Footer />
       </BrowserRouter>
     );
   }
