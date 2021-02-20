@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // Redux
-import { Link } from 'react-router-dom';
+import { NavHashLink as NavLink } from 'react-router-hash-link';
 import { logoutUser } from '../../store/user';
 import { connect } from 'react-redux';
 // Components
@@ -15,10 +15,10 @@ const NavBar = ({ user, logoutUser }) => {
       <div></div>
     ) : (
       <div>
-        <Link to='/profile'>
+        <NavLink to='/profile' smooth>
           <Button className='mr-1'>{user.Username}</Button>
-        </Link>
-        <Link to='/'>
+        </NavLink>
+        <NavLink exact to='/' smooth>
           <Button
             onClick={logoutUser}
             className='ml-1'
@@ -26,7 +26,7 @@ const NavBar = ({ user, logoutUser }) => {
           >
             Logout
           </Button>
-        </Link>
+        </NavLink>
       </div>
     );
   };
@@ -36,11 +36,11 @@ const NavBar = ({ user, logoutUser }) => {
       bg='white'
       className='d-flex justify-content-between align-items-center px-3'
     >
-      <Link to='/'>
+      <NavLink exact to='/'>
         <Navbar.Brand className='text-dark font-italic h2 font-weight-bold p-0 m-0'>
           my<span className='text-primary'>Fight</span>Flix
         </Navbar.Brand>
-      </Link>
+      </NavLink>
       <div>{renderButtons()}</div>
     </Navbar>
   );
